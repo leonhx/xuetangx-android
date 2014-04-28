@@ -7,7 +7,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_tweet_detail">Tweet Detail</string>
     <string name="action_post">Post</string>
+    <string name="post_hint">Share something with friends!</string>
+    <string name="post_to">Post to</string>
     <string name="title_activity_post">Post</string>
+    <string name="post_text_count">0</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_share">Share</string>
     <string name="action_send">Send!</string>
