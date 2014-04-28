@@ -38,10 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.leonhuang.onespace.TweetListActivity" />
         </activity>
-        <activity
-            android:name="com.leonhuang.onespace.RefreshActivity"
-            android:label="@string/title_activity_refresh" >
-        </activity>
     </application>
 
 </manifest>
