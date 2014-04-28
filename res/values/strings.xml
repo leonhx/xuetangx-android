@@ -10,6 +10,7 @@
     <string name="title_activity_post">Post</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_share">Share</string>
+    <string name="action_send">Send!</string>
     <string name="action_refresh">Refresh</string>
     <string name="toast_end_of_list">End of List!</string>
     <string name="platform_renren">Renren</string>
