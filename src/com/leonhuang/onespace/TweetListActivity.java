@@ -26,6 +26,8 @@ import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
 import com.leonhuang.pulltorefresh.library.extras.SoundPullEventListener;
 
 public class TweetListActivity extends ListActivity {
+	public String TWEET_CONTENT = "com.leonhuang.onespace.TweetListActivity.tweet_content";
+
     static final int MENU_MANUAL_REFRESH = 0;
 
 	private LinkedList<String> mListItems;
@@ -80,6 +82,7 @@ public class TweetListActivity extends ListActivity {
 	@Override
 	 protected void onListItemClick(ListView l, View v, int position, long id) {
 		 Intent intent = new Intent(this, TweetDetailActivity.class);
+		 intent.putExtra(TWEET_CONTENT, mListItems.get(position));
 	     startActivity(intent);
 	 }
 	

@@ -3,10 +3,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.leonhuang.onespace.TweetDetailActivity" >
 
-    <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_action_share"
-        android:title="@string/action_share"
-        android:showAsAction="always"/>
-
 </menu>

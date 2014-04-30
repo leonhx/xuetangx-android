@@ -2,8 +2,12 @@ package com.leonhuang.onespace;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class PostActivity extends Activity {
 
@@ -11,6 +15,17 @@ public class PostActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_post);
+		
+		final TextView tv = (TextView)findViewById(R.id.post_text_count);
+		final EditText textMessage = (EditText)findViewById(R.id.post_text);
+
+		textMessage.addTextChangedListener(new TextWatcher(){
+	        public void afterTextChanged(Editable s) {
+	            tv.setText(String.valueOf(textMessage.getText().length()));
+	        }
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
 	}
 
 	@Override
