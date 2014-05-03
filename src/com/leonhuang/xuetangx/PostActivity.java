@@ -1,4 +1,4 @@
-package com.leonhuang.onespace;
+package com.leonhuang.xuetangx;
 
 import android.app.Activity;
 import android.os.Bundle;

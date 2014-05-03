@@ -35,10 +35,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.leonhuang.onespace.R;
 import com.leonhuang.pulltorefresh.library.ILoadingLayout;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.Orientation;
+import com.leonhuang.xuetangx.R;
 
 @SuppressLint("ViewConstructor")
 public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {

@@ -26,9 +26,9 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView.ScaleType;
 
-import com.leonhuang.onespace.R;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.Orientation;
+import com.leonhuang.xuetangx.R;
 
 @SuppressLint("ViewConstructor")
 public class FlipLoadingLayout extends LoadingLayout {

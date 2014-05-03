@@ -20,8 +20,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
-import com.leonhuang.onespace.R;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase;
+import com.leonhuang.xuetangx.R;
 
 public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 

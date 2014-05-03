@@ -1,4 +1,4 @@
-package com.leonhuang.onespace;
+package com.leonhuang.xuetangx;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -19,14 +19,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase;
-import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
+import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
 import com.leonhuang.pulltorefresh.library.extras.SoundPullEventListener;
 
 public class TweetListActivity extends ListActivity {
-	public String TWEET_CONTENT = "com.leonhuang.onespace.TweetListActivity.tweet_content";
+	public String TWEET_CONTENT = "com.leonhuang.xuetangx.TweetListActivity.tweet_content";
 
     static final int MENU_MANUAL_REFRESH = 0;
 

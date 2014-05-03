@@ -32,9 +32,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
-import com.leonhuang.onespace.R;
 import com.leonhuang.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.leonhuang.pulltorefresh.library.internal.IndicatorLayout;
+import com.leonhuang.xuetangx.R;
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
 		OnScrollListener {
