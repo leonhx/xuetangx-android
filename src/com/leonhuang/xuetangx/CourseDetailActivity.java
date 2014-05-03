@@ -6,12 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class TweetDetailActivity extends Activity {
+public class CourseDetailActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tweet_detail);
+		setContentView(R.layout.activity_course_detail);
 	}
 
 	@Override

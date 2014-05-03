@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/MyTheme" >
         <activity
-            android:name="com.leonhuang.xuetangx.TweetListActivity"
+            android:name="com.leonhuang.xuetangx.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +26,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.TweetDetailActivity"
+            android:name="com.leonhuang.xuetangx.CourseListActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.CourseDetailActivity"
             android:label="@string/title_activity_tweet_detail"
-            android:parentActivityName="com.leonhuang.xuetangx.TweetListActivity" >
+            android:parentActivityName="com.leonhuang.xuetangx.CourseListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.leonhuang.xuetangx.TweetListActivity" />
@@ -36,7 +40,7 @@
         <activity
             android:name="com.leonhuang.xuetangx.PostActivity"
             android:label="@string/title_activity_post"
-            android:parentActivityName="com.leonhuang.xuetangx.TweetListActivity" >
+            android:parentActivityName="com.leonhuang.xuetangx.CourseListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.leonhuang.xuetangx.TweetListActivity" />
@@ -45,12 +49,9 @@
             android:name="com.leonhuang.xuetangx.FavoActivity"
             android:label="@string/title_activity_favo" >
         </activity>
-        <activity
-            android:name="io.vov.vitamio.activity.InitActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
+
+    <use>
+    </use>
 
 </manifest>

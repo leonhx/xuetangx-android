@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">学堂在线</string>
+    <string name="app_name">XuetangX</string>
+    
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Log In</string>
+    <string name="login_failed">Log In Failed!</string>
+    
     <string name="action_settings">Settings</string>
     <string name="title_activity_tweet_list">Tweet List</string>
     <string name="hello_world">Hello world!</string>
@@ -22,5 +28,6 @@
     <string name="platform_wechat">WeChat</string>
     <string name="avatar_placeholder">Avatar</string>
     <string name="title_activity_favo">FavoActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
 
 </resources>
