@@ -21,5 +21,6 @@
     <string name="platform_qzone">QZone</string>
     <string name="platform_wechat">WeChat</string>
     <string name="avatar_placeholder">Avatar</string>
+    <string name="title_activity_favo">FavoActivity</string>
 
 </resources>

@@ -137,8 +137,8 @@ public class TweetListActivity extends ListActivity {
 	}
     
     private void openFavorite() {
-		// TODO Auto-generated method stub
-		Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(this, FavoActivity.class);
+		startActivity(intent);
 	}
 
 	private void openSettings() {
