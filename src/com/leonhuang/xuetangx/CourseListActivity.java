@@ -30,7 +30,6 @@ import com.leonhuang.xuetangx.webclient.HTTPClient;
 
 public class CourseListActivity extends ListActivity {
 	public static final String COURSE_URL = "com.leonhuang.xuetangx.CourseListActivity.CourseUrl";
-	public static final String COURSE_LIST = "com.leonhuang.xuetangx.CourseListActivity.CourseList";
 
 	public static HTTPClient client = null;
 
