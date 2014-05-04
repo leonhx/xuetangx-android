@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.leonhuang.xuetangx"
     android:versionCode="0"
-    android:versionName="0.0.3" >
+    android:versionName="0.0.3(1)" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -35,7 +35,7 @@
         </activity>
         <activity
             android:name="com.leonhuang.xuetangx.CourseDetailActivity"
-            android:label="@string/title_activity_tweet_detail"
+            android:label="@string/app_name"
             android:parentActivityName="com.leonhuang.xuetangx.CourseListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

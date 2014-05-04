@@ -1,12 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.leonhuang.xuetangx.MainActivity" >
+    tools:context="com.leonhuang.xuetangx.CourseListActivity" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/default_ptr_rotate"
+        android:title="@string/action_refresh"
+        android:visible="true"
+        android:showAsAction="always" >
+    </item>
 
 </menu>

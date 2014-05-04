@@ -26,10 +26,15 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				EditText email_text = (EditText) findViewById(R.id.edit_email);
-				EditText password_text = (EditText) findViewById(R.id.edit_password);
-				String email = email_text.getText().toString();
-				String password = password_text.getText().toString();
+				Button btn = (Button) findViewById(R.id.login_button);
+				EditText email_field = (EditText) findViewById(R.id.edit_email);
+				EditText password_field = (EditText) findViewById(R.id.edit_password);
+				btn.setEnabled(false);
+				btn.setText(LoginActivity.this.getString(R.string.login_button_disbled));
+				email_field.setEnabled(false);
+				password_field.setEnabled(false);
+				String email = email_field.getText().toString();
+				String password = password_field.getText().toString();
 				tryLogin(new User(email, password));
 			}
 		});
@@ -42,8 +47,9 @@ public class LoginActivity extends Activity {
 				try {
 					Response resp = XuetangX.logIn(user);
 					if (!XuetangX.isLogIn(resp)) {
-						throw new Exception("Not real exception. Log in failed actually! "
-								+ resp.getContent());
+						throw new Exception(
+								"Not real exception. Log in failed actually! "
+										+ resp.getContent());
 					}
 					String clientJSON = resp.getClient().dumpJSON();
 					MainActivity.saveClientJSON(clientJSON, LoginActivity.this);
@@ -59,16 +65,22 @@ public class LoginActivity extends Activity {
 									LoginActivity.this
 											.getString(R.string.login_failed),
 									Toast.LENGTH_SHORT).show();
+							Button btn = (Button) findViewById(R.id.login_button);
+							EditText email_field = (EditText) findViewById(R.id.edit_email);
+							EditText password_field = (EditText) findViewById(R.id.edit_password);
+							btn.setEnabled(true);
+							btn.setText(LoginActivity.this.getString(R.string.login_button));
+							email_field.setEnabled(true);
+							password_field.setEnabled(true);
 						}
 					});
 				}
 			}
 		}).start();
 	}
-	
+
 	private void startCourseListActivity(String clientJSON) {
-		Intent intent = new Intent(LoginActivity.this,
-				CourseListActivity.class);
+		Intent intent = new Intent(LoginActivity.this, CourseListActivity.class);
 		intent.putExtra(MainActivity.CLIENT_JSON, clientJSON);
 		startActivity(intent);
 		finish();

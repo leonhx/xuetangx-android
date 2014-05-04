@@ -4,54 +4,58 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
-        android:id="@+id/tweetAvatar"
-        android:contentDescription="@string/avatar_placeholder"
+    <RelativeLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/user_profile"
+        android:layout_gravity="top"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/tweetAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_marginLeft="10dp"
-        android:gravity="left" >
+        android:gravity="left"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/tweetTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Header Text"
-            android:textSize="19sp"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="#222222"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tweetBrief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tweet body text here"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:lines="3"
-            android:textColor="#666666"                                                
+            android:textColor="#666666"
             android:textSize="14sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp" >
-            
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
+
             <TextView
                 android:id="@+id/tweetDate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="20 Nov 2013"
                 android:textColor="#999999"
                 android:textSize="12sp" />
 
@@ -61,12 +65,9 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="Renren"
                 android:textColor="#999999"
                 android:textSize="12sp" />
-
         </RelativeLayout>
-
     </LinearLayout>
 
 </LinearLayout>

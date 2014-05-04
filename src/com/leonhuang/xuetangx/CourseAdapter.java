@@ -33,7 +33,6 @@ public class CourseAdapter extends ArrayAdapter<CurrentCourseItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.i("0", "0");
 		View view = inflater.inflate(R.layout.row_course, parent, false);
 		TextView title = (TextView) view.findViewById(R.id.tweetTitle);
 		TextView text = (TextView) view.findViewById(R.id.tweetBrief);
@@ -47,9 +46,8 @@ public class CourseAdapter extends ArrayAdapter<CurrentCourseItem> {
 		} else {
 			text.setText("此课程尚未开始");
 		}
-		SimpleDateFormat df = new SimpleDateFormat("MM dd, yyyy", Locale.CHINA);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy年mm月dd日", Locale.CHINA);
 		date.setText(df.format(course.getStartDate()));
-		Log.i("0", XuetangX.absPath(course.getImgPath()));
 		new DownloadImageTask((ImageView) view.findViewById(R.id.tweetAvatar))
 				.execute(XuetangX.absPath(course.getImgPath()));
 

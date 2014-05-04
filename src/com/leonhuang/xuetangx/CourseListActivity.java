@@ -17,10 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase;
-import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
 import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
@@ -31,9 +29,10 @@ import com.leonhuang.xuetangx.webclient.Client;
 import com.leonhuang.xuetangx.webclient.HTTPClient;
 
 public class CourseListActivity extends ListActivity {
-	public static final String TWEET_CONTENT = "com.leonhuang.xuetangx.TweetListActivity.tweet_content";
+	public static final String COURSE_URL = "com.leonhuang.xuetangx.CourseListActivity.CourseUrl";
+	public static final String COURSE_LIST = "com.leonhuang.xuetangx.CourseListActivity.CourseList";
 
-	private static final int MENU_MANUAL_REFRESH = 0;
+	public static HTTPClient client = null;
 
 	private LinkedList<CurrentCourseItem> mListItems;
 	private PullToRefreshListView mPullRefreshListView;
@@ -44,11 +43,12 @@ public class CourseListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_list);
 
-		Intent intent = getIntent();
-		final HTTPClient client = (HTTPClient) Client.loadJSON(intent
-				.getStringExtra(MainActivity.CLIENT_JSON));
-
-		new UpdateUserInfoTask().execute(client);
+		if (null == client) {
+			Intent intent = getIntent();
+			client = (HTTPClient) Client.loadJSON(intent
+					.getStringExtra(MainActivity.CLIENT_JSON));
+			new UpdateUserInfoTask().execute(client);
+		}
 
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
 
@@ -67,18 +67,7 @@ public class CourseListActivity extends ListActivity {
 						refreshView.getLoadingLayoutProxy()
 								.setLastUpdatedLabel(label);
 
-						new GetDataTask().execute();
-					}
-				});
-
-		mPullRefreshListView
-				.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
-
-					@Override
-					public void onLastItemVisible() {
-						Toast.makeText(CourseListActivity.this,
-								getString(R.string.toast_end_of_list),
-								Toast.LENGTH_SHORT).show();
+						new GetDataTask().execute(client);
 					}
 				});
 
@@ -88,7 +77,8 @@ public class CourseListActivity extends ListActivity {
 
 		mListItems = new LinkedList<CurrentCourseItem>();
 		mAdapter = new CourseAdapter(this, mListItems);
-		new GetCoursesTask(mListItems, mAdapter, actualListView).execute(client);
+		new GetCoursesTask(mListItems, mAdapter, actualListView)
+				.execute(client);
 
 		SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(
 				this);
@@ -101,7 +91,8 @@ public class CourseListActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent intent = new Intent(this, CourseDetailActivity.class);
-		// intent.putExtra(TWEET_CONTENT, mListItems.get(position));
+		intent.putExtra(COURSE_URL,
+				XuetangX.absPath(mListItems.get(position - 1).getPath()));
 		startActivity(intent);
 	}
 
@@ -109,7 +100,6 @@ public class CourseListActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		menu.add(0, MENU_MANUAL_REFRESH, 0, R.string.action_refresh);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -132,19 +122,10 @@ public class CourseListActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case MENU_MANUAL_REFRESH:
-			new GetDataTask().execute();
+		case R.id.action_refresh:
+			new GetDataTask().execute(client);
 			mPullRefreshListView.setRefreshing(false);
 			break;
-//		case R.id.action_post:
-//			openPost();
-//			return true;
-//		case R.id.action_favorite:
-//			openFavorite();
-//			return true;
-		case R.id.action_settings:
-			openSettings();
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -152,28 +133,14 @@ public class CourseListActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void openPost() {
-		Intent intent = new Intent(this, PostActivity.class);
-		startActivity(intent);
-	}
-
-	private void openFavorite() {
-		Intent intent = new Intent(this, FavoActivity.class);
-		startActivity(intent);
-	}
-
-	private void openSettings() {
-		// TODO Auto-generated method stub
-		Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-	}
-
-	private class GetDataTask extends AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
+	private class GetDataTask extends
+			AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
 
 		@Override
 		protected ArrayList<CurrentCourseItem> doInBackground(
 				HTTPClient... clients) {
 			ArrayList<CurrentCourseItem> courses = new ArrayList<CurrentCourseItem>();
-			for (HTTPClient client: clients) {
+			for (HTTPClient client : clients) {
 				try {
 					courses.addAll(XuetangX.getCurrentCourses(client));
 				} catch (IOException e) {
@@ -182,17 +149,18 @@ public class CourseListActivity extends ListActivity {
 			}
 			return courses;
 		}
-		
+
 		@Override
 		protected void onPostExecute(ArrayList<CurrentCourseItem> result) {
+			mListItems.removeAll(mListItems);
 			mListItems.addAll(result);
 			mAdapter.notifyDataSetChanged();
 			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
-		
+
 	}
-	
+
 	private class UpdateUserInfoTask extends AsyncTask<HTTPClient, Void, Void> {
 
 		@Override
@@ -207,12 +175,14 @@ public class CourseListActivity extends ListActivity {
 		}
 	}
 
-	private class GetCoursesTask extends AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
+	private class GetCoursesTask extends
+			AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
 		LinkedList<CurrentCourseItem> items;
 		CourseAdapter mAdapter;
 		ListView actualListView;
-		
-		public GetCoursesTask(LinkedList<CurrentCourseItem> items, CourseAdapter mAdapter, ListView actualListView) {
+
+		public GetCoursesTask(LinkedList<CurrentCourseItem> items,
+				CourseAdapter mAdapter, ListView actualListView) {
 			this.items = items;
 			this.mAdapter = mAdapter;
 			this.actualListView = actualListView;
@@ -222,7 +192,7 @@ public class CourseListActivity extends ListActivity {
 		protected ArrayList<CurrentCourseItem> doInBackground(
 				HTTPClient... clients) {
 			ArrayList<CurrentCourseItem> courses = new ArrayList<CurrentCourseItem>();
-			for (HTTPClient client: clients) {
+			for (HTTPClient client : clients) {
 				try {
 					courses.addAll(XuetangX.getCurrentCourses(client));
 				} catch (IOException e) {
@@ -231,12 +201,12 @@ public class CourseListActivity extends ListActivity {
 			}
 			return courses;
 		}
-		
+
 		@Override
 		protected void onPostExecute(ArrayList<CurrentCourseItem> result) {
 			this.items.addAll(result);
 			actualListView.setAdapter(mAdapter);
 		}
-		
+
 	}
 }
