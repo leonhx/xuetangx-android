@@ -2,21 +2,7 @@
 <resources>
 
     <string name="app_name">XuetangX</string>
-    <string name="login_email_hint">Email</string>
-    <string name="login_password_hint">Password</string>
-    <string name="login_button">Sign In</string>
-    <string name="login_button_disbled">Signing In</string>
-    <string name="login_failed">Log In Failed!</string>
-    <string name="title_activity_tweet_list">Tweet List</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_post">Post</string>
-    <string name="post_hint">Share something with friends!</string>
-    <string name="post_to">Post to</string>
-    <string name="title_activity_post">Post</string>
-    <string name="post_text_count">0</string>
-    <string name="action_favorite">Favorite</string>
-    <string name="action_share">Share</string>
-    <string name="action_send">Send!</string>
+    
     <string name="action_refresh">Refresh</string>
 
 </resources>

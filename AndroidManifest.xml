@@ -34,36 +34,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.LoginActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="com.leonhuang.xuetangx.CourseListActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.leonhuang.xuetangx.CourseDetailActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="com.leonhuang.xuetangx.CourseListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.leonhuang.xuetangx.CourseListActivity" />
-        </activity>
-        <activity
-            android:name="com.leonhuang.xuetangx.PostActivity"
-            android:label="@string/title_activity_post"
-            android:parentActivityName="com.leonhuang.xuetangx.CourseListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.leonhuang.xuetangx.CourseListActivity" />
-        </activity>
-        <activity
-            android:name="com.leonhuang.xuetangx.FavoActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.renn.rennsdk.oauth.OAuthActivity"
             android:configChanges="orientation|navigation|keyboardHidden" />
+        <activity
+            android:name="com.leonhuang.xuetangx.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
 
     <use>

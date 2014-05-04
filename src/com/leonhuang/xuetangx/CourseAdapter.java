@@ -44,9 +44,9 @@ public class CourseAdapter extends ArrayAdapter<CurrentCourseItem> {
 			text.setText(course.getUpdateDate() + "更新："
 					+ course.getUpdateInfo());
 		} else {
-			text.setText("此课程尚未开始");
+			text.setText(R.string.course_not_start);;
 		}
-		SimpleDateFormat df = new SimpleDateFormat("yyyy年mm月dd日", Locale.CHINA);
+		SimpleDateFormat df = new SimpleDateFormat("开课时间：yyyy年mm月dd日", Locale.CHINA);
 		date.setText(df.format(course.getStartDate()));
 		new DownloadImageTask((ImageView) view.findViewById(R.id.tweetAvatar))
 				.execute(XuetangX.absPath(course.getImgPath()));
