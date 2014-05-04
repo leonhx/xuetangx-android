@@ -46,7 +46,7 @@ public class CourseListActivity extends ListActivity {
 
 		Intent intent = getIntent();
 		final HTTPClient client = (HTTPClient) Client.loadJSON(intent
-				.getStringExtra(LoginActivity.CLIENT_JSON));
+				.getStringExtra(MainActivity.CLIENT_JSON));
 
 		new UpdateUserInfoTask().execute(client);
 
@@ -140,12 +140,12 @@ public class CourseListActivity extends ListActivity {
 			new GetDataTask().execute();
 			mPullRefreshListView.setRefreshing(false);
 			break;
-		case R.id.action_post:
-			openPost();
-			return true;
-		case R.id.action_favorite:
-			openFavorite();
-			return true;
+//		case R.id.action_post:
+//			openPost();
+//			return true;
+//		case R.id.action_favorite:
+//			openFavorite();
+//			return true;
 		case R.id.action_settings:
 			openSettings();
 			return true;

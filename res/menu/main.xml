@@ -1,20 +1,12 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:id="@+id/action_post"
-        android:icon="@drawable/ic_action_edit"
-        android:title="@string/action_post"
-        android:showAsAction="always" />
-    
-    <item
-        android:id="@+id/action_favorite"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_favorite"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.leonhuang.xuetangx.MainActivity" >
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="200"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
 
 </menu>
