@@ -85,12 +85,10 @@ public class CourseListActivity extends ListActivity {
 		ListView actualListView = mPullRefreshListView.getRefreshableView();
 
 		registerForContextMenu(actualListView);
-		Toast.makeText(this, "afsaf", Toast.LENGTH_SHORT).show();
 
-		mListItems = new LinkedList<CurrentCourseItem>();		
-		new GetCoursesTask(mListItems).execute(client);
-
+		mListItems = new LinkedList<CurrentCourseItem>();
 		mAdapter = new CourseAdapter(this, mListItems);
+		new GetCoursesTask(mListItems, mAdapter, actualListView).execute(client);
 
 		SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(
 				this);
@@ -98,8 +96,6 @@ public class CourseListActivity extends ListActivity {
 		soundListener.addSoundEvent(State.RESET, R.raw.reset_sound);
 		soundListener.addSoundEvent(State.REFRESHING, R.raw.refreshing_sound);
 		mPullRefreshListView.setOnPullEventListener(soundListener);
-
-		actualListView.setAdapter(mAdapter);
 	}
 
 	@Override
@@ -171,28 +167,30 @@ public class CourseListActivity extends ListActivity {
 		Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
 	}
 
-	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+	private class GetDataTask extends AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
 
 		@Override
-		protected String[] doInBackground(Void... params) {
-			// Simulates a background job.
-			try {
-				Thread.sleep(4000);
-			} catch (InterruptedException e) {
+		protected ArrayList<CurrentCourseItem> doInBackground(
+				HTTPClient... clients) {
+			ArrayList<CurrentCourseItem> courses = new ArrayList<CurrentCourseItem>();
+			for (HTTPClient client: clients) {
+				try {
+					courses.addAll(XuetangX.getCurrentCourses(client));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			return null;
+			return courses;
 		}
-
+		
 		@Override
-		protected void onPostExecute(String[] result) {
-			// mListItems.addFirst("Added after refresh...");
+		protected void onPostExecute(ArrayList<CurrentCourseItem> result) {
+			mListItems.addAll(result);
 			mAdapter.notifyDataSetChanged();
-
-			// Call onRefreshComplete when the list has been refreshed.
 			mPullRefreshListView.onRefreshComplete();
-
 			super.onPostExecute(result);
 		}
+		
 	}
 	
 	private class UpdateUserInfoTask extends AsyncTask<HTTPClient, Void, Void> {
@@ -211,9 +209,13 @@ public class CourseListActivity extends ListActivity {
 
 	private class GetCoursesTask extends AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
 		LinkedList<CurrentCourseItem> items;
+		CourseAdapter mAdapter;
+		ListView actualListView;
 		
-		public GetCoursesTask(LinkedList<CurrentCourseItem> items) {
+		public GetCoursesTask(LinkedList<CurrentCourseItem> items, CourseAdapter mAdapter, ListView actualListView) {
 			this.items = items;
+			this.mAdapter = mAdapter;
+			this.actualListView = actualListView;
 		}
 
 		@Override
@@ -233,6 +235,7 @@ public class CourseListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(ArrayList<CurrentCourseItem> result) {
 			this.items.addAll(result);
+			actualListView.setAdapter(mAdapter);
 		}
 		
 	}
