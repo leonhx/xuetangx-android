@@ -4,8 +4,8 @@
     <string name="app_name">XuetangX</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
-    <string name="login_button">Log In</string>
-    <string name="login_button_disbled">Logging In</string>
+    <string name="login_button">Sign In</string>
+    <string name="login_button_disbled">Signing In</string>
     <string name="login_failed">Log In Failed!</string>
     <string name="title_activity_tweet_list">Tweet List</string>
     <string name="hello_world">Hello world!</string>
