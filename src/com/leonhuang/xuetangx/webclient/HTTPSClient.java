@@ -41,8 +41,10 @@ public class HTTPSClient extends Client {
 	}
 
 	private Response react(HttpsURLConnection con) throws IOException {
-		cookie.update(Cookie.fromString(con.getHeaderField("Set-Cookie")));
-		
+		if (null != cookie) {
+			cookie.update(Cookie.fromString(con.getHeaderField("Set-Cookie")));
+		}
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new GZIPInputStream(con.getInputStream())));
 		StringBuilder sb = new StringBuilder();
@@ -79,7 +81,7 @@ public class HTTPSClient extends Client {
 			}
 		}
 	}
-	
+
 	@Override
 	public String type() {
 		return "HTTPS";

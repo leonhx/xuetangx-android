@@ -17,8 +17,8 @@ public class CurrentCourseItem {
 	private CurrentCourseItem() {
 	}
 
-	public static CurrentCourseItem NotStartedCourse(String img_path, Date start_date,
-			String university, String id, String title) {
+	public static CurrentCourseItem NotStartedCourse(String img_path,
+			Date start_date, String university, String id, String title) {
 		CurrentCourseItem self = new CurrentCourseItem();
 		self.is_started = false;
 		self.img_path = img_path;
@@ -29,9 +29,9 @@ public class CurrentCourseItem {
 		return self;
 	}
 
-	public static CurrentCourseItem StartedCourse(String img_path, Date start_date,
-			String university, String id, String title, String path,
-			String update_info, String update_date) {
+	public static CurrentCourseItem StartedCourse(String img_path,
+			Date start_date, String university, String id, String title,
+			String path, String update_info, String update_date) {
 		CurrentCourseItem self = NotStartedCourse(img_path, start_date,
 				university, id, title);
 		self.is_started = true;
@@ -40,7 +40,7 @@ public class CurrentCourseItem {
 		self.update_date = update_date;
 		return self;
 	}
-	
+
 	public String getImgPath() {
 		return img_path;
 	}
