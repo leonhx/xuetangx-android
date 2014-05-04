@@ -100,9 +100,14 @@ public class CourseListActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		CurrentCourseItem course = mListItems.get(position - 1);
+		String url = mListItems.get(position - 1).getPath();
+		if (!course.isStarted()) {
+			url = "/courses/" + course.getUniversity() + "/" + course.getId()
+					+ "/_/about";
+		}
 		Intent intent = new Intent(this, CourseDetailActivity.class);
-		intent.putExtra(COURSE_URL,
-				XuetangX.absPath(mListItems.get(position - 1).getPath()));
+		intent.putExtra(COURSE_URL, XuetangX.absPath(url));
 		startActivity(intent);
 	}
 
