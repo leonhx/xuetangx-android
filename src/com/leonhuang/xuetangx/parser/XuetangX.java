@@ -63,13 +63,13 @@ public class XuetangX {
 		Response resp = client.get(new URL(HTTP + ROOT + DASHBOARD));
 		String page = resp.getContent();
 		Pattern nn_pattern = Pattern
-				.compile("<h1 class=\"user-name\">([^<]+)</h1>");
+				.compile("<h1 class=\"user-name\">([^<]*)</h1>");
 		Matcher nn = nn_pattern.matcher(page);
 		if (nn.find()) {
 			client.setUserNickname(nn.group(1));
 		}
 		Pattern name_pattern = Pattern
-				.compile("<span class=\"data\">([^<]+)</span>");
+				.compile("<span class=\"data\">([^<]*)</span>");
 		Matcher name = name_pattern.matcher(page);
 		if (name.find()) {
 			client.setUserName(name.group(1));
