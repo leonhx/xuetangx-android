@@ -1,4 +1,4 @@
-package com.leonhuang.xuetangx;
+package com.leonhuang.xuetangx.android;
 
 import java.io.IOException;
 
@@ -22,9 +22,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.leonhuang.xuetangx.component.User;
-import com.leonhuang.xuetangx.parser.XuetangX;
-import com.leonhuang.xuetangx.webclient.Response;
+import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.Student;
 
 public class LoginActivity extends Activity {
 
@@ -101,11 +100,13 @@ public class LoginActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.action_forgot_password:
-			intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.xuetangx.com/login"));
+			intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("https://www.xuetangx.com/login"));
 			startActivity(intent);
 			break;
 		case R.id.action_register:
-			intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.xuetangx.com/register"));
+			intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("https://www.xuetangx.com/register"));
 			startActivity(intent);
 			break;
 		default:
@@ -222,19 +223,17 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			Response resp;
 
 			try {
-				resp = XuetangX.logIn(new User(mEmail, mPassword));
+				boolean success = Student.verify(mEmail, mPassword);
+				if (!success) {
+					throw new IOException(
+							"Not real exception. Log in failed actually!");
+				}
 			} catch (IOException e) {
 				return false;
 			}
 
-			if (!XuetangX.isLogIn(resp)) {
-				return false;
-			}
-
-			clientJSON = resp.getClient().dumpJSON();
 			return true;
 		}
 
@@ -244,7 +243,7 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				MainActivity.saveClientJSON(clientJSON, LoginActivity.this);
+				MainActivity.saveUserInfo(mEmail, mPassword, LoginActivity.this);
 				LoginActivity.this.startCourseListActivity(clientJSON);
 				finish();
 			} else {
@@ -263,7 +262,6 @@ public class LoginActivity extends Activity {
 
 	private void startCourseListActivity(String clientJSON) {
 		Intent intent = new Intent(LoginActivity.this, CourseListActivity.class);
-		intent.putExtra(MainActivity.CLIENT_JSON, clientJSON);
 		startActivity(intent);
 	}
 }

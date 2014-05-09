@@ -1,4 +1,4 @@
-package com.leonhuang.xuetangx;
+package com.leonhuang.xuetangx.android;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
 import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
 import com.leonhuang.pulltorefresh.library.extras.SoundPullEventListener;
-import com.leonhuang.xuetangx.component.CurrentCourseItem;
-import com.leonhuang.xuetangx.parser.XuetangX;
-import com.leonhuang.xuetangx.webclient.Client;
-import com.leonhuang.xuetangx.webclient.HTTPClient;
+import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.Student;
+import com.leonhuang.xuetangx.data.SimpleCourseInfo;
+import com.leonhuang.xuetangx.data.StudentInfo;
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennClient.LoginListener;
 import com.renn.rennsdk.RennExecutor.CallBack;
@@ -38,9 +38,7 @@ import com.renn.rennsdk.param.PutShareUrlParam;
 public class CourseListActivity extends ListActivity {
 	public static final String COURSE_URL = "com.leonhuang.xuetangx.CourseListActivity.CourseUrl";
 
-	public static HTTPClient client = null;
-
-	private LinkedList<CurrentCourseItem> mListItems;
+	private LinkedList<SimpleCourseInfo> mListItems;
 	private PullToRefreshListView mPullRefreshListView;
 	private CourseAdapter mAdapter;
 
@@ -52,13 +50,6 @@ public class CourseListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_list);
-
-		if (null == client) {
-			Intent intent = getIntent();
-			client = (HTTPClient) Client.loadJSON(intent
-					.getStringExtra(MainActivity.CLIENT_JSON));
-			new UpdateUserInfoTask().execute(client);
-		}
 
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
 
@@ -101,15 +92,15 @@ public class CourseListActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO
-//		CurrentCourseItem course = mListItems.get(position - 1);
-//		String url = mListItems.get(position - 1).getPath();
-//		if (!course.isStarted()) {
-//			url = "/courses/" + course.getUniversity() + "/" + course.getId()
-//					+ "/_/about";
-//		}
-//		Intent intent = new Intent(this, CourseDetailActivity.class);
-//		intent.putExtra(COURSE_URL, XuetangX.absPath(url));
-//		startActivity(intent);
+		// CurrentCourseItem course = mListItems.get(position - 1);
+		// String url = mListItems.get(position - 1).getPath();
+		// if (!course.isStarted()) {
+		// url = "/courses/" + course.getUniversity() + "/" + course.getId()
+		// + "/_/about";
+		// }
+		// Intent intent = new Intent(this, CourseDetailActivity.class);
+		// intent.putExtra(COURSE_URL, XuetangX.absPath(url));
+		// startActivity(intent);
 	}
 
 	@Override
@@ -217,7 +208,7 @@ public class CourseListActivity extends ListActivity {
 	}
 
 	private class GetDataTask extends
-			AsyncTask<HTTPClient, Void, ArrayList<CurrentCourseItem>> {
+			AsyncTask<Void, Void, ArrayList<CurrentCourseItem>> {
 
 		@Override
 		protected ArrayList<CurrentCourseItem> doInBackground(
@@ -242,20 +233,6 @@ public class CourseListActivity extends ListActivity {
 			super.onPostExecute(result);
 		}
 
-	}
-
-	private class UpdateUserInfoTask extends AsyncTask<HTTPClient, Void, Void> {
-
-		@Override
-		protected Void doInBackground(HTTPClient... clients) {
-			try {
-				for (HTTPClient client : clients)
-					XuetangX.updateUserInfo(client);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
 	}
 
 	private class GetCoursesTask extends

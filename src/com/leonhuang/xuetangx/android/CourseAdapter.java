@@ -1,4 +1,4 @@
-package com.leonhuang.xuetangx;
+package com.leonhuang.xuetangx.android;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -17,8 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leonhuang.xuetangx.component.CurrentCourseItem;
-import com.leonhuang.xuetangx.parser.XuetangX;
+import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.android.component.CurrentCourseItem;
+import com.leonhuang.xuetangx.android.parser.XuetangX;
 
 public class CourseAdapter extends ArrayAdapter<CurrentCourseItem> {
 	private LayoutInflater inflater;
