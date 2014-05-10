@@ -12,8 +12,6 @@ Left Side Panel:
 TODO
 ====
 
-+ Redesign architecture
-
 + Put course list into a fragment
 
 + The circle's location when refresh
