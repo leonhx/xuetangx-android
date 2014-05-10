@@ -16,12 +16,12 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		UserInfo user = UserInfo.load(MainActivity.this);
-		if (null != user) {
-			tryLogin(user.getEmail(), user.getPassword());
-		} else {
-			MainActivity.this.startLoginActivity();
-		}
+//		UserInfo user = UserInfo.load(MainActivity.this);
+//		if (null != user) {
+//			tryLogin(user.getEmail(), user.getPassword());
+//		} else {
+//			MainActivity.this.startLoginActivity();
+//		}
 	}
 
 	private void tryLogin(final String email, final String password) {

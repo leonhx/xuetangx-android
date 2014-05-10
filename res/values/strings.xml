@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">XuetangX</string>
-    
+    <string name="app_slogan">Make all men equal in education</string>
     <string name="action_refresh">Refresh</string>
 
 </resources>

@@ -13,13 +13,18 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_nav_up</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
     </style>
-    
+
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
     <style name="MyActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:displayOptions">showHome|useLogo</item>
+    </style>
+
+    <style name="NoActionBar" parent="@android:style/Theme.Holo.Light">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>
