@@ -1,31 +1,58 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.leonhuang.xuetangx.android.MainActivity"
-    tools:ignore="MergeRootFrame"
-    android:orientation="vertical" >
+    tools:context="com.leonhuang.example.MainActivity" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:contentDescription="@string/app_name"
-        android:layout_gravity="center"
+    <LinearLayout
+        android:id="@+id/main_msg_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.leonhuang.xuetangx.android.MainActivity"
+        tools:ignore="MergeRootFrame" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/xuetangx" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/app_slogan"
+            android:textColor="#800080" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/main_login_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/xuetangx" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_gravity="center"
-        android:textColor="#800080"
-        android:text="@string/app_slogan" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
-</LinearLayout>
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
 
+        <TextView
+            android:id="@+id/main_login_status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/login_progress_signing_in"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+</merge>

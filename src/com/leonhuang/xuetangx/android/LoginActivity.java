@@ -220,7 +220,7 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -241,7 +241,6 @@ public class LoginActivity extends Activity {
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
-			showProgress(false);
 
 			if (success) {
 				new UpdateUserInfoTask(new UserInfo(mEmail, mPassword, "", ""),
@@ -249,14 +248,17 @@ public class LoginActivity extends Activity {
 
 							@Override
 							public void run() {
+								LoginActivity.this.showProgress(false);
 								LoginActivity.this.startCourseListActivity();
 							}
 						}).execute();
 			} else {
+				showProgress(false);
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
+
 		}
 
 		@Override
