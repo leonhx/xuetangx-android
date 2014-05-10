@@ -1,16 +1,13 @@
 package com.leonhuang.xuetangx.android;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.Student;
+import com.leonhuang.xuetangx.android.asyntask.UpdateUserInfoTask;
 import com.leonhuang.xuetangx.android.model.UserInfo;
-import com.leonhuang.xuetangx.data.StudentInfo;
 
 public class MainActivity extends Activity {
 
@@ -39,7 +36,15 @@ public class MainActivity extends Activity {
 					}
 					UserInfo user = new UserInfo(email, password, "", "");
 					user.save(MainActivity.this);
-					new UpdateUserInfoTask(user).execute();
+					new UpdateUserInfoTask(user, MainActivity.this,
+							new Runnable() {
+
+								@Override
+								public void run() {
+									MainActivity.this.startCourseListActivity();
+
+								}
+							}).execute();
 				} catch (Exception e) {
 					e.printStackTrace();
 					MainActivity.this.startLoginActivity();
@@ -60,25 +65,4 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	private class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
-		UserInfo user;
-
-		public UpdateUserInfoTask(UserInfo user) {
-			this.user = user;
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				StudentInfo studentInfo = Student.info(user.getEmail(),
-						user.getPassword());
-				user.update(studentInfo.getName(), studentInfo.getNickname());
-				user.save(MainActivity.this);
-				MainActivity.this.startCourseListActivity();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
 }

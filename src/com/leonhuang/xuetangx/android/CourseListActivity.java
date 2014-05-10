@@ -24,8 +24,10 @@ import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
 import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
 import com.leonhuang.pulltorefresh.library.extras.SoundPullEventListener;
+import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.Student;
+import com.leonhuang.xuetangx.android.model.UserInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
 import com.leonhuang.xuetangx.data.StudentInfo;
 import com.renn.rennsdk.RennClient;
@@ -208,20 +210,17 @@ public class CourseListActivity extends ListActivity {
 	}
 
 	private class GetDataTask extends
-			AsyncTask<Void, Void, ArrayList<CurrentCourseItem>> {
+			AsyncTask<Void, Void, ArrayList<SimpleCourseInfo>> {
 
 		@Override
-		protected ArrayList<CurrentCourseItem> doInBackground(
-				HTTPClient... clients) {
-			ArrayList<CurrentCourseItem> courses = new ArrayList<CurrentCourseItem>();
-			for (HTTPClient client : clients) {
-				try {
-					courses.addAll(XuetangX.getCurrentCourses(client));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		protected ArrayList<SimpleCourseInfo> doInBackground(Void... params) {
+			try {
+				UserInfo user = UserInfo.load(CourseListActivity.this);
+				return Courses.selected(user.getEmail(), user.getPassword());
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			return courses;
+			return new ArrayList<SimpleCourseInfo>();
 		}
 
 		@Override

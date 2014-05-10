@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.Student;
+import com.leonhuang.xuetangx.android.asyntask.UpdateUserInfoTask;
+import com.leonhuang.xuetangx.android.model.UserInfo;
 
 public class LoginActivity extends Activity {
 
@@ -219,7 +221,6 @@ public class LoginActivity extends Activity {
 	 * the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		String clientJSON;
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -243,9 +244,14 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				MainActivity.saveUserInfo(mEmail, mPassword, LoginActivity.this);
-				LoginActivity.this.startCourseListActivity(clientJSON);
-				finish();
+				new UpdateUserInfoTask(new UserInfo(mEmail, mPassword, "", ""),
+						LoginActivity.this, new Runnable() {
+
+							@Override
+							public void run() {
+								LoginActivity.this.startCourseListActivity();
+							}
+						}).execute();
 			} else {
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
@@ -260,8 +266,9 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	private void startCourseListActivity(String clientJSON) {
+	private void startCourseListActivity() {
 		Intent intent = new Intent(LoginActivity.this, CourseListActivity.class);
 		startActivity(intent);
+		finish();
 	}
 }
