@@ -38,24 +38,6 @@ public class MainActivity extends Activity {
 
 	private void tryLogin(final String email, final String password) {
 		new UserLoginTask(email, password).execute();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					boolean success = Student.verify(email, password);
-					if (!success) {
-						throw new Exception(
-								"Not real exception. Log in failed actually!");
-					}
-					UserInfo user = new UserInfo(email, password, "", "");
-					user.save(MainActivity.this);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					MainActivity.this.startLoginActivity();
-				}
-			}
-		}).start();
 	}
 
 	/**
