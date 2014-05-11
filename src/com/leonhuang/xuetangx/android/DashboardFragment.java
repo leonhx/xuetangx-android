@@ -14,9 +14,9 @@ import com.leonhuang.xuetangx.R;
 public class DashboardFragment extends Fragment implements
 		ActionBar.TabListener {
 
-	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 
-	ViewPager mViewPager;
+	private ViewPager mViewPager;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
