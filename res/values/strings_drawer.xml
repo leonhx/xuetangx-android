@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>Dashboard</item>
+        <item>Search</item>
+        <item>Browse</item>
+        <item>My Downloads</item>
+        <item>Feedback</item>
+        <item>About</item>
+        <item>Logout</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+</resources>

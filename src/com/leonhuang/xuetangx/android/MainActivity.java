@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void startCourseListActivity() {
-		Intent intent = new Intent(MainActivity.this, OldCourseListActivity.class);
+		Intent intent = new Intent(MainActivity.this, CourseActivity.class);
 		startActivity(intent);
 		finish();
 	}

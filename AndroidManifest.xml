@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.leonhuang.xuetangx"
     android:versionCode="0"
-    android:versionName="0.0.4" >
+    android:versionName="0.0.4(1)" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,8 +26,8 @@
         android:theme="@style/MyTheme" >
         <activity
             android:name="com.leonhuang.xuetangx.android.MainActivity"
-            android:theme="@style/NoActionBar"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,6 +45,10 @@
             android:name="com.leonhuang.xuetangx.android.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.android.CourseActivity"
+            android:label="@string/title_activity_course_list" >
         </activity>
     </application>
 
