@@ -14,9 +14,9 @@ import com.leonhuang.xuetangx.R;
 public class DashboardFragment extends Fragment implements
 		ActionBar.TabListener {
 
-	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 
-	private ViewPager mViewPager;
+	ViewPager mViewPager;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -30,11 +30,6 @@ public class DashboardFragment extends Fragment implements
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActivity().getActionBar();
-
-		// Specify that the Home/Up button should not be enabled, since there is
-		// no hierarchical
-		// parent.
-		actionBar.setHomeButtonEnabled(false);
 
 		// Specify that we will be displaying tabs in the action bar.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
