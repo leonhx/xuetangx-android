@@ -1,6 +1,13 @@
-MainPage => not logged in : Log in Page
-            logged in     : My Courses / Dashboard
+XuetangX
+========
 
+Android client for XuetangX (http://www.xuetangx.com/)
+
+
+Design
+-----
+
+```
 Left Side Panel:
     My Courses / Dashboard
     Search
@@ -8,29 +15,11 @@ Left Side Panel:
     Feedback => 发送邮件
     Logout
     version number
+```
 
-TODO
-====
 
-+ Put course list into a fragment
+### Notes
 
-+ The circle's location when refresh
++ remove back button and refresh button
 
-+ Remove action bar icon - refresh
-
-+ Implement navigation drawer, which the project MainActivity in Eclipse
-shows
-
-+ Click twice to exit
-
-+ 加载个人主页的课程信息时一定要显示正在加载之类的（最好是直接利用GetDataTask）
-
-+ CourseInfo, CourseAbout, CourseWare
-
-+ CourseVideoPlayer
-
-+ All courses to browse
-
-+ Cache and network status check
-
-+ Search courses
++ cache and check network status before access internet
