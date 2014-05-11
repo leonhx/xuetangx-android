@@ -269,7 +269,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void startCourseListActivity() {
-		Intent intent = new Intent(LoginActivity.this, CourseListActivity.class);
+		Intent intent = new Intent(LoginActivity.this, OldCourseListActivity.class);
 		startActivity(intent);
 		finish();
 	}

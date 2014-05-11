@@ -34,7 +34,7 @@ import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.PutShareUrlParam;
 
-public class CourseListActivity extends ListActivity {
+public class OldCourseListActivity extends ListActivity {
 	public static final String COURSE_URL = "com.leonhuang.xuetangx.CourseListActivity.CourseUrl";
 
 	private LinkedList<SimpleCourseInfo> mListItems;
@@ -175,7 +175,7 @@ public class CourseListActivity extends ListActivity {
 								new CallBack() {
 									@Override
 									public void onSuccess(RennResponse response) {
-										Toast.makeText(CourseListActivity.this,
+										Toast.makeText(OldCourseListActivity.this,
 												"分享成功", Toast.LENGTH_SHORT)
 												.show();
 									}
@@ -183,14 +183,14 @@ public class CourseListActivity extends ListActivity {
 									@Override
 									public void onFailed(String errorCode,
 											String errorMessage) {
-										Toast.makeText(CourseListActivity.this,
+										Toast.makeText(OldCourseListActivity.this,
 												"分享失败", Toast.LENGTH_SHORT)
 												.show();
 									}
 
 								});
 					} catch (RennException e) {
-						Toast.makeText(CourseListActivity.this, "分享失败",
+						Toast.makeText(OldCourseListActivity.this, "分享失败",
 								Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
@@ -198,7 +198,7 @@ public class CourseListActivity extends ListActivity {
 
 				@Override
 				public void onLoginCanceled() {
-					Toast.makeText(CourseListActivity.this,
+					Toast.makeText(OldCourseListActivity.this,
 							getString(R.string.login_failed),
 							Toast.LENGTH_SHORT).show();
 				}
@@ -225,7 +225,7 @@ public class CourseListActivity extends ListActivity {
 		@Override
 		protected ArrayList<SimpleCourseInfo> doInBackground(Void... params) {
 			try {
-				UserInfo user = UserInfo.load(CourseListActivity.this);
+				UserInfo user = UserInfo.load(OldCourseListActivity.this);
 				return Courses.selected(user.getEmail(), user.getPassword());
 			} catch (IOException e) {
 				e.printStackTrace();
