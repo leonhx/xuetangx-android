@@ -48,7 +48,7 @@ public class OldCourseListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_course_list);
+		setContentView(R.layout.activity_old_course_list);
 
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
 
