@@ -22,8 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
-import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 
 public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 	private LayoutInflater inflater;
@@ -46,14 +46,8 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 		TextView date = (TextView) view.findViewById(R.id.tweetDate);
 		TextView platform = (TextView) view.findViewById(R.id.tweetSource);
 		final SimpleCourseInfo course = items.get(position);
-		title.setText(course.getId() + " " + course.getTitle());
-		if (course.getStatus() == SimpleCourseStatus.CURRENT) {
-			text.setText(R.string.course_current);
-		} else if (course.getStatus() == SimpleCourseStatus.UPCOMING) {
-			text.setText(R.string.course_upcoming);
-		} else {
-			text.setText(R.string.course_past);
-		}
+		title.setText(course.getId());
+		text.setText(course.getTitle());
 		SimpleDateFormat df = new SimpleDateFormat(
 				activity.getString(R.string.course_start_date_format),
 				Locale.CHINA);
@@ -88,6 +82,12 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 				return BitmapFactory.decodeStream(activity
 						.openFileInput(urldisplay.replaceAll("/", "")));
 			} catch (FileNotFoundException e1) {
+				if (!new NetworkConnectivityManager(activity)
+						.isConnectingViaWifiOrWiMAX()) {
+					Log.i("Network", "Using Mobile Data");
+					return null;
+				}
+
 				Bitmap mIcon11 = null;
 				try {
 					InputStream in = new java.net.URL(urldisplay).openStream();
@@ -103,7 +103,12 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 		}
 
 		protected void onPostExecute(Bitmap result) {
-			bmImage.setImageBitmap(result);
+			if (null != result) {
+				bmImage.setImageBitmap(result);
+			} else {
+				bmImage.setImageDrawable(activity.getResources().getDrawable(
+						R.drawable.placeholder));
+			}
 		}
 	}
 

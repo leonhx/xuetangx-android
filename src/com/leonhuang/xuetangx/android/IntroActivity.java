@@ -89,7 +89,7 @@ public class IntroActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			if (!new NetworkConnectivityManager(IntroActivity.this)
-					.isConnectingToInternet()) {
+					.isConnectingToInternet(true)) {
 				return null;
 			}
 

@@ -1,8 +1,16 @@
 package com.leonhuang.xuetangx.android;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -15,9 +23,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
@@ -33,25 +41,27 @@ import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.PutShareUrlParam;
 
-public class CourseListFragment extends ListFragment {
-	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseListFragment.CourseStatus";
+public class CourseCurrentListFragment extends ListFragment {
+	public static final String CACHE_COURSES_CURRENT = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Current";
 
 	private static final String RENREN_APP_ID = "267586";
 	private static final String RENREN_API_KEY = "89137a23b30d4a9d9b1acd8c0faaba40";
 	private static final String RENREN_SECRET_KEY = "7e611e75794e474a98f12c872d731ba5";
 
+	private static final int RENREN_ID = 0;
+
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private final ArrayList<SimpleCourseInfo> mListItems = new ArrayList<SimpleCourseInfo>();
 	private SimpleCourseStatus courseStatus;
+	private final ArrayList<SimpleCourseInfo> mListItems = new ArrayList<SimpleCourseInfo>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Bundle args = getArguments();
-		courseStatus = (SimpleCourseStatus) args.getSerializable(COURSE_STATUS);
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
-				R.layout.fragment_course_list, container, false);
+				R.layout.fragment_upcoming_course_list, container, false);
+		Log.e("F", String.valueOf(mSwipeRefreshLayout));
+
 		mSwipeRefreshLayout.setColorScheme(R.color.holo_green_dark,
 				R.color.holo_orange_dark, R.color.holo_blue_bright,
 				R.color.holo_red_dark);
@@ -65,21 +75,21 @@ public class CourseListFragment extends ListFragment {
 
 			@Override
 			public void run() {
+				if (courseStatus != SimpleCourseStatus.UPCOMING) {
+					registerForContextMenu(listView);
+				}
 				listView.setAdapter(adapter);
-
 			}
 		}).execute();
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				Log.e(getClass().getSimpleName(), "refresh");
 				new GetDataTask(new Runnable() {
 
 					@Override
 					public void run() {
 						adapter.notifyDataSetInvalidated();
-
 					}
 				}).execute();
 			}
@@ -101,7 +111,7 @@ public class CourseListFragment extends ListFragment {
 				R.string.course_share_to));
 		menu.add(
 				0,
-				0,
+				RENREN_ID,
 				0,
 				mSwipeRefreshLayout.getResources().getString(
 						R.string.share_renren));
@@ -113,10 +123,35 @@ public class CourseListFragment extends ListFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
+		int position = info.position - 1;
 
+		// SimpleCourseInfo course = mListItems.get(position);
+		//
+		// StringBuilder commentBuilder = new StringBuilder();
+		// commentBuilder.append("我正在#学堂在线#学习来自 ");
+		// commentBuilder.append(course.getUniversity());
+		// commentBuilder.append(" 的课程《");
+		// commentBuilder.append(course.getTitle());
+		// commentBuilder.append("》，来和我一起学习吧！");
+		// final String comment = commentBuilder.toString();
+		//
+		// String cinfo = course.getCourseInfoUrl();
+		// if (cinfo.endsWith("info")) {
+		// cinfo = cinfo.substring(0, cinfo.length() - 4) + "about";
+		// }
+		// final String url = cinfo;
+		//
 		switch (item.getItemId()) {
-		case 0:
-			shareToRenren(info.position);
+		case RENREN_ID:
+			// shareToRenren(comment, url);
+			Log.i("FUCK",
+					String.valueOf(position) + " "
+							+ String.valueOf(mListItems.size()));
+			Toast.makeText(
+					getActivity(),
+					String.valueOf(position) + " "
+							+ String.valueOf(mListItems.size()),
+					Toast.LENGTH_SHORT).show();
 			break;
 		default:
 			break;
@@ -125,21 +160,7 @@ public class CourseListFragment extends ListFragment {
 		return super.onContextItemSelected(item);
 	}
 
-	private void shareToRenren(int position) {
-		SimpleCourseInfo course = mListItems.get(position - 1);
-		StringBuilder commentBuilder = new StringBuilder();
-		commentBuilder.append("我正在#学堂在线#学习来自 ");
-		commentBuilder.append(course.getUniversity());
-		commentBuilder.append(" 的课程《");
-		commentBuilder.append(course.getTitle());
-		commentBuilder.append("》，来和我一起学习吧！");
-		final String comment = commentBuilder.toString();
-		String cinfo = course.getCourseInfoUrl();
-		if (cinfo.endsWith("info")) {
-			cinfo = cinfo.substring(0, cinfo.length() - 4) + "about";
-		}
-		final String url = cinfo;
-
+	private void shareToRenren(final String comment, final String url) {
 		final RennClient rennClient = RennClient.getInstance(getActivity());
 		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);
 		rennClient.setScope("publish_share publish_feed");
@@ -196,13 +217,19 @@ public class CourseListFragment extends ListFragment {
 
 		@Override
 		protected ArrayList<SimpleCourseInfo> doInBackground(Void... params) {
+			mSwipeRefreshLayout.setRefreshing(true);
+
+			ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
+
 			if (!new NetworkConnectivityManager(getActivity())
-					.isConnectingToInternet()) {
-				return null;
+					.isConnectingToInternet(false)) {
+				courses = loadCourses(courseStatus);
+				return courses;
 			}
+
 			try {
 				UserInfo user = UserInfo.load(getActivity());
-				ArrayList<SimpleCourseInfo> courses;
+
 				switch (courseStatus) {
 				case PAST:
 					courses = Courses.past(user.getEmail(), user.getPassword());
@@ -215,27 +242,22 @@ public class CourseListFragment extends ListFragment {
 					courses = Courses.upcoming(user.getEmail(),
 							user.getPassword());
 					break;
-				default:
-					courses = new ArrayList<SimpleCourseInfo>();
 				}
 				new SignInStatusManager(getActivity())
 						.checkSignInStatus(courses);
-				return courses;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return new ArrayList<SimpleCourseInfo>();
+
+			return courses;
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
 
-			if (null == result) {
-				return;
-			}
-
-			mListItems.removeAll(mListItems);
+			mListItems.clear();
 			mListItems.addAll(result);
+			saveCourses(result, courseStatus);
 
 			if (null != runOnPostExecute) {
 				runOnPostExecute.run();
@@ -245,6 +267,63 @@ public class CourseListFragment extends ListFragment {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
 
+	}
+
+	private void saveCourses(ArrayList<SimpleCourseInfo> courses,
+			SimpleCourseStatus status) {
+		String filename = getStoragePath(status);
+		if (null != filename) {
+			JSONArray coursesJSON = new JSONArray();
+			for (SimpleCourseInfo course : courses) {
+				coursesJSON.put(course.toJSON());
+			}
+
+			try {
+				FileOutputStream fos = getActivity().openFileOutput(filename,
+						Context.MODE_PRIVATE);
+				fos.write(coursesJSON.toString().getBytes());
+				fos.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private ArrayList<SimpleCourseInfo> loadCourses(SimpleCourseStatus status) {
+		ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
+
+		String filename = getStoragePath(status);
+		if (null != filename) {
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(getActivity().openFileInput(
+								filename)));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line);
+				}
+				JSONArray coursesJSON = new JSONArray(sb.toString());
+				for (int i = 0; i < coursesJSON.length(); i++) {
+					courses.add(SimpleCourseInfo.fromJSON(
+							coursesJSON.getJSONObject(i), status));
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return courses;
+	}
+
+	private String getStoragePath(SimpleCourseStatus status) {
+		return CACHE_COURSES_CURRENT;
 	}
 
 }

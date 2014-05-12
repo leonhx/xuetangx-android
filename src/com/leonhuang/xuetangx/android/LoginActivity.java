@@ -58,7 +58,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		new NetworkConnectivityManager(LoginActivity.this)
-				.isConnectingToInternet();
+				.isConnectingToInternet(true);
 
 		SharedPreferences sharedPref = getSharedPreferences(EXTRA_INFO,
 				Context.MODE_PRIVATE);
@@ -252,7 +252,7 @@ public class LoginActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			if (!new NetworkConnectivityManager(LoginActivity.this)
-					.isConnectingToInternet()) {
+					.isConnectingToInternet(true)) {
 				return false;
 			}
 

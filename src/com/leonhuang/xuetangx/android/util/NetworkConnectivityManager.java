@@ -16,7 +16,7 @@ public class NetworkConnectivityManager {
 		__activity = activity;
 	}
 
-	public boolean isConnectingToInternet() {
+	public boolean isConnectingToInternet(boolean toastIfNot) {
 		ConnectivityManager __cm = (ConnectivityManager) __activity
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (__cm != null) {
@@ -28,15 +28,17 @@ public class NetworkConnectivityManager {
 					}
 		}
 
-		__activity.runOnUiThread(new Runnable() {
+		if (toastIfNot) {
+			__activity.runOnUiThread(new Runnable() {
 
-			@Override
-			public void run() {
-				Toast.makeText(__activity, R.string.util_internet_inavail,
-						Toast.LENGTH_SHORT).show();
+				@Override
+				public void run() {
+					Toast.makeText(__activity, R.string.util_internet_inavail,
+							Toast.LENGTH_SHORT).show();
 
-			}
-		});
+				}
+			});
+		}
 
 		return false;
 	}
@@ -63,6 +65,10 @@ public class NetworkConnectivityManager {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isConnectingViaWifiOrWiMAX() {
+		return isConnectingViaWifi() || isConnectingViaWiMAX();
 	}
 
 }

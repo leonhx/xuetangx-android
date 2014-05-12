@@ -11,10 +11,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 ### TODO
 
-+ Past, Current, Upcoming courses list fragment (SimpleCourseInfo)
-
-+ Function the lists: pull to refresh and local storage to cache
-
 + Past and Upcoming and Current in this phase: click item and jump to the
 WebView(there should be an option to open it in browser). All can be shared to
 Renren
