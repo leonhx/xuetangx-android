@@ -20,7 +20,8 @@ Android client for XuetangX (http://www.xuetangx.com/)
 + Function the lists: pull to refresh and local storage to cache
 
 + Past and Upcoming and Current in this phase: click item and jump to the
-WebView(there should be an option to open it in browser)
+WebView(there should be an option to open it in browser). All can be shared to
+Renren
 
 + Logout: delete SharedPref of UserInfo
 
@@ -37,3 +38,5 @@ WebView(there should be an option to open it in browser)
 + Search
 
 + My Downloads
+
++ Share to: Weibo, QZone, WeChat
