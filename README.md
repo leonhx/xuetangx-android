@@ -11,8 +11,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 ### TODO
 
-+ CourseActivity: click twice to quit
-
 + Past, Current, Upcoming courses list fragment (SimpleCourseInfo)
 
 + Function the lists: pull to refresh and local storage to cache
