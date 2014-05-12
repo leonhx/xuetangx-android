@@ -2,22 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.leonhuang.example.MainActivity" >
 
-    <LinearLayout
+   <LinearLayout
         android:id="@+id/main_msg_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context="com.leonhuang.xuetangx.android.MainActivity"
         tools:ignore="MergeRootFrame" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/xuetangx" />
 
         <TextView
             android:id="@+id/textView1"
@@ -26,10 +17,13 @@
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
+            android:drawablePadding="20dp"
+            android:drawableTop="@drawable/xuetangx"
             android:text="@string/app_slogan"
             android:textColor="#800080" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/main_login_status"
         android:layout_width="wrap_content"
