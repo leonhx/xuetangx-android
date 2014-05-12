@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+public class DashboardPagerAdapter extends FragmentPagerAdapter {
 
-    public AppSectionsPagerAdapter(FragmentManager fm) {
+    public DashboardPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

@@ -14,7 +14,7 @@ import com.leonhuang.xuetangx.R;
 public class DashboardFragment extends Fragment implements
 		ActionBar.TabListener {
 
-	private AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+	private DashboardPagerAdapter mAppSectionsPagerAdapter;
 
 	private ViewPager mViewPager;
 
@@ -25,7 +25,7 @@ public class DashboardFragment extends Fragment implements
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getActivity()
+		mAppSectionsPagerAdapter = new DashboardPagerAdapter(getActivity()
 				.getSupportFragmentManager());
 
 		// Set up the ViewPager, attaching the adapter and setting up a listener
