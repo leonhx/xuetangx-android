@@ -7,11 +7,8 @@
 	<string name="course_share_to">Share the course to</string>
 	
 	<string name="share_renren">Renren</string>
-	
-	<string-array name="dashboard_tabs">
-        <item>Past</item>
-        <item>Current</item>
-        <item>Upcoming</item>
-    </string-array>
+	<string name="course_tab_upcoming">UPCOMING</string>
+	<string name="course_tab_current">CURRENT</string>
+	<string name="course_tab_past">PAST</string>
 
 </resources>

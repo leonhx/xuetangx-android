@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
 							@Override
 							public void run() {
 								MainActivity.this.showProgress(false);
-								MainActivity.this.startCourseListActivity();
+								MainActivity.this.startCourseActivity();
 							}
 						}).execute();
 			} else {
@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	private void startCourseListActivity() {
+	private void startCourseActivity() {
 		Intent intent = new Intent(MainActivity.this, CourseActivity.class);
 		startActivity(intent);
 		finish();

@@ -1,59 +1,64 @@
 package com.leonhuang.xuetangx.android;
 
-import com.leonhuang.xuetangx.R;
+import java.util.Map;
+
+import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 public class DashboardPagerAdapter extends FragmentPagerAdapter {
 
-    public DashboardPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
+	private Map<SimpleCourseStatus, String> courseTitleMap;
 
-    @Override
-    public Fragment getItem(int i) {
-        switch (i) {
-            default:
-                // The other sections of the app are dummy placeholders.
-                Fragment fragment = new PlaceholderFragment();
-                Bundle args = new Bundle();
-                fragment.setArguments(args);
-                return fragment;
-        }
-    }
+	public DashboardPagerAdapter(FragmentManager fm,
+			Map<SimpleCourseStatus, String> map) {
+		super(fm);
+		this.courseTitleMap = map;
+	}
 
-    @Override
-    public int getCount() {
-        return 3;
-    }
+	@Override
+	public Fragment getItem(int i) {
+		Fragment fragment = new CourseListFragment();
+		Bundle args = new Bundle();
+		SimpleCourseStatus status = positionToStatus(i);
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return "Section " + (position + 1);
-    }
-    
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-    	
-    	public static final String ARG_PLANET_NUMBER = "planet_number";
+		if (null != status) {
+			args.putSerializable(CourseListFragment.COURSE_STATUS, status);
+		}
 
-    	public PlaceholderFragment() {
-    	}
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-    	@Override
-    	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    			Bundle savedInstanceState) {
-    		View rootView = inflater.inflate(R.layout.fragment_placeholder,
-    				container, false);
-    		return rootView;
-    	}
-    }
+	@Override
+	public int getCount() {
+		return 3;
+	}
+
+	@Override
+	public CharSequence getPageTitle(int position) {
+		SimpleCourseStatus status = positionToStatus(position);
+		if (null != status) {
+			return courseTitleMap.get(status);
+		} else {
+			return "";
+		}
+	}
+
+	private SimpleCourseStatus positionToStatus(int position) {
+		switch (position) {
+		case 0:
+			return SimpleCourseStatus.PAST;
+		case 1:
+			return SimpleCourseStatus.CURRENT;
+		case 2:
+			return SimpleCourseStatus.UPCOMING;
+		default:
+			return null;
+		}
+	}
+
 }

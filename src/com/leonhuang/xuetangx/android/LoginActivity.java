@@ -249,7 +249,7 @@ public class LoginActivity extends Activity {
 							@Override
 							public void run() {
 								LoginActivity.this.showProgress(false);
-								LoginActivity.this.startCourseListActivity();
+								LoginActivity.this.startCourseActivity();
 							}
 						}).execute();
 			} else {
@@ -268,7 +268,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	private void startCourseListActivity() {
+	private void startCourseActivity() {
 		Intent intent = new Intent(LoginActivity.this, CourseActivity.class);
 		startActivity(intent);
 		finish();
