@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -27,11 +27,11 @@ import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 
 public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 	private LayoutInflater inflater;
-	private LinkedList<SimpleCourseInfo> items;
+	private ArrayList<SimpleCourseInfo> items;
 	private Activity activity;
 
 	public CourseAdapter(Activity activity,
-			LinkedList<SimpleCourseInfo> mListItems) {
+			ArrayList<SimpleCourseInfo> mListItems) {
 		super(activity, R.layout.row_course, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;
@@ -86,7 +86,7 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 			String urldisplay = urls[0];
 			try {
 				return BitmapFactory.decodeStream(activity
-						.openFileInput(urldisplay));
+						.openFileInput(urldisplay.replaceAll("/", "")));
 			} catch (FileNotFoundException e1) {
 				Bitmap mIcon11 = null;
 				try {
@@ -96,7 +96,7 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 					Log.e("Error", e.getMessage());
 					e.printStackTrace();
 				}
-				storeImage(mIcon11, urldisplay);
+				storeImage(mIcon11, urldisplay.replaceAll("/", ""));
 
 				return mIcon11;
 			}
@@ -108,7 +108,7 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 	}
 
 	private void storeImage(Bitmap image, String path) {
-		final String TAG = "Strore Image";
+		final String TAG = "Store Image";
 		try {
 			FileOutputStream fos = activity.openFileOutput(path,
 					Context.MODE_PRIVATE);

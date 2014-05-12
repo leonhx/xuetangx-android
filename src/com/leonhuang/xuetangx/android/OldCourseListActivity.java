@@ -67,7 +67,7 @@ public class OldCourseListActivity extends ListActivity {
 //				});
 
 		mListItems = new LinkedList<SimpleCourseInfo>();
-		mAdapter = new CourseAdapter(this, mListItems);
+//		mAdapter = new CourseAdapter(this, mListItems);
 		new GetDataTask(new Runnable() {
 
 			@Override

@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.LoginActivity;
-import com.leonhuang.xuetangx.data.BaseInfo;
 
 public class SignInStatusManager {
 
@@ -16,7 +15,7 @@ public class SignInStatusManager {
 		__context = context;
 	}
 
-	public void checkSignInStatus(BaseInfo info) {
+	public void checkSignInStatus(Object info) {
 		if (null == info) {
 			Toast.makeText(__context, R.string.util_relogin_plz,
 					Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,12 @@ public class DashboardFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_dashboard,
 				container, false);
+
+		PagerTabStrip pagerTabStrip = (PagerTabStrip) rootView
+				.findViewById(R.id.pager_header);
+		pagerTabStrip.setDrawFullUnderline(true);
+		pagerTabStrip.setTabIndicatorColor(rootView.getResources().getColor(
+				R.color.holo_blue_dark));
 
 		Map<SimpleCourseStatus, String> courseTitleMap = new HashMap<SimpleCourseStatus, String>();
 		courseTitleMap.put(SimpleCourseStatus.PAST, rootView.getResources()
