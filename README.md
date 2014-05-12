@@ -4,27 +4,14 @@ XuetangX
 Android client for XuetangX (http://www.xuetangx.com/)
 
 
-Design
------
-
-```
-Left Side Panel:
-    Dashboard
-    Search
-    Browse
-    My Downloads
-    Feedback
-    About
-    Logout
-```
-
-
 ### Notes
 
 + cache and check network status before access internet
 
 
 ### TODO
+
++ check network status before access internet: MainActivity and LoginActivity
 
 + CourseActivity: click twice to quit
 
