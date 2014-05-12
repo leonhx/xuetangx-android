@@ -26,6 +26,7 @@ import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.Student;
 import com.leonhuang.xuetangx.android.asyntask.UpdateUserInfoTask;
 import com.leonhuang.xuetangx.android.model.UserInfo;
+import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 
 public class LoginActivity extends Activity {
 
@@ -51,8 +52,10 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
+
+		new NetworkConnectivityManager(LoginActivity.this)
+				.isConnectingToInternet();
 
 		SharedPreferences sharedPref = getSharedPreferences(EXTRA_INFO,
 				Context.MODE_PRIVATE);
@@ -224,6 +227,11 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+
+			if (!new NetworkConnectivityManager(LoginActivity.this)
+					.isConnectingToInternet()) {
+				return false;
+			}
 
 			try {
 				boolean success = Student.verify(mEmail, mPassword);

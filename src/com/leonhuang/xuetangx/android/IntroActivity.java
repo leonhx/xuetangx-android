@@ -16,6 +16,7 @@ import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.Student;
 import com.leonhuang.xuetangx.android.asyntask.UpdateUserInfoTask;
 import com.leonhuang.xuetangx.android.model.UserInfo;
+import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 
 public class IntroActivity extends Activity {
 
@@ -37,6 +38,7 @@ public class IntroActivity extends Activity {
 	}
 
 	private void tryLogin(final String email, final String password) {
+		showProgress(true);
 		new UserLoginTask(email, password).execute();
 	}
 
@@ -86,6 +88,11 @@ public class IntroActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
+			if (!new NetworkConnectivityManager(IntroActivity.this)
+					.isConnectingToInternet()) {
+				return null;
+			}
+
 			try {
 				boolean success = Student.verify(email, password);
 				if (!success) {
@@ -102,6 +109,12 @@ public class IntroActivity extends Activity {
 		@Override
 		protected void onPostExecute(final Boolean success) {
 
+			if (null == success) {
+				IntroActivity.this.showProgress(false);
+				IntroActivity.this.startMainActivity();
+				return;
+			}
+
 			if (success) {
 				new UpdateUserInfoTask(new UserInfo(email, password, "", ""),
 						IntroActivity.this, new Runnable() {
@@ -109,7 +122,7 @@ public class IntroActivity extends Activity {
 							@Override
 							public void run() {
 								IntroActivity.this.showProgress(false);
-								IntroActivity.this.startCourseActivity();
+								IntroActivity.this.startMainActivity();
 							}
 						}).execute();
 			} else {
@@ -130,7 +143,7 @@ public class IntroActivity extends Activity {
 		finish();
 	}
 
-	private void startCourseActivity() {
+	private void startMainActivity() {
 		Intent intent = new Intent(IntroActivity.this, MainActivity.class);
 		startActivity(intent);
 		finish();

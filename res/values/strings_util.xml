@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="util_internet_inavail">Internet not available!</string>
+    <string name="util_relogin_plz">Error occurs. Resignin Please!</string>
+    
+</resources>

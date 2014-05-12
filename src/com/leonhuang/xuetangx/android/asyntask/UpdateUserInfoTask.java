@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.leonhuang.xuetangx.Student;
 import com.leonhuang.xuetangx.android.model.UserInfo;
+import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.data.StudentInfo;
 
 public class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
@@ -14,7 +15,8 @@ public class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
 	Activity activity;
 	Runnable postExecute;
 
-	public UpdateUserInfoTask(UserInfo user, Activity activity, Runnable postExecute) {
+	public UpdateUserInfoTask(UserInfo user, Activity activity,
+			Runnable postExecute) {
 		this.user = user;
 		this.activity = activity;
 		this.postExecute = postExecute;
@@ -25,6 +27,7 @@ public class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
 		try {
 			StudentInfo studentInfo = Student.info(user.getEmail(),
 					user.getPassword());
+			new SignInStatusManager(activity).checkSignInStatus(studentInfo);
 			user.update(studentInfo.getName(), studentInfo.getNickname());
 			user.save(this.activity);
 		} catch (IOException e) {
@@ -32,10 +35,10 @@ public class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected void onPostExecute(Void param) {
 		postExecute.run();
 	}
-	
+
 }
