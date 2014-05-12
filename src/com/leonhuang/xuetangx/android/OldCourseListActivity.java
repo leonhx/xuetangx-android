@@ -18,11 +18,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.leonhuang.pulltorefresh.library.PullToRefreshBase;
-import com.leonhuang.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.leonhuang.pulltorefresh.library.PullToRefreshBase.State;
-import com.leonhuang.pulltorefresh.library.PullToRefreshListView;
-import com.leonhuang.pulltorefresh.library.extras.SoundPullEventListener;
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.model.UserInfo;
@@ -38,7 +33,7 @@ public class OldCourseListActivity extends ListActivity {
 	public static final String COURSE_URL = "com.leonhuang.xuetangx.CourseListActivity.CourseUrl";
 
 	private LinkedList<SimpleCourseInfo> mListItems;
-	private PullToRefreshListView mPullRefreshListView;
+//	private PullToRefreshListView mPullRefreshListView;
 	private CourseAdapter mAdapter;
 
 	private static final String RENREN_APP_ID = "267586";
@@ -50,26 +45,26 @@ public class OldCourseListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_old_course_list);
 
-		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
+//		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
 
-		mPullRefreshListView
-				.setOnRefreshListener(new OnRefreshListener<ListView>() {
-					@Override
-					public void onRefresh(
-							PullToRefreshBase<ListView> refreshView) {
-						String label = DateUtils.formatDateTime(
-								getApplicationContext(),
-								System.currentTimeMillis(),
-								DateUtils.FORMAT_SHOW_TIME
-										| DateUtils.FORMAT_SHOW_DATE
-										| DateUtils.FORMAT_ABBREV_ALL);
-
-						refreshView.getLoadingLayoutProxy()
-								.setLastUpdatedLabel(label);
-
-						new GetDataTask(null).execute();
-					}
-				});
+//		mPullRefreshListView
+//				.setOnRefreshListener(new OnRefreshListener<ListView>() {
+//					@Override
+//					public void onRefresh(
+//							PullToRefreshBase<ListView> refreshView) {
+//						String label = DateUtils.formatDateTime(
+//								getApplicationContext(),
+//								System.currentTimeMillis(),
+//								DateUtils.FORMAT_SHOW_TIME
+//										| DateUtils.FORMAT_SHOW_DATE
+//										| DateUtils.FORMAT_ABBREV_ALL);
+//
+//						refreshView.getLoadingLayoutProxy()
+//								.setLastUpdatedLabel(label);
+//
+//						new GetDataTask(null).execute();
+//					}
+//				});
 
 		mListItems = new LinkedList<SimpleCourseInfo>();
 		mAdapter = new CourseAdapter(this, mListItems);
@@ -77,20 +72,20 @@ public class OldCourseListActivity extends ListActivity {
 
 			@Override
 			public void run() {
-				ListView actualListView = mPullRefreshListView
-						.getRefreshableView();
-				registerForContextMenu(actualListView);
-				actualListView.setAdapter(mAdapter);
+//				ListView actualListView = mPullRefreshListView
+//						.getRefreshableView();
+//				registerForContextMenu(actualListView);
+//				actualListView.setAdapter(mAdapter);
 
 			}
 		}).execute();
 
-		SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(
-				this);
-		soundListener.addSoundEvent(State.PULL_TO_REFRESH, R.raw.pull_event);
-		soundListener.addSoundEvent(State.RESET, R.raw.reset_sound);
-		soundListener.addSoundEvent(State.REFRESHING, R.raw.refreshing_sound);
-		mPullRefreshListView.setOnPullEventListener(soundListener);
+//		SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(
+//				this);
+//		soundListener.addSoundEvent(State.PULL_TO_REFRESH, R.raw.pull_event);
+//		soundListener.addSoundEvent(State.RESET, R.raw.reset_sound);
+//		soundListener.addSoundEvent(State.REFRESHING, R.raw.refreshing_sound);
+//		mPullRefreshListView.setOnPullEventListener(soundListener);
 	}
 
 	@Override
@@ -120,7 +115,7 @@ public class OldCourseListActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 			new GetDataTask(null).execute();
-			mPullRefreshListView.setRefreshing(false);
+//			mPullRefreshListView.setRefreshing(false);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -243,7 +238,7 @@ public class OldCourseListActivity extends ListActivity {
 			}
 
 			mAdapter.notifyDataSetChanged();
-			mPullRefreshListView.onRefreshComplete();
+//			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
 
