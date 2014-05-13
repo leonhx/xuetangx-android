@@ -12,6 +12,7 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,12 +61,14 @@ public class CourseListFragment extends ListFragment {
 	private ListView listView;
 	private final ArrayList<SimpleCourseInfo> mListItems = new ArrayList<SimpleCourseInfo>();
 
+	private Activity mActivity;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.i("CourseListFragment", "onCreateView");
 		Bundle args = getArguments();
 		courseStatus = (SimpleCourseStatus) args.getSerializable(COURSE_STATUS);
+		Log.i("CourseListFragment", "onCreateView " + String.valueOf(courseStatus));
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
 				R.layout.fragment_course_list, container, false);
@@ -105,6 +108,12 @@ public class CourseListFragment extends ListFragment {
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
@@ -125,7 +134,7 @@ public class CourseListFragment extends ListFragment {
 	}
 
 	private void shareToRenren(final String comment, final String url) {
-		final RennClient rennClient = RennClient.getInstance(getActivity());
+		final RennClient rennClient = RennClient.getInstance(mActivity);
 		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);
 		rennClient.setScope("publish_share publish_feed");
 		rennClient.setTokenType("mac");
@@ -140,34 +149,36 @@ public class CourseListFragment extends ListFragment {
 							new CallBack() {
 								@Override
 								public void onSuccess(RennResponse response) {
-									Toast.makeText(getActivity(), "分享成功",
+									Toast.makeText(mActivity,
+											R.string.share_succeed,
 											Toast.LENGTH_SHORT).show();
 								}
 
 								@Override
 								public void onFailed(String errorCode,
 										String errorMessage) {
-									Toast.makeText(getActivity(), "分享失败",
+									Toast.makeText(mActivity,
+											R.string.share_failed,
 											Toast.LENGTH_SHORT).show();
 								}
 
 							});
 				} catch (RennException e) {
-					Toast.makeText(getActivity(), "分享失败", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(mActivity, R.string.share_failed,
+							Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onLoginCanceled() {
-				Toast.makeText(getActivity(), getString(R.string.login_failed),
+				Toast.makeText(mActivity, getString(R.string.login_failed),
 						Toast.LENGTH_SHORT).show();
 			}
 
 		});
 
-		rennClient.login(getActivity());
+		rennClient.login(mActivity);
 	}
 
 	private class GetDataTask extends
@@ -185,14 +196,14 @@ public class CourseListFragment extends ListFragment {
 
 			ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
 
-			if (!new NetworkConnectivityManager(getActivity())
+			if (!new NetworkConnectivityManager(mActivity)
 					.isConnectingToInternet(false)) {
 				courses = loadCourses(courseStatus);
 				return courses;
 			}
 
 			try {
-				UserInfo user = UserInfo.load(getActivity());
+				UserInfo user = UserInfo.load(mActivity);
 
 				switch (courseStatus) {
 				case PAST:
@@ -207,7 +218,7 @@ public class CourseListFragment extends ListFragment {
 							user.getPassword());
 					break;
 				}
-				new SignInStatusManager(getActivity())
+				new SignInStatusManager(mActivity)
 						.checkSignInStatus(courses);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -219,7 +230,7 @@ public class CourseListFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
 
-			new SignInStatusManager(getActivity()).checkSignInStatus(result);
+			new SignInStatusManager(mActivity).checkSignInStatus(result);
 
 			if (result.isEmpty()) {
 				return;
@@ -258,7 +269,7 @@ public class CourseListFragment extends ListFragment {
 			}
 
 			try {
-				FileOutputStream fos = getActivity().openFileOutput(filename,
+				FileOutputStream fos = mActivity.openFileOutput(filename,
 						Context.MODE_PRIVATE);
 				fos.write(coursesJSON.toString().getBytes());
 				fos.close();
@@ -277,7 +288,7 @@ public class CourseListFragment extends ListFragment {
 		if (null != filename) {
 			try {
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(getActivity().openFileInput(
+						new InputStreamReader(mActivity.openFileInput(
 								filename)));
 				StringBuilder sb = new StringBuilder();
 				String line;

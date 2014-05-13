@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:scrollbars="vertical" >
+
+        <TextView
+            android:id="@+id/text_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/kg_multi_user_text_inactive"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/text_copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_note"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/text_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_copyright"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/text_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_author"
+            android:layout_marginBottom="20dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/kg_multi_user_text_inactive" />
+    </RelativeLayout>
+
+</ScrollView>

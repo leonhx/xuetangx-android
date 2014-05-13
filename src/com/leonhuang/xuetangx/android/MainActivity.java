@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -145,7 +144,6 @@ public class MainActivity extends FragmentActivity {
 
 	private void selectItem(int position) {
 		// TODO
-		// update the main content by replacing fragments
 
 		Fragment fragment = null;
 		Intent intent;
@@ -170,6 +168,7 @@ public class MainActivity extends FragmentActivity {
 					getString(R.string.choose_mail_client)));
 			return;
 		case 5: // About
+			fragment = new AboutFragment();
 			break;
 		case 6: // Logout
 			new UserInfo("", "", "", "").save(MainActivity.this);

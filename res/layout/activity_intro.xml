@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.leonhuang.example.MainActivity" >
 
-   <LinearLayout
+    <LinearLayout
         android:id="@+id/main_msg_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,18 +10,15 @@
         tools:context="com.leonhuang.xuetangx.android.IntroActivity"
         tools:ignore="MergeRootFrame" >
 
-        <TextView
-            android:id="@+id/textView1"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="50dp"
-            android:drawablePadding="20dp"
-            android:drawableTop="@drawable/xuetangx"
-            android:text="@string/app_slogan"
-            android:textColor="@color/holo_purple" />
+            android:contentDescription="@string/course_image_plh"
+            android:src="@drawable/xuetangx" />
     </LinearLayout>
 
     <LinearLayout

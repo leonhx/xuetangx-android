@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class DashboardFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.i("Dahsboard", "onCreateView");
 		View rootView = inflater.inflate(R.layout.fragment_dashboard,
 				container, false);
 
@@ -51,15 +53,10 @@ public class DashboardFragment extends Fragment {
 		mViewPager.setAdapter(mAppSectionsPagerAdapter);
 
 		mViewPager.setCurrentItem(1);
+		
+		Log.i("Dahsboard", "onCreateView Finished");
 
 		return rootView;
-	}
-
-	@Override
-	public void onDestroyView() {
-		mAppSectionsPagerAdapter = null;
-		mViewPager = null;
-		super.onDestroyView();
 	}
 
 }

@@ -2,14 +2,15 @@ package com.leonhuang.xuetangx.android;
 
 import java.util.Map;
 
-import com.leonhuang.xuetangx.data.SimpleCourseStatus;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
-public class DashboardPagerAdapter extends FragmentPagerAdapter {
+import com.leonhuang.xuetangx.data.SimpleCourseStatus;
+
+public class DashboardPagerAdapter extends FragmentStatePagerAdapter {
 
 	private Map<SimpleCourseStatus, String> courseTitleMap;
 
@@ -21,6 +22,7 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int i) {
+		Log.i("ViewPager", "" + i);
 		Fragment fragment = new CourseListFragment();
 		Bundle args = new Bundle();
 		SimpleCourseStatus status = positionToStatus(i);
