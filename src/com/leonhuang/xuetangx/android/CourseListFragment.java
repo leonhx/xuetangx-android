@@ -219,6 +219,12 @@ public class CourseListFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
 
+			new SignInStatusManager(getActivity()).checkSignInStatus(result);
+
+			if (result.isEmpty()) {
+				return;
+			}
+
 			Collections.sort(result, new Comparator<SimpleCourseInfo>() {
 
 				@Override

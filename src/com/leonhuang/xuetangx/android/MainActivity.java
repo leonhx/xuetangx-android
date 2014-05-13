@@ -1,5 +1,6 @@
 package com.leonhuang.xuetangx.android;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.android.model.UserInfo;
 
 public class MainActivity extends FragmentActivity {
 
@@ -143,10 +146,41 @@ public class MainActivity extends FragmentActivity {
 	private void selectItem(int position) {
 		// TODO
 		// update the main content by replacing fragments
-		Fragment fragment = new DashboardFragment();
-		// Bundle args = new Bundle();
-		// args.putInt(PlaceholderFragment.ARG_PLANET_NUMBER, position);
-		// fragment.setArguments(args);
+
+		Fragment fragment = null;
+		Intent intent;
+
+		switch (position) {
+		case 0: // Dashboard
+			fragment = new DashboardFragment();
+			break;
+		case 1: // Search
+			break;
+		case 2: // Browse
+			break;
+		case 3: // My Downloads
+			break;
+		case 4: // Feedback
+			intent = new Intent(Intent.ACTION_SENDTO);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_EMAIL, "leon@njuopen.com");
+			intent.putExtra(Intent.EXTRA_SUBJECT, "[XuetangX FEEDBACK]");
+
+			startActivity(Intent.createChooser(intent,
+					getString(R.string.choose_mail_client)));
+			return;
+		case 5: // About
+			break;
+		case 6: // Logout
+			new UserInfo("", "", "", "").save(MainActivity.this);
+			intent = new Intent(MainActivity.this, LoginActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			MainActivity.this.startActivity(intent);
+			return;
+		default:
+			return;
+		}
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()

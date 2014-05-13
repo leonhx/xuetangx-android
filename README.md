@@ -15,11 +15,7 @@ Android client for XuetangX (http://www.xuetangx.com/)
 WebView(there should be an option to open it in browser). All can be shared to
 Renren
 
-+ Logout: delete SharedPref of UserInfo
-
 + About: declare copyright and version
-
-+ Feedback: seed email
 
 + Dashboard => Current: there should be a Course Detail Fragment
 
