@@ -59,7 +59,7 @@ public class CoursePastListFragment extends ListFragment {
 			Bundle savedInstanceState) {
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
-				R.layout.fragment_upcoming_course_list, container, false);
+				R.layout.fragment_course_list, container, false);
 		Log.e("F", String.valueOf(mSwipeRefreshLayout));
 
 		mSwipeRefreshLayout.setColorScheme(R.color.holo_green_dark,

@@ -6,24 +6,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,8 +41,9 @@ import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.PutShareUrlParam;
 
-public class CourseUpcomingListFragment extends ListFragment {
+public class CourseListFragment extends ListFragment {
 	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseListFragment.CourseStatus";
+
 	public static final String CACHE_COURSES_UPCOMING = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Upcoming";
 	public static final String CACHE_COURSES_CURRENT = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Current";
 	public static final String CACHE_COURSES_PAST = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Past";
@@ -55,6 +56,8 @@ public class CourseUpcomingListFragment extends ListFragment {
 
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private SimpleCourseStatus courseStatus;
+	private CourseAdapter adapter;
+	private ListView listView;
 	private final ArrayList<SimpleCourseInfo> mListItems = new ArrayList<SimpleCourseInfo>();
 
 	@Override
@@ -64,27 +67,21 @@ public class CourseUpcomingListFragment extends ListFragment {
 		courseStatus = (SimpleCourseStatus) args.getSerializable(COURSE_STATUS);
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
-				R.layout.fragment_upcoming_course_list, container, false);
-		Log.e("F", String.valueOf(mSwipeRefreshLayout));
+				R.layout.fragment_course_list, container, false);
+		Log.i("Layout", String.valueOf(mSwipeRefreshLayout));
 
 		mSwipeRefreshLayout.setColorScheme(R.color.holo_green_dark,
 				R.color.holo_orange_dark, R.color.holo_blue_bright,
 				R.color.holo_red_dark);
 
-		final ListView listView = (ListView) mSwipeRefreshLayout
+		listView = (ListView) mSwipeRefreshLayout
 				.findViewById(android.R.id.list);
-		final CourseAdapter adapter = new CourseAdapter(getActivity(),
-				mListItems);
+		adapter = new CourseAdapter(getActivity(), mListItems);
 
 		new GetDataTask(new Runnable() {
 
 			@Override
 			public void run() {
-				if (courseStatus != SimpleCourseStatus.UPCOMING) {
-					Log.i("Register", String.valueOf(courseStatus));
-					Log.i("Register", String.valueOf(listView));
-					registerForContextMenu(listView);
-				}
 				listView.setAdapter(adapter);
 			}
 		}).execute();
@@ -108,64 +105,22 @@ public class CourseUpcomingListFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
-	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		menu.setHeaderTitle(mSwipeRefreshLayout.getResources().getString(
-				R.string.course_share_to));
-		menu.add(
-				0,
-				RENREN_ID,
-				0,
-				mSwipeRefreshLayout.getResources().getString(
-						R.string.share_renren));
+		switch (courseStatus) {
+		case UPCOMING:
 
-		super.onCreateContextMenu(menu, v, menuInfo);
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
-		int position = info.position - 1;
-
-		// SimpleCourseInfo course = mListItems.get(position);
-		//
-		// StringBuilder commentBuilder = new StringBuilder();
-		// commentBuilder.append("我正在#学堂在线#学习来自 ");
-		// commentBuilder.append(course.getUniversity());
-		// commentBuilder.append(" 的课程《");
-		// commentBuilder.append(course.getTitle());
-		// commentBuilder.append("》，来和我一起学习吧！");
-		// final String comment = commentBuilder.toString();
-		//
-		// String cinfo = course.getCourseInfoUrl();
-		// if (cinfo.endsWith("info")) {
-		// cinfo = cinfo.substring(0, cinfo.length() - 4) + "about";
-		// }
-		// final String url = cinfo;
-		//
-		switch (item.getItemId()) {
-		case RENREN_ID:
-			// shareToRenren(comment, url);
-			Log.i("FUCK",
-					String.valueOf(position) + " "
-							+ String.valueOf(mListItems.size()));
-			Toast.makeText(
-					getActivity(),
-					String.valueOf(position) + " "
-							+ String.valueOf(mListItems.size()),
-					Toast.LENGTH_SHORT).show();
+			break;
+		case CURRENT:
+		case PAST:
+			Log.i("URL", String.valueOf(position));
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mListItems
+					.get(position).getCourseInfoUrl()));
+			startActivity(intent);
 			break;
 		default:
 			break;
 		}
-
-		return super.onContextItemSelected(item);
 	}
 
 	private void shareToRenren(final String comment, final String url) {
@@ -262,6 +217,15 @@ public class CourseUpcomingListFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
+
+			Collections.sort(result, new Comparator<SimpleCourseInfo>() {
+
+				@Override
+				public int compare(SimpleCourseInfo arg0, SimpleCourseInfo arg1) {
+					return arg0.getStartDate().compareTo(arg1.getStartDate());
+				}
+
+			});
 
 			mListItems.clear();
 			mListItems.addAll(result);

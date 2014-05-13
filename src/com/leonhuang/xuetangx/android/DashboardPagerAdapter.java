@@ -24,10 +24,10 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int i) {
 		if (null == fragments[i]) {
-			Fragment fragment =  new CourseUpcomingListFragment();
+			Fragment fragment =  new CourseListFragment();
 			Bundle args = new Bundle();
 			SimpleCourseStatus status = positionToStatus(i);
-			args.putSerializable(CourseUpcomingListFragment.COURSE_STATUS, status);
+			args.putSerializable(CourseListFragment.COURSE_STATUS, status);
 			
 			fragment.setArguments(args);
 			
