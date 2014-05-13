@@ -15,7 +15,6 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -26,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
@@ -35,12 +33,6 @@ import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseStatus;
-import com.renn.rennsdk.RennClient;
-import com.renn.rennsdk.RennClient.LoginListener;
-import com.renn.rennsdk.RennExecutor.CallBack;
-import com.renn.rennsdk.RennResponse;
-import com.renn.rennsdk.exception.RennException;
-import com.renn.rennsdk.param.PutShareUrlParam;
 
 public class CourseListFragment extends ListFragment {
 	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseListFragment.CourseStatus";
@@ -48,12 +40,6 @@ public class CourseListFragment extends ListFragment {
 	public static final String CACHE_COURSES_UPCOMING = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Upcoming";
 	public static final String CACHE_COURSES_CURRENT = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Current";
 	public static final String CACHE_COURSES_PAST = "com.leonhuang.xuetangx.android.CourseListFragment.CourseCache.Past";
-
-	private static final String RENREN_APP_ID = "267586";
-	private static final String RENREN_API_KEY = "89137a23b30d4a9d9b1acd8c0faaba40";
-	private static final String RENREN_SECRET_KEY = "7e611e75794e474a98f12c872d731ba5";
-
-	private static final int RENREN_ID = 0;
 
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private SimpleCourseStatus courseStatus;
@@ -68,7 +54,8 @@ public class CourseListFragment extends ListFragment {
 			Bundle savedInstanceState) {
 		Bundle args = getArguments();
 		courseStatus = (SimpleCourseStatus) args.getSerializable(COURSE_STATUS);
-		Log.i("CourseListFragment", "onCreateView " + String.valueOf(courseStatus));
+		Log.i("CourseListFragment",
+				"onCreateView " + String.valueOf(courseStatus));
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
 				R.layout.fragment_course_list, container, false);
@@ -123,62 +110,15 @@ public class CourseListFragment extends ListFragment {
 			break;
 		case CURRENT:
 		case PAST:
-			Log.i("URL", String.valueOf(position));
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mListItems
-					.get(position).getCourseInfoUrl()));
+			Intent intent = new Intent(mActivity, CourseActivity.class);
+			intent.putExtra(CourseActivity.SIMPLE_COURSE_INFO,
+					mListItems.get(position).toString());
+			intent.putExtra(CourseActivity.COURSE_STATUS, courseStatus);
 			startActivity(intent);
 			break;
 		default:
 			break;
 		}
-	}
-
-	private void shareToRenren(final String comment, final String url) {
-		final RennClient rennClient = RennClient.getInstance(mActivity);
-		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);
-		rennClient.setScope("publish_share publish_feed");
-		rennClient.setTokenType("mac");
-		rennClient.setLoginListener(new LoginListener() {
-			@Override
-			public void onLoginSuccess() {
-				PutShareUrlParam param = new PutShareUrlParam();
-				param.setComment(comment);
-				param.setUrl(url);
-				try {
-					rennClient.getRennService().sendAsynRequest(param,
-							new CallBack() {
-								@Override
-								public void onSuccess(RennResponse response) {
-									Toast.makeText(mActivity,
-											R.string.share_succeed,
-											Toast.LENGTH_SHORT).show();
-								}
-
-								@Override
-								public void onFailed(String errorCode,
-										String errorMessage) {
-									Toast.makeText(mActivity,
-											R.string.share_failed,
-											Toast.LENGTH_SHORT).show();
-								}
-
-							});
-				} catch (RennException e) {
-					Toast.makeText(mActivity, R.string.share_failed,
-							Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-				}
-			}
-
-			@Override
-			public void onLoginCanceled() {
-				Toast.makeText(mActivity, getString(R.string.login_failed),
-						Toast.LENGTH_SHORT).show();
-			}
-
-		});
-
-		rennClient.login(mActivity);
 	}
 
 	private class GetDataTask extends
@@ -218,8 +158,7 @@ public class CourseListFragment extends ListFragment {
 							user.getPassword());
 					break;
 				}
-				new SignInStatusManager(mActivity)
-						.checkSignInStatus(courses);
+				new SignInStatusManager(mActivity).checkSignInStatus(courses);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -288,8 +227,7 @@ public class CourseListFragment extends ListFragment {
 		if (null != filename) {
 			try {
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(mActivity.openFileInput(
-								filename)));
+						new InputStreamReader(mActivity.openFileInput(filename)));
 				StringBuilder sb = new StringBuilder();
 				String line;
 				while ((line = reader.readLine()) != null) {

@@ -49,6 +49,7 @@
         <activity
             android:name="com.leonhuang.xuetangx.android.CourseActivity"
             android:label="@string/title_activity_course"
+            android:theme="@style/MyHasTitleTheme"
             android:parentActivityName="com.leonhuang.xuetangx.android.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

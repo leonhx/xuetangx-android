@@ -4,9 +4,9 @@
     tools:context="com.leonhuang.xuetangx.CourseActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_share_renren"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:title="@string/share_to_renren"
+        android:showAsAction="never"/>
 
 </menu>

@@ -1,64 +1,303 @@
 package com.leonhuang.xuetangx.android;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.android.model.UserInfo;
+import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
+import com.leonhuang.xuetangx.android.util.SignInStatusManager;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleCourseInfo;
+import com.leonhuang.xuetangx.data.SimpleCourseStatus;
+import com.renn.rennsdk.RennClient;
+import com.renn.rennsdk.RennClient.LoginListener;
+import com.renn.rennsdk.RennExecutor.CallBack;
+import com.renn.rennsdk.RennResponse;
+import com.renn.rennsdk.exception.RennException;
+import com.renn.rennsdk.param.PutShareUrlParam;
 
-public class CourseActivity extends ActionBarActivity {
+public class CourseActivity extends ListActivity {
+
+	public static final String SIMPLE_COURSE_INFO = "com.leonhuang.xuetangx.android.CourseActivity.Intent.SimpleCourseInfo";
+	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseActivity.Intent.CourseStatus";
+	public static final String CACHE_COURSE_CONTENT = "com.leonhuang.xuetangx.android.CourseActivity.Cache.CourseContent";
+
+	private static final String RENREN_APP_ID = "267586";
+	private static final String RENREN_API_KEY = "89137a23b30d4a9d9b1acd8c0faaba40";
+	private static final String RENREN_SECRET_KEY = "7e611e75794e474a98f12c872d731ba5";
+
+	private SimpleCourseInfo course;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
+	private ListView listView;
+	private ChapterAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course);
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+		Intent intent = getIntent();
+		Bundle extra = intent.getExtras();
+		SimpleCourseStatus courseStatus = (SimpleCourseStatus) extra
+				.getSerializable(COURSE_STATUS);
+		try {
+			course = SimpleCourseInfo.fromJSON(
+					new JSONObject(extra.getString(SIMPLE_COURSE_INFO)),
+					courseStatus);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+
+		getActionBar().setTitle(course.getTitle());
+
+		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chapters_swipe_layout);
+		mSwipeRefreshLayout.setColorScheme(R.color.holo_green_dark,
+				R.color.holo_orange_dark, R.color.holo_blue_bright,
+				R.color.holo_red_dark);
+
+		listView = (ListView) mSwipeRefreshLayout
+				.findViewById(android.R.id.list);
+		adapter = new ChapterAdapter(this, mChapters);
+
+		new GetContentTask(new Runnable() {
+
+			@Override
+			public void run() {
+				listView.setAdapter(adapter);
+			}
+		}).execute();
+
+		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				new GetContentTask(new Runnable() {
+
+					@Override
+					public void run() {
+						adapter.notifyDataSetInvalidated();
+					}
+				}).execute();
+			}
+		});
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.course, menu);
-		return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.course, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		StringBuilder commentBuilder = new StringBuilder();
+		commentBuilder.append("我正在#学堂在线#学习来自 ");
+		commentBuilder.append(course.getUniversity());
+		commentBuilder.append(" 的课程《");
+		commentBuilder.append(course.getTitle());
+		commentBuilder.append("》，来和我一起学习吧！");
+		String comment = commentBuilder.toString();
+
+		String cinfo = course.getCourseInfoUrl();
+		if (cinfo.endsWith("info")) {
+			cinfo = cinfo.substring(0, cinfo.length() - 4) + "about";
 		}
-		return super.onOptionsItemSelected(item);
+		String url = cinfo;
+
+		switch (item.getItemId()) {
+		case R.id.action_share_renren:
+			shareToRenren(comment, url);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
+	private class GetContentTask extends
+			AsyncTask<Void, Void, ArrayList<SimpleChapterInfo>> {
 
-		public PlaceholderFragment() {
+		private Runnable runOnPostExecute;
+
+		public GetContentTask(Runnable runOnPostExecute) {
+			this.runOnPostExecute = runOnPostExecute;
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_course,
-					container, false);
-			return rootView;
+		protected ArrayList<SimpleChapterInfo> doInBackground(Void... params) {
+			mSwipeRefreshLayout.setRefreshing(true);
+
+			ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
+
+			if (!new NetworkConnectivityManager(CourseActivity.this)
+					.isConnectingToInternet(false)) {
+				chapters = loadContent();
+				return chapters;
+			}
+
+			try {
+				UserInfo user = UserInfo.load(CourseActivity.this);
+				chapters = Courses.lectures(user.getEmail(),
+						user.getPassword(), course);
+				new SignInStatusManager(CourseActivity.this)
+						.checkSignInStatus(chapters);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return chapters;
 		}
+
+		@Override
+		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
+
+			new SignInStatusManager(CourseActivity.this)
+					.checkSignInStatus(result);
+
+			if (result.isEmpty()) {
+				return;
+			}
+
+			mChapters.clear();
+			mChapters.addAll(result);
+			saveContent(result);
+
+			if (null != runOnPostExecute) {
+				runOnPostExecute.run();
+			}
+
+			super.onPostExecute(result);
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+
+	}
+
+	private void saveContent(ArrayList<SimpleChapterInfo> chapters) {
+		String filename = getStoragePath();
+		if (null != filename) {
+			JSONArray coursesJSON = new JSONArray();
+			for (SimpleChapterInfo chapter : chapters) {
+				coursesJSON.put(chapter.toJSON());
+			}
+
+			try {
+				FileOutputStream fos = openFileOutput(filename,
+						Context.MODE_PRIVATE);
+				fos.write(coursesJSON.toString().getBytes());
+				fos.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private ArrayList<SimpleChapterInfo> loadContent() {
+		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
+
+		String filename = getStoragePath();
+		if (null != filename) {
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(openFileInput(filename)));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line);
+				}
+				JSONArray chaptersJSON = new JSONArray(sb.toString());
+				for (int i = 0; i < chaptersJSON.length(); i++) {
+					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
+							.getJSONObject(i)));
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return chapters;
+	}
+
+	private String getStoragePath() {
+		return CACHE_COURSE_CONTENT;
+	}
+
+	private void shareToRenren(final String comment, final String url) {
+		final RennClient rennClient = RennClient
+				.getInstance(CourseActivity.this);
+		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);
+		rennClient.setScope("publish_share publish_feed");
+		rennClient.setTokenType("mac");
+		rennClient.setLoginListener(new LoginListener() {
+			@Override
+			public void onLoginSuccess() {
+				PutShareUrlParam param = new PutShareUrlParam();
+				param.setComment(comment);
+				param.setUrl(url);
+				try {
+					rennClient.getRennService().sendAsynRequest(param,
+							new CallBack() {
+								@Override
+								public void onSuccess(RennResponse response) {
+									Toast.makeText(CourseActivity.this,
+											R.string.share_succeed,
+											Toast.LENGTH_SHORT).show();
+								}
+
+								@Override
+								public void onFailed(String errorCode,
+										String errorMessage) {
+									Toast.makeText(CourseActivity.this,
+											R.string.share_failed,
+											Toast.LENGTH_SHORT).show();
+								}
+
+							});
+				} catch (RennException e) {
+					Toast.makeText(CourseActivity.this, R.string.share_failed,
+							Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onLoginCanceled() {
+				Toast.makeText(CourseActivity.this,
+						getString(R.string.login_failed), Toast.LENGTH_SHORT)
+						.show();
+			}
+
+		});
+
+		rennClient.login(CourseActivity.this);
 	}
 
 }

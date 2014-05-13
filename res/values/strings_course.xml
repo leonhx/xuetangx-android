@@ -6,9 +6,8 @@
 	<string name="course_start_date_format">\'Start on:\' MM/dd/yyyy</string>
 		
 	<string name="course_image_plh">Image</string>
-	
-	<string name="course_share_to">Share the course to</string>
-	<string name="share_renren">Renren</string>
+
+	<string name="share_to_renren">Share to Renren</string>
 	<string name="share_failed">Share failed!</string>
 	<string name="share_succeed">Share succeed!</string>
 	
