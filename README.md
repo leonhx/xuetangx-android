@@ -17,8 +17,6 @@ Renren
 
 + Dashboard => Current: there should be a Course Detail Fragment
 
-+ list fragment of CourseInfo
-
 + Browse: knowledge/1, knowledge/2, knowledge/3 and search
 
 + Search
