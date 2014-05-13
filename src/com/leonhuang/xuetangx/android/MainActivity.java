@@ -153,10 +153,13 @@ public class MainActivity extends FragmentActivity {
 			fragment = new DashboardFragment();
 			break;
 		case 1: // Search
+			fragment = new SearchFragment();
 			break;
 		case 2: // Browse
+			fragment = new BrowseFragment();
 			break;
 		case 3: // My Downloads
+			fragment = new DownloadsFragment();
 			break;
 		case 4: // Feedback
 			intent = new Intent(Intent.ACTION_SENDTO);
