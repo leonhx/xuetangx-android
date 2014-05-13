@@ -21,6 +21,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.model.UserInfo;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
-import com.leonhuang.xuetangx.data.SimpleChapterInfo;
+import com.leonhuang.xuetangx.data.ChapterInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 import com.renn.rennsdk.RennClient;
@@ -43,7 +44,7 @@ public class CourseActivity extends ListActivity {
 
 	public static final String SIMPLE_COURSE_INFO = "com.leonhuang.xuetangx.android.CourseActivity.Intent.SimpleCourseInfo";
 	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseActivity.Intent.CourseStatus";
-	public static final String CACHE_COURSE_CONTENT = "com.leonhuang.xuetangx.android.CourseActivity.Cache.CourseContent";
+	public static final String CACHE_COURSE_CHAPTERS = "com.leonhuang.xuetangx.android.CourseActivity.Cache.CourseChapters";
 
 	private static final String RENREN_APP_ID = "267586";
 	private static final String RENREN_API_KEY = "89137a23b30d4a9d9b1acd8c0faaba40";
@@ -51,7 +52,7 @@ public class CourseActivity extends ListActivity {
 
 	private SimpleCourseInfo course;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
+	private ArrayList<ChapterInfo> mChapters = new ArrayList<ChapterInfo>();
 	private ListView listView;
 	private ChapterAdapter adapter;
 
@@ -104,6 +105,14 @@ public class CourseActivity extends ListActivity {
 			}
 		});
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Intent intent = new Intent(this, ChapterActivity.class);
+		intent.putExtra(ChapterActivity.CHAPTER_NO, position);
+		startActivity(intent);
+		super.onListItemClick(l, v, position, id);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,7 +147,7 @@ public class CourseActivity extends ListActivity {
 	}
 
 	private class GetContentTask extends
-			AsyncTask<Void, Void, ArrayList<SimpleChapterInfo>> {
+			AsyncTask<Void, Void, ArrayList<ChapterInfo>> {
 
 		private Runnable runOnPostExecute;
 
@@ -147,21 +156,21 @@ public class CourseActivity extends ListActivity {
 		}
 
 		@Override
-		protected ArrayList<SimpleChapterInfo> doInBackground(Void... params) {
+		protected ArrayList<ChapterInfo> doInBackground(Void... params) {
 			mSwipeRefreshLayout.setRefreshing(true);
 
-			ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
+			ArrayList<ChapterInfo> chapters = new ArrayList<ChapterInfo>();
 
 			if (!new NetworkConnectivityManager(CourseActivity.this)
 					.isConnectingToInternet(false)) {
-				chapters = loadContent();
+				chapters = loadChapters();
 				return chapters;
 			}
 
 			try {
 				UserInfo user = UserInfo.load(CourseActivity.this);
-				chapters = Courses.lectures(user.getEmail(),
-						user.getPassword(), course);
+				chapters = Courses.ware(user.getEmail(), user.getPassword(),
+						course);
 				new SignInStatusManager(CourseActivity.this)
 						.checkSignInStatus(chapters);
 			} catch (IOException e) {
@@ -172,7 +181,7 @@ public class CourseActivity extends ListActivity {
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
+		protected void onPostExecute(ArrayList<ChapterInfo> result) {
 
 			new SignInStatusManager(CourseActivity.this)
 					.checkSignInStatus(result);
@@ -183,7 +192,7 @@ public class CourseActivity extends ListActivity {
 
 			mChapters.clear();
 			mChapters.addAll(result);
-			saveContent(result);
+			saveChapter(result);
 
 			if (null != runOnPostExecute) {
 				runOnPostExecute.run();
@@ -195,11 +204,11 @@ public class CourseActivity extends ListActivity {
 
 	}
 
-	private void saveContent(ArrayList<SimpleChapterInfo> chapters) {
+	private void saveChapter(ArrayList<ChapterInfo> chapters) {
 		String filename = getStoragePath();
 		if (null != filename) {
 			JSONArray coursesJSON = new JSONArray();
-			for (SimpleChapterInfo chapter : chapters) {
+			for (ChapterInfo chapter : chapters) {
 				coursesJSON.put(chapter.toJSON());
 			}
 
@@ -216,8 +225,8 @@ public class CourseActivity extends ListActivity {
 		}
 	}
 
-	private ArrayList<SimpleChapterInfo> loadContent() {
-		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
+	private ArrayList<ChapterInfo> loadChapters() {
+		ArrayList<ChapterInfo> chapters = new ArrayList<ChapterInfo>();
 
 		String filename = getStoragePath();
 		if (null != filename) {
@@ -231,7 +240,7 @@ public class CourseActivity extends ListActivity {
 				}
 				JSONArray chaptersJSON = new JSONArray(sb.toString());
 				for (int i = 0; i < chaptersJSON.length(); i++) {
-					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
+					chapters.add(ChapterInfo.fromJSON(chaptersJSON
 							.getJSONObject(i)));
 				}
 			} catch (FileNotFoundException e) {
@@ -247,7 +256,7 @@ public class CourseActivity extends ListActivity {
 	}
 
 	private String getStoragePath() {
-		return CACHE_COURSE_CONTENT;
+		return CACHE_COURSE_CHAPTERS;
 	}
 
 	private void shareToRenren(final String comment, final String url) {

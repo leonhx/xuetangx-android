@@ -10,23 +10,22 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.data.ChapterInfo;
+import com.leonhuang.xuetangx.data.LectureInfo;
 
-public class ChapterAdapter extends ArrayAdapter<ChapterInfo> {
+public class LectureAdapter extends ArrayAdapter<LectureInfo> {
 	private LayoutInflater inflater;
-	private ArrayList<ChapterInfo> items;
+	private ArrayList<LectureInfo> items;
 
-	public ChapterAdapter(Activity activity,
-			ArrayList<ChapterInfo> mListItems) {
-		super(activity, R.layout.row_chapter, mListItems);
+	public LectureAdapter(Activity activity, ArrayList<LectureInfo> mListItems) {
+		super(activity, R.layout.row_lecture, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = inflater.inflate(R.layout.row_chapter, parent, false);
-		TextView title = (TextView) view.findViewById(R.id.chapter_title);
+		View view = inflater.inflate(R.layout.row_lecture, parent, false);
+		TextView title = (TextView) view.findViewById(R.id.lecture_title);
 
 		title.setText(items.get(position).getTitle());
 
