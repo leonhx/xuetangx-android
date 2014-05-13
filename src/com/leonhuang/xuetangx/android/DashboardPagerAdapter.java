@@ -12,29 +12,23 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class DashboardPagerAdapter extends FragmentPagerAdapter {
 
 	private Map<SimpleCourseStatus, String> courseTitleMap;
-	private static Fragment[] fragments;
 
 	public DashboardPagerAdapter(FragmentManager fm,
 			Map<SimpleCourseStatus, String> map) {
 		super(fm);
 		this.courseTitleMap = map;
-		fragments = new Fragment[] { null, null, null };
 	}
 
 	@Override
 	public Fragment getItem(int i) {
-		if (null == fragments[i]) {
-			Fragment fragment =  new CourseListFragment();
-			Bundle args = new Bundle();
-			SimpleCourseStatus status = positionToStatus(i);
-			args.putSerializable(CourseListFragment.COURSE_STATUS, status);
-			
-			fragment.setArguments(args);
-			
-			fragments[i] = fragment;
-		}
-		
-		return fragments[i];
+		Fragment fragment = new CourseListFragment();
+		Bundle args = new Bundle();
+		SimpleCourseStatus status = positionToStatus(i);
+		args.putSerializable(CourseListFragment.COURSE_STATUS, status);
+
+		fragment.setArguments(args);
+
+		return fragment;
 	}
 
 	@Override

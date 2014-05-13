@@ -63,6 +63,7 @@ public class CourseListFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.i("CourseListFragment", "onCreateView");
 		Bundle args = getArguments();
 		courseStatus = (SimpleCourseStatus) args.getSerializable(COURSE_STATUS);
 

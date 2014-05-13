@@ -9,11 +9,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -146,9 +144,9 @@ public class MainActivity extends FragmentActivity {
 		// TODO
 		// update the main content by replacing fragments
 		Fragment fragment = new DashboardFragment();
-		Bundle args = new Bundle();
-		args.putInt(PlaceholderFragment.ARG_PLANET_NUMBER, position);
-		fragment.setArguments(args);
+		// Bundle args = new Bundle();
+		// args.putInt(PlaceholderFragment.ARG_PLANET_NUMBER, position);
+		// fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
@@ -183,25 +181,6 @@ public class MainActivity extends FragmentActivity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public static final String ARG_PLANET_NUMBER = "planet_number";
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_placeholder,
-					container, false);
-			return rootView;
-		}
 	}
 
 }
