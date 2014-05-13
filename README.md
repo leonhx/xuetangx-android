@@ -15,8 +15,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 WebView(there should be an option to open it in browser). All can be shared to
 Renren
 
-+ About: declare copyright and version
-
 + Dashboard => Current: there should be a Course Detail Fragment
 
 + list fragment of CourseInfo
