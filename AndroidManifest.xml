@@ -46,6 +46,14 @@
             android:name="com.leonhuang.xuetangx.android.MainActivity"
             android:label="@string/title_activity_course_list" >
         </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.android.CourseActivity"
+            android:label="@string/title_activity_course"
+            android:parentActivityName="com.leonhuang.xuetangx.android.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.leonhuang.xuetangx.android.MainActivity" />
+        </activity>
     </application>
 
     <use>
