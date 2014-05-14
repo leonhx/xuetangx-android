@@ -159,9 +159,9 @@ public class MainActivity extends FragmentActivity {
 			fragment = new DownloadsFragment();
 			break;
 		case 3: // Feedback
-			intent = new Intent(Intent.ACTION_SENDTO);
+			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_EMAIL, "leon@njuopen.com");
+			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"leon@njuopen.com"});
 			intent.putExtra(Intent.EXTRA_SUBJECT, "[XuetangX FEEDBACK]");
 
 			startActivity(Intent.createChooser(intent,
