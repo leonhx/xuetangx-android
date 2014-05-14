@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_download_image_button"
+        android:layout_toRightOf="@+id/item_type_image"
+        android:ellipsize="end"
+        android:lines="1" />
+
+    <ImageButton
+        android:id="@+id/item_download_image_button"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_action_download" />
+
+    <ImageView
+        android:id="@+id/item_type_image"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_action_play_over_video" />
+
+</RelativeLayout>
