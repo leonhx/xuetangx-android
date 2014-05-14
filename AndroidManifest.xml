@@ -58,9 +58,12 @@
         </activity>
         <activity
             android:name="com.leonhuang.xuetangx.android.ItemListActivity"
-            
             android:parentActivityName="com.leonhuang.xuetangx.android.LectureListActivity"
             android:theme="@style/MyHasTitleTheme" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.android.WebViewActivity"
+            android:label="@string/title_activity_web_view" >
         </activity>
     </application>
 

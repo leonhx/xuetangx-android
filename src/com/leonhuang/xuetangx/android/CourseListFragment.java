@@ -282,10 +282,7 @@ public class CourseListFragment extends ListFragment {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					mActivity.openFileInput(filename)));
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
+			while (reader.readLine() != null) {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

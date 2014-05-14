@@ -111,7 +111,8 @@ public class ChapterListActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent intent = new Intent(this, LectureListActivity.class);
 		intent.putExtra(LectureListActivity.CHAPTER_NO, position);
-		intent.putExtra(LectureListActivity.COURSE_CACHE_PATH, getStoragePath(course));
+		intent.putExtra(LectureListActivity.COURSE_CACHE_PATH,
+				getStoragePath(course));
 		startActivity(intent);
 		super.onListItemClick(l, v, position, id);
 	}
@@ -195,7 +196,7 @@ public class ChapterListActivity extends ListActivity {
 
 			mChapters.clear();
 			mChapters.addAll(result);
-			saveChapter(result);
+			saveChapters(result);
 
 			if (null != runOnPostExecute) {
 				runOnPostExecute.run();
@@ -207,7 +208,7 @@ public class ChapterListActivity extends ListActivity {
 
 	}
 
-	private void saveChapter(ArrayList<SimpleChapterInfo> chapters) {
+	private void saveChapters(ArrayList<SimpleChapterInfo> chapters) {
 		String filename = getStoragePath(course);
 		if (null != filename) {
 			JSONArray coursesJSON = new JSONArray();
@@ -259,7 +260,8 @@ public class ChapterListActivity extends ListActivity {
 	}
 
 	public static String getStoragePath(SimpleCourseInfo course) {
-		return CACHE_COURSE_CHAPTERS + "." + course.getId();
+		return CACHE_COURSE_CHAPTERS + "."
+				+ course.getCourseInfoUrl().replaceAll("/", "");
 	}
 
 	private void shareToRenren(final String comment, final String url) {

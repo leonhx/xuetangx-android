@@ -14,8 +14,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.data.SimpleChapterInfo;
 import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
@@ -27,6 +29,7 @@ public class LectureListActivity extends ListActivity {
 	private SimpleChapterInfo chapter;
 	private ArrayList<SimpleLectureInfo> mLectures = new ArrayList<SimpleLectureInfo>();
 	private String courseCachePath;
+	private int chapter_position;
 	private ListView listView;
 	private LectureAdapter adapter;
 
@@ -37,9 +40,9 @@ public class LectureListActivity extends ListActivity {
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
-		int position = extra.getInt(CHAPTER_NO);
+		chapter_position = extra.getInt(CHAPTER_NO);
 		courseCachePath = extra.getString(COURSE_CACHE_PATH);
-		chapter = loadChapters().get(position);
+		chapter = loadChapters().get(chapter_position);
 		mLectures = chapter.getLectures();
 
 		getActionBar().setTitle(chapter.getTitle());
@@ -52,16 +55,25 @@ public class LectureListActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// Intent intent = new Intent(this, ChapterActivity.class);
-		// intent.putExtra(ChapterActivity.CHAPTER_NO, position);
-		// startActivity(intent);// TODO
+		if (!new NetworkConnectivityManager(LectureListActivity.this)
+				.isConnectingToInternet(false) && !isItemsCached(position)) {
+			Toast.makeText(this,
+					R.string.internet_not_avail_and_lecture_not_cached,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		Intent intent = new Intent(this, ItemListActivity.class);
+		intent.putExtra(ItemListActivity.CHAPTER_NO, chapter_position);
+		intent.putExtra(ItemListActivity.LECTURE_NO, position);
+		intent.putExtra(ItemListActivity.COURSE_CACHE_PATH, courseCachePath);
+		startActivity(intent);
 		super.onListItemClick(l, v, position, id);
 	}
 
 	private ArrayList<SimpleChapterInfo> loadChapters() {
 		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
 
-		String filename = getStoragePath();
+		String filename = courseCachePath;
 		if (null != filename) {
 			try {
 				BufferedReader reader = new BufferedReader(
@@ -88,8 +100,23 @@ public class LectureListActivity extends ListActivity {
 		return chapters;
 	}
 
-	private String getStoragePath() {
-		return courseCachePath;
+	private boolean isItemsCached(int position) {
+		String filename = ItemListActivity.getStoragePath(mLectures
+				.get(position));
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					openFileInput(filename)));
+			while (reader.readLine() != null) {
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 }

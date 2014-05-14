@@ -16,5 +16,6 @@
 	<string name="course_tab_past">PAST</string>
 	
 	<string name="internet_not_avail_and_course_not_cached">Internet not available and the course has not been cached!</string>
+	<string name="internet_not_avail_and_lecture_not_cached">Internet not available and the lecture has not been cached!</string>
 
 </resources>

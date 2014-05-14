@@ -10,13 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.data.SimpleLectureInfo;
+import com.leonhuang.xuetangx.data.ItemInfo;
 
-public class ItemAdapter extends ArrayAdapter<SimpleLectureInfo> {
+public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 	private LayoutInflater inflater;
-	private ArrayList<SimpleLectureInfo> items;
+	private ArrayList<ItemInfo> items;
 
-	public ItemAdapter(Activity activity, ArrayList<SimpleLectureInfo> mListItems) {
+	public ItemAdapter(Activity activity, ArrayList<ItemInfo> mListItems) {
 		super(activity, R.layout.row_lecture, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;
