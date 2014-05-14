@@ -3,7 +3,6 @@
     <string-array name="planets_array">
         <item>Dashboard</item>
         <item>Search</item>
-        <item>Browse</item>
         <item>My Downloads</item>
         <item>Feedback</item>
         <item>About</item>

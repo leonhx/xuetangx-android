@@ -1,15 +1,13 @@
 package com.leonhuang.xuetangx.android;
 
-import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.R.id;
-import com.leonhuang.xuetangx.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import com.leonhuang.xuetangx.R;
 
 public class WebViewActivity extends Activity {
 

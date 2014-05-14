@@ -155,13 +155,10 @@ public class MainActivity extends FragmentActivity {
 		case 1: // Search
 			fragment = new SearchFragment();
 			break;
-		case 2: // Browse
-			fragment = new BrowseFragment();
-			break;
-		case 3: // My Downloads
+		case 2: // My Downloads
 			fragment = new DownloadsFragment();
 			break;
-		case 4: // Feedback
+		case 3: // Feedback
 			intent = new Intent(Intent.ACTION_SENDTO);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_EMAIL, "leon@njuopen.com");
@@ -170,10 +167,10 @@ public class MainActivity extends FragmentActivity {
 			startActivity(Intent.createChooser(intent,
 					getString(R.string.choose_mail_client)));
 			return;
-		case 5: // About
+		case 4: // About
 			fragment = new AboutFragment();
 			break;
-		case 6: // Logout
+		case 5: // Logout
 			new UserInfo("", "", "", "").save(MainActivity.this);
 			intent = new Intent(MainActivity.this, LoginActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
