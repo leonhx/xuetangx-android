@@ -11,8 +11,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 ### TODO
 
-+ Search
-
 + My Downloads
 
 + Video Player
