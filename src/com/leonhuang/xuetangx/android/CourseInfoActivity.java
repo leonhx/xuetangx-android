@@ -1,4 +1,4 @@
-package com.leonhuang.xuetangx;
+package com.leonhuang.xuetangx.android;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.leonhuang.xuetangx.android.WebViewActivity;
+import com.leonhuang.xuetangx.R;
+import com.leonhuang.xuetangx.R.id;
+import com.leonhuang.xuetangx.R.menu;
 import com.leonhuang.xuetangx.data.CourseInfo;
 
 public class CourseInfoActivity extends WebViewActivity {

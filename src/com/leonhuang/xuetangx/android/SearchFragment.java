@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.leonhuang.xuetangx.CourseInfoActivity;
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;

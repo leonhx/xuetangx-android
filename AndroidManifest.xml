@@ -65,7 +65,7 @@
             android:name="com.leonhuang.xuetangx.android.WebViewActivity" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.CourseInfoActivity" >
+            android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
         </activity>
     </application>
 
