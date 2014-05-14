@@ -62,8 +62,10 @@
             android:theme="@style/MyHasTitleTheme" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.android.WebViewActivity"
-            android:label="@string/title_activity_web_view" >
+            android:name="com.leonhuang.xuetangx.android.WebViewActivity" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.CourseInfoActivity" >
         </activity>
     </application>
 

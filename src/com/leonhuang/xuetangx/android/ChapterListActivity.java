@@ -201,32 +201,26 @@ public class ChapterListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Boolean success) {
 
-			if (null == success) {
-				return;
-			}
-
-			if (success) {
-				__activity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						Toast.makeText(ChapterListActivity.this,
-								R.string.unenroll_succeed, Toast.LENGTH_SHORT)
-								.show();
-
-					}
-				});
-			} else {
-				__activity.runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						Toast.makeText(ChapterListActivity.this,
-								R.string.unenroll_failed, Toast.LENGTH_SHORT)
-								.show();
-
-					}
-				});
+			if (null != success) {
+				if (success) {
+					__activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(ChapterListActivity.this,
+									R.string.unenroll_succeed,
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				} else {
+					__activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(ChapterListActivity.this,
+									R.string.unenroll_failed,
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
 			}
 
 			if (null != __runOnPostExecute) {
@@ -276,17 +270,11 @@ public class ChapterListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
 
-			if (null == result) {
-				return;
+			if (null != result && !result.isEmpty()) {
+				mChapters.clear();
+				mChapters.addAll(result);
+				saveChapters(result);
 			}
-
-			if (result.isEmpty()) {
-				return;
-			}
-
-			mChapters.clear();
-			mChapters.addAll(result);
-			saveChapters(result);
 
 			if (null != runOnPostExecute) {
 				runOnPostExecute.run();

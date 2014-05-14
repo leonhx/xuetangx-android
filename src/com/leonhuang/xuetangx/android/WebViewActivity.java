@@ -16,7 +16,7 @@ public class WebViewActivity extends Activity {
 	public static final String WEB_VIEW_URL = "com.leonhuang.xuetangx.android.WebViewActivity.Intent.URL";
 
 	WebView webView;
-	private String url;
+	protected String __url;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +25,10 @@ public class WebViewActivity extends Activity {
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
-		url = extra.getString(WEB_VIEW_URL);
+		__url = extra.getString(WEB_VIEW_URL);
 
 		webView = (WebView) findViewById(R.id.webview);
-		webView.loadUrl(url);
+		webView.loadUrl(__url);
 
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);

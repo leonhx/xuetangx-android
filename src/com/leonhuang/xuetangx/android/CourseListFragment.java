@@ -191,24 +191,20 @@ public class CourseListFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
 
-			new SignInStatusManager(mActivity).checkSignInStatus(result);
+			if (null != result && !result.isEmpty()) {
+				Collections.sort(result, new Comparator<SimpleCourseInfo>() {
+					@Override
+					public int compare(SimpleCourseInfo arg0,
+							SimpleCourseInfo arg1) {
+						return arg0.getStartDate().compareTo(
+								arg1.getStartDate());
+					}
+				});
 
-			if (result.isEmpty()) {
-				return;
+				mCourses.clear();
+				mCourses.addAll(result);
+				saveCourses(result, courseStatus);
 			}
-
-			Collections.sort(result, new Comparator<SimpleCourseInfo>() {
-
-				@Override
-				public int compare(SimpleCourseInfo arg0, SimpleCourseInfo arg1) {
-					return arg0.getStartDate().compareTo(arg1.getStartDate());
-				}
-
-			});
-
-			mCourses.clear();
-			mCourses.addAll(result);
-			saveCourses(result, courseStatus);
 
 			if (null != runOnPostExecute) {
 				runOnPostExecute.run();

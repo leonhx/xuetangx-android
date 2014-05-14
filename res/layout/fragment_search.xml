@@ -1,7 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/search_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:inputType="text"
+        android:hint="@string/search_hint"
+        android:imeOptions="actionSearch"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/search_widget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <!-- some full screen pullable view that will be the offsetable content -->
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

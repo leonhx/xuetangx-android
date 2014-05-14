@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal" >
 
     <RelativeLayout
         android:layout_width="100dp"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" >
 
         <ImageView
-            android:id="@+id/tweetAvatar"
+            android:id="@+id/course_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -29,46 +30,32 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tweetTitle"
+            android:id="@+id/course_title_univ_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="#666666"
+            android:textColor="#222222"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tweetBrief"
+            android:id="@+id/course_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:maxLines="3"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/course_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="#222222"
-            android:textSize="16sp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/tweetDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#999999"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tweetSource"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:textColor="#999999"
-                android:textSize="12sp" />
-        </RelativeLayout>
+            android:textColor="#666666"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

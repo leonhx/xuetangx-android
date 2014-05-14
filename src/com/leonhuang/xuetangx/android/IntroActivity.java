@@ -112,6 +112,7 @@ public class IntroActivity extends Activity {
 			if (null == success) {
 				IntroActivity.this.showProgress(false);
 				IntroActivity.this.startMainActivity();
+				showProgress(false);
 				return;
 			}
 
@@ -126,9 +127,10 @@ public class IntroActivity extends Activity {
 							}
 						}).execute();
 			} else {
-				showProgress(false);
 				IntroActivity.this.startLoginActivity();
 			}
+			
+			showProgress(false);
 		}
 
 		@Override
