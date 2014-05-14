@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.R.id;
-import com.leonhuang.xuetangx.R.menu;
 import com.leonhuang.xuetangx.data.CourseInfo;
 
 public class CourseInfoActivity extends WebViewActivity {
