@@ -12,11 +12,11 @@ import android.widget.TextView;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
-public class LectureAdapter extends ArrayAdapter<SimpleLectureInfo> {
+public class ItemAdapter extends ArrayAdapter<SimpleLectureInfo> {
 	private LayoutInflater inflater;
 	private ArrayList<SimpleLectureInfo> items;
 
-	public LectureAdapter(Activity activity, ArrayList<SimpleLectureInfo> mListItems) {
+	public ItemAdapter(Activity activity, ArrayList<SimpleLectureInfo> mListItems) {
 		super(activity, R.layout.row_lecture, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;

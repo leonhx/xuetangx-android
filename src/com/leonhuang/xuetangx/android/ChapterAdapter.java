@@ -10,14 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.data.ChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
 
-public class ChapterAdapter extends ArrayAdapter<ChapterInfo> {
+public class ChapterAdapter extends ArrayAdapter<SimpleChapterInfo> {
 	private LayoutInflater inflater;
-	private ArrayList<ChapterInfo> items;
+	private ArrayList<SimpleChapterInfo> items;
 
 	public ChapterAdapter(Activity activity,
-			ArrayList<ChapterInfo> mListItems) {
+			ArrayList<SimpleChapterInfo> mListItems) {
 		super(activity, R.layout.row_chapter, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;

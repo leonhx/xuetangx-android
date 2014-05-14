@@ -14,5 +14,7 @@
 	<string name="course_tab_upcoming">UPCOMING</string>
 	<string name="course_tab_current">CURRENT</string>
 	<string name="course_tab_past">PAST</string>
+	
+	<string name="internet_not_avail_and_course_not_cached">Internet not available and the course has not been cached!</string>
 
 </resources>

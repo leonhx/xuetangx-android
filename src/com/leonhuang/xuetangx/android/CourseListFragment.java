@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
@@ -45,7 +46,7 @@ public class CourseListFragment extends ListFragment {
 	private SimpleCourseStatus courseStatus;
 	private CourseAdapter adapter;
 	private ListView listView;
-	private final ArrayList<SimpleCourseInfo> mListItems = new ArrayList<SimpleCourseInfo>();
+	private final ArrayList<SimpleCourseInfo> mCourses = new ArrayList<SimpleCourseInfo>();
 
 	private Activity mActivity;
 
@@ -67,7 +68,7 @@ public class CourseListFragment extends ListFragment {
 
 		listView = (ListView) mSwipeRefreshLayout
 				.findViewById(android.R.id.list);
-		adapter = new CourseAdapter(getActivity(), mListItems);
+		adapter = new CourseAdapter(getActivity(), mCourses);
 
 		new GetDataTask(new Runnable() {
 
@@ -106,14 +107,23 @@ public class CourseListFragment extends ListFragment {
 
 		switch (courseStatus) {
 		case UPCOMING:
-
+			Toast.makeText(mActivity, R.string.course_upcoming,
+					Toast.LENGTH_SHORT).show();
 			break;
-		case CURRENT:
+		case CURRENT: // Fall through
 		case PAST:
-			Intent intent = new Intent(mActivity, CourseActivity.class);
-			intent.putExtra(CourseActivity.SIMPLE_COURSE_INFO,
-					mListItems.get(position).toString());
-			intent.putExtra(CourseActivity.COURSE_STATUS, courseStatus);
+			if (!new NetworkConnectivityManager(mActivity)
+					.isConnectingToInternet(false)
+					&& !isChaptersCached(position)) {
+				Toast.makeText(mActivity,
+						R.string.internet_not_avail_and_course_not_cached,
+						Toast.LENGTH_SHORT).show();
+				break;
+			}
+			Intent intent = new Intent(mActivity, ChapterListActivity.class);
+			intent.putExtra(ChapterListActivity.SIMPLE_COURSE_INFO, mCourses
+					.get(position).toString());
+			intent.putExtra(ChapterListActivity.COURSE_STATUS, courseStatus);
 			startActivity(intent);
 			break;
 		default:
@@ -184,8 +194,8 @@ public class CourseListFragment extends ListFragment {
 
 			});
 
-			mListItems.clear();
-			mListItems.addAll(result);
+			mCourses.clear();
+			mCourses.addAll(result);
 			saveCourses(result, courseStatus);
 
 			if (null != runOnPostExecute) {
@@ -264,6 +274,28 @@ public class CourseListFragment extends ListFragment {
 			break;
 		}
 		return filename;
+	}
+
+	private boolean isChaptersCached(int position) {
+		String filename = ChapterListActivity.getStoragePath(mCourses
+				.get(position));
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					mActivity.openFileInput(filename)));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 }

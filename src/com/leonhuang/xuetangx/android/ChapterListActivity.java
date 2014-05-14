@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +31,7 @@ import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.model.UserInfo;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
-import com.leonhuang.xuetangx.data.ChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 import com.renn.rennsdk.RennClient;
@@ -40,7 +41,7 @@ import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.PutShareUrlParam;
 
-public class CourseActivity extends ListActivity {
+public class ChapterListActivity extends ListActivity {
 
 	public static final String SIMPLE_COURSE_INFO = "com.leonhuang.xuetangx.android.CourseActivity.Intent.SimpleCourseInfo";
 	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.CourseActivity.Intent.CourseStatus";
@@ -52,14 +53,14 @@ public class CourseActivity extends ListActivity {
 
 	private SimpleCourseInfo course;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private ArrayList<ChapterInfo> mChapters = new ArrayList<ChapterInfo>();
+	private ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
 	private ListView listView;
 	private ChapterAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_course);
+		setContentView(R.layout.activity_chapter_list);
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
@@ -105,11 +106,12 @@ public class CourseActivity extends ListActivity {
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent = new Intent(this, ChapterActivity.class);
-		intent.putExtra(ChapterActivity.CHAPTER_NO, position);
+		Intent intent = new Intent(this, LectureListActivity.class);
+		intent.putExtra(LectureListActivity.CHAPTER_NO, position);
+		intent.putExtra(LectureListActivity.COURSE_CACHE_PATH, getStoragePath(course));
 		startActivity(intent);
 		super.onListItemClick(l, v, position, id);
 	}
@@ -147,7 +149,7 @@ public class CourseActivity extends ListActivity {
 	}
 
 	private class GetContentTask extends
-			AsyncTask<Void, Void, ArrayList<ChapterInfo>> {
+			AsyncTask<Void, Void, ArrayList<SimpleChapterInfo>> {
 
 		private Runnable runOnPostExecute;
 
@@ -156,22 +158,23 @@ public class CourseActivity extends ListActivity {
 		}
 
 		@Override
-		protected ArrayList<ChapterInfo> doInBackground(Void... params) {
+		protected ArrayList<SimpleChapterInfo> doInBackground(Void... params) {
 			mSwipeRefreshLayout.setRefreshing(true);
 
-			ArrayList<ChapterInfo> chapters = new ArrayList<ChapterInfo>();
+			ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
 
-			if (!new NetworkConnectivityManager(CourseActivity.this)
+			if (!new NetworkConnectivityManager(ChapterListActivity.this)
 					.isConnectingToInternet(false)) {
 				chapters = loadChapters();
 				return chapters;
 			}
 
 			try {
-				UserInfo user = UserInfo.load(CourseActivity.this);
-				chapters = Courses.ware(user.getEmail(), user.getPassword(),
-						course);
-				new SignInStatusManager(CourseActivity.this)
+				Log.i("ChapterListTask", "Get From Internet");
+				UserInfo user = UserInfo.load(ChapterListActivity.this);
+				chapters = Courses.lectures(user.getEmail(),
+						user.getPassword(), course);
+				new SignInStatusManager(ChapterListActivity.this)
 						.checkSignInStatus(chapters);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -181,9 +184,9 @@ public class CourseActivity extends ListActivity {
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<ChapterInfo> result) {
+		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
 
-			new SignInStatusManager(CourseActivity.this)
+			new SignInStatusManager(ChapterListActivity.this)
 					.checkSignInStatus(result);
 
 			if (result.isEmpty()) {
@@ -204,11 +207,11 @@ public class CourseActivity extends ListActivity {
 
 	}
 
-	private void saveChapter(ArrayList<ChapterInfo> chapters) {
-		String filename = getStoragePath();
+	private void saveChapter(ArrayList<SimpleChapterInfo> chapters) {
+		String filename = getStoragePath(course);
 		if (null != filename) {
 			JSONArray coursesJSON = new JSONArray();
-			for (ChapterInfo chapter : chapters) {
+			for (SimpleChapterInfo chapter : chapters) {
 				coursesJSON.put(chapter.toJSON());
 			}
 
@@ -225,10 +228,10 @@ public class CourseActivity extends ListActivity {
 		}
 	}
 
-	private ArrayList<ChapterInfo> loadChapters() {
-		ArrayList<ChapterInfo> chapters = new ArrayList<ChapterInfo>();
+	private ArrayList<SimpleChapterInfo> loadChapters() {
+		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
 
-		String filename = getStoragePath();
+		String filename = getStoragePath(course);
 		if (null != filename) {
 			try {
 				BufferedReader reader = new BufferedReader(
@@ -240,7 +243,7 @@ public class CourseActivity extends ListActivity {
 				}
 				JSONArray chaptersJSON = new JSONArray(sb.toString());
 				for (int i = 0; i < chaptersJSON.length(); i++) {
-					chapters.add(ChapterInfo.fromJSON(chaptersJSON
+					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
 							.getJSONObject(i)));
 				}
 			} catch (FileNotFoundException e) {
@@ -255,13 +258,13 @@ public class CourseActivity extends ListActivity {
 		return chapters;
 	}
 
-	private String getStoragePath() {
-		return CACHE_COURSE_CHAPTERS;
+	public static String getStoragePath(SimpleCourseInfo course) {
+		return CACHE_COURSE_CHAPTERS + "." + course.getId();
 	}
 
 	private void shareToRenren(final String comment, final String url) {
 		final RennClient rennClient = RennClient
-				.getInstance(CourseActivity.this);
+				.getInstance(ChapterListActivity.this);
 		rennClient.init(RENREN_APP_ID, RENREN_API_KEY, RENREN_SECRET_KEY);
 		rennClient.setScope("publish_share publish_feed");
 		rennClient.setTokenType("mac");
@@ -276,7 +279,7 @@ public class CourseActivity extends ListActivity {
 							new CallBack() {
 								@Override
 								public void onSuccess(RennResponse response) {
-									Toast.makeText(CourseActivity.this,
+									Toast.makeText(ChapterListActivity.this,
 											R.string.share_succeed,
 											Toast.LENGTH_SHORT).show();
 								}
@@ -284,29 +287,29 @@ public class CourseActivity extends ListActivity {
 								@Override
 								public void onFailed(String errorCode,
 										String errorMessage) {
-									Toast.makeText(CourseActivity.this,
+									Toast.makeText(ChapterListActivity.this,
 											R.string.share_failed,
 											Toast.LENGTH_SHORT).show();
 								}
 
 							});
 				} catch (RennException e) {
-					Toast.makeText(CourseActivity.this, R.string.share_failed,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(ChapterListActivity.this,
+							R.string.share_failed, Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onLoginCanceled() {
-				Toast.makeText(CourseActivity.this,
+				Toast.makeText(ChapterListActivity.this,
 						getString(R.string.login_failed), Toast.LENGTH_SHORT)
 						.show();
 			}
 
 		});
 
-		rennClient.login(CourseActivity.this);
+		rennClient.login(ChapterListActivity.this);
 	}
 
 }

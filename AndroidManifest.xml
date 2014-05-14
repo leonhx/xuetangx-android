@@ -47,15 +47,19 @@
             android:label="@string/title_activity_course_list" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.android.CourseActivity"
-            android:label="@string/title_activity_course"
+            android:name="com.leonhuang.xuetangx.android.ChapterListActivity"
             android:parentActivityName="com.leonhuang.xuetangx.android.MainActivity"
             android:theme="@style/MyHasTitleTheme" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.android.ChapterActivity"
-            android:label="@string/title_activity_chapter"
-            android:parentActivityName="com.leonhuang.xuetangx.android.CourseActivity"
+            android:name="com.leonhuang.xuetangx.android.LectureListActivity"
+            android:parentActivityName="com.leonhuang.xuetangx.android.ChapterListActivity"
+            android:theme="@style/MyHasTitleTheme" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.android.ItemListActivity"
+            
+            android:parentActivityName="com.leonhuang.xuetangx.android.LectureListActivity"
             android:theme="@style/MyHasTitleTheme" >
         </activity>
     </application>

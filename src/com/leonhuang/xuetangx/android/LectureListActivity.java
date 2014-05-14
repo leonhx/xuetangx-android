@@ -12,29 +12,33 @@ import org.json.JSONException;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.data.ChapterInfo;
-import com.leonhuang.xuetangx.data.LectureInfo;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
-public class ChapterActivity extends ListActivity {
+public class LectureListActivity extends ListActivity {
 
 	public static final String CHAPTER_NO = "com.leonhuang.xuetangx.android.ChapterActivity.Intent.ChapterNo";
+	public static final String COURSE_CACHE_PATH = "com.leonhuang.xuetangx.android.ChapterActivity.Intent.CourseCachePath";
 
-	private ChapterInfo chapter;
-	private ArrayList<LectureInfo> mLectures = new ArrayList<LectureInfo>();
+	private SimpleChapterInfo chapter;
+	private ArrayList<SimpleLectureInfo> mLectures = new ArrayList<SimpleLectureInfo>();
+	private String courseCachePath;
 	private ListView listView;
 	private LectureAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_chapter);
+		setContentView(R.layout.activity_lecture_list);
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
 		int position = extra.getInt(CHAPTER_NO);
+		courseCachePath = extra.getString(COURSE_CACHE_PATH);
 		chapter = loadChapters().get(position);
 		mLectures = chapter.getLectures();
 
@@ -46,8 +50,16 @@ public class ChapterActivity extends ListActivity {
 		listView.setAdapter(adapter);
 	}
 
-	private ArrayList<ChapterInfo> loadChapters() {
-		ArrayList<ChapterInfo> chapters = new ArrayList<ChapterInfo>();
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// Intent intent = new Intent(this, ChapterActivity.class);
+		// intent.putExtra(ChapterActivity.CHAPTER_NO, position);
+		// startActivity(intent);// TODO
+		super.onListItemClick(l, v, position, id);
+	}
+
+	private ArrayList<SimpleChapterInfo> loadChapters() {
+		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
 
 		String filename = getStoragePath();
 		if (null != filename) {
@@ -61,7 +73,7 @@ public class ChapterActivity extends ListActivity {
 				}
 				JSONArray chaptersJSON = new JSONArray(sb.toString());
 				for (int i = 0; i < chaptersJSON.length(); i++) {
-					chapters.add(ChapterInfo.fromJSON(chaptersJSON
+					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
 							.getJSONObject(i)));
 				}
 			} catch (FileNotFoundException e) {
@@ -77,7 +89,7 @@ public class ChapterActivity extends ListActivity {
 	}
 
 	private String getStoragePath() {
-		return CourseActivity.CACHE_COURSE_CHAPTERS;
+		return courseCachePath;
 	}
 
 }
