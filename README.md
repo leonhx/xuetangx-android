@@ -17,4 +17,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 + My Downloads
 
++ Video Player
+
 + Share to: Weibo, QZone, WeChat
