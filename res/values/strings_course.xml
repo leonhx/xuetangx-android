@@ -18,4 +18,10 @@
 	<string name="internet_not_avail_and_course_not_cached">Internet not available and the course has not been cached!</string>
 	<string name="internet_not_avail_and_lecture_not_cached">Internet not available and the lecture has not been cached!</string>
 
+	<string name="enroll">Enroll</string>
+	<string name="unenroll">Un-Enroll</string>
+	<string name="enroll_succeed">Enroll succeed!</string>
+	<string name="enroll_failed">Enroll failed!</string>
+	<string name="unenroll_succeed">Un-Enroll succeed!</string>
+	<string name="unenroll_failed">Un-Enroll failed!</string>
 </resources>

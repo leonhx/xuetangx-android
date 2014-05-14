@@ -11,10 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -57,6 +62,8 @@ public class ChapterListActivity extends ListActivity {
 	private ListView listView;
 	private ChapterAdapter adapter;
 
+	private View mUnenrollStatusView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +87,8 @@ public class ChapterListActivity extends ListActivity {
 		mSwipeRefreshLayout.setColorScheme(R.color.holo_green_dark,
 				R.color.holo_orange_dark, R.color.holo_blue_bright,
 				R.color.holo_red_dark);
+
+		mUnenrollStatusView = findViewById(R.id.unenroll_status);
 
 		listView = (ListView) mSwipeRefreshLayout
 				.findViewById(android.R.id.list);
@@ -144,9 +153,89 @@ public class ChapterListActivity extends ListActivity {
 		case R.id.action_share_renren:
 			shareToRenren(comment, url);
 			return true;
+		case R.id.action_unenroll:
+			showProgress(true);
+			new TryUnenrollTask(this, new Runnable() {
+
+				@Override
+				public void run() {
+					showProgress(false);
+				}
+			}).execute();
+			finish();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private class TryUnenrollTask extends AsyncTask<Void, Void, Boolean> {
+
+		private Activity __activity;
+		private Runnable __runOnPostExecute;
+
+		public TryUnenrollTask(Activity activity, Runnable runOnPostExecute) {
+			__activity = activity;
+			__runOnPostExecute = runOnPostExecute;
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			Boolean success = false;
+
+			if (!new NetworkConnectivityManager(__activity)
+					.isConnectingToInternet(true)) {
+				return null;
+			}
+
+			try {
+				UserInfo user = UserInfo.load(__activity);
+				success = Courses.unenroll(user.getEmail(), user.getPassword(),
+						course);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return success;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+
+			if (null == success) {
+				return;
+			}
+
+			if (success) {
+				__activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(ChapterListActivity.this,
+								R.string.unenroll_succeed, Toast.LENGTH_SHORT)
+								.show();
+
+					}
+				});
+			} else {
+				__activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(ChapterListActivity.this,
+								R.string.unenroll_failed, Toast.LENGTH_SHORT)
+								.show();
+
+					}
+				});
+			}
+
+			if (null != __runOnPostExecute) {
+				__runOnPostExecute.run();
+			}
+
+			super.onPostExecute(success);
+		}
+
 	}
 
 	private class GetContentTask extends
@@ -187,8 +276,9 @@ public class ChapterListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
 
-			new SignInStatusManager(ChapterListActivity.this)
-					.checkSignInStatus(result);
+			if (null == result) {
+				return;
+			}
 
 			if (result.isEmpty()) {
 				return;
@@ -312,6 +402,44 @@ public class ChapterListActivity extends ListActivity {
 		});
 
 		rennClient.login(ChapterListActivity.this);
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mUnenrollStatusView.setVisibility(View.VISIBLE);
+			mUnenrollStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mUnenrollStatusView
+									.setVisibility(show ? View.VISIBLE
+											: View.GONE);
+						}
+					});
+
+			listView.setVisibility(View.VISIBLE);
+			listView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							listView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mUnenrollStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			listView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
 	}
 
 }

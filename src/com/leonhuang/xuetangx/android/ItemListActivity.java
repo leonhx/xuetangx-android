@@ -152,10 +152,11 @@ public class ItemListActivity extends ListActivity {
 
 		@Override
 		protected void onPostExecute(ArrayList<ItemInfo> result) {
-
-			new SignInStatusManager(ItemListActivity.this)
-					.checkSignInStatus(result);
-
+		
+			if (null == result) {
+				return;
+			}
+			
 			if (result.isEmpty()) {
 				return;
 			}

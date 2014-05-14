@@ -102,6 +102,18 @@ public class CourseListFragment extends ListFragment {
 	}
 
 	@Override
+	public void onResume() {
+		new GetDataTask(new Runnable() {
+
+			@Override
+			public void run() {
+				adapter.notifyDataSetInvalidated();
+			}
+		}).execute();
+		super.onResume();
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
