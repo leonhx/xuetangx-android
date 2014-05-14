@@ -1,5 +1,6 @@
 package com.leonhuang.xuetangx.android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.webkit.WebView;
 
 import com.leonhuang.xuetangx.R;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class WebViewActivity extends Activity {
 
 	public static final String WEB_VIEW_URL = "com.leonhuang.xuetangx.android.WebViewActivity.Intent.URL";
