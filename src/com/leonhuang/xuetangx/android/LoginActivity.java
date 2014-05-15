@@ -253,7 +253,7 @@ public class LoginActivity extends Activity {
 
 			if (!new NetworkConnectivityManager(LoginActivity.this)
 					.isConnectingToInternet(true)) {
-				return false;
+				return null;
 			}
 
 			try {
@@ -273,22 +273,24 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
 
-			if (success) {
-				new UpdateUserInfoTask(new UserInfo(mEmail, mPassword, "", ""),
-						LoginActivity.this, new Runnable() {
+			if (null != success) {
+				if (success) {
+					new UpdateUserInfoTask(new UserInfo(mEmail, mPassword, "",
+							""), LoginActivity.this, new Runnable() {
 
-							@Override
-							public void run() {
-								LoginActivity.this.showProgress(false);
-								LoginActivity.this.startCourseActivity();
-							}
-						}).execute();
-			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
+						@Override
+						public void run() {
+							LoginActivity.this.showProgress(false);
+							LoginActivity.this.startCourseActivity();
+						}
+					}).execute();
+				} else {
+					mPasswordView
+							.setError(getString(R.string.error_incorrect_password));
+					mPasswordView.requestFocus();
+				}
 			}
-			
+
 			showProgress(false);
 
 		}

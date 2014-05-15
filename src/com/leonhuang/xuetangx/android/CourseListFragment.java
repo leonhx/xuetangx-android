@@ -76,7 +76,7 @@ public class CourseListFragment extends ListFragment {
 			public void run() {
 				listView.setAdapter(adapter);
 			}
-		}).execute();
+		}, true).execute();
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -88,7 +88,7 @@ public class CourseListFragment extends ListFragment {
 					public void run() {
 						adapter.notifyDataSetInvalidated();
 					}
-				}).execute();
+				}, false).execute();
 			}
 		});
 
@@ -109,7 +109,7 @@ public class CourseListFragment extends ListFragment {
 			public void run() {
 				adapter.notifyDataSetInvalidated();
 			}
-		}).execute();
+		}, true).execute();
 		super.onResume();
 	}
 
@@ -147,9 +147,11 @@ public class CourseListFragment extends ListFragment {
 			AsyncTask<Void, Void, ArrayList<SimpleCourseInfo>> {
 
 		private Runnable runOnPostExecute;
+		private boolean __cacheFirst;
 
-		public GetDataTask(Runnable runOnPostExecute) {
+		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst) {
 			this.runOnPostExecute = runOnPostExecute;
+			__cacheFirst = cacheFirst;
 		}
 
 		@Override
@@ -162,6 +164,13 @@ public class CourseListFragment extends ListFragment {
 					.isConnectingToInternet(false)) {
 				courses = loadCourses(courseStatus);
 				return courses;
+			}
+
+			if (__cacheFirst) {
+				courses = loadCourses(courseStatus);
+				if (!courses.isEmpty()) {
+					return courses;
+				}
 			}
 
 			try {

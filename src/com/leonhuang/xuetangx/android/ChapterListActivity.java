@@ -100,7 +100,7 @@ public class ChapterListActivity extends ListActivity {
 			public void run() {
 				listView.setAdapter(adapter);
 			}
-		}).execute();
+		}, true).execute();
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -111,7 +111,7 @@ public class ChapterListActivity extends ListActivity {
 					public void run() {
 						adapter.notifyDataSetInvalidated();
 					}
-				}).execute();
+				}, false).execute();
 			}
 		});
 	}
@@ -236,9 +236,11 @@ public class ChapterListActivity extends ListActivity {
 			AsyncTask<Void, Void, ArrayList<SimpleChapterInfo>> {
 
 		private Runnable runOnPostExecute;
+		private boolean __cacheFirst;
 
-		public GetContentTask(Runnable runOnPostExecute) {
+		public GetContentTask(Runnable runOnPostExecute, boolean cacheFirst) {
 			this.runOnPostExecute = runOnPostExecute;
+			__cacheFirst = cacheFirst;
 		}
 
 		@Override
@@ -251,6 +253,13 @@ public class ChapterListActivity extends ListActivity {
 					.isConnectingToInternet(false)) {
 				chapters = loadChapters();
 				return chapters;
+			}
+
+			if (__cacheFirst) {
+				chapters = loadChapters();
+				if (!chapters.isEmpty()) {
+					return chapters;
+				}
 			}
 
 			try {
