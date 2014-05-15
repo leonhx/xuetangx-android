@@ -3,6 +3,10 @@ package com.leonhuang.xuetangx.android;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,11 +23,13 @@ import com.leonhuang.xuetangx.data.ItemType;
 public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 	private LayoutInflater inflater;
 	private ArrayList<ItemInfo> items;
+	private Activity __activity;
 
 	public ItemAdapter(Activity activity, ArrayList<ItemInfo> mListItems) {
 		super(activity, R.layout.row_lecture, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;
+		this.__activity = activity;
 	}
 
 	@Override
@@ -34,7 +40,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				.findViewById(R.id.item_download_image_button);
 		ImageView type = (ImageView) view.findViewById(R.id.item_type_image);
 
-		ItemInfo item = items.get(position);
+		final ItemInfo item = items.get(position);
 
 		if (item.getType() == ItemType.PROBLEM) {
 			type.setImageDrawable(view.getResources().getDrawable(
@@ -46,11 +52,23 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				@Override
 				public void onClick(View arg0) {
 					// TODO
-
+					DownloadManager mgr = (DownloadManager) __activity
+							.getSystemService(Context.DOWNLOAD_SERVICE);
+					String url = item.getLowQualityVideoUrls()[0];
+					DownloadManager.Request request = new DownloadManager.Request(
+							Uri.parse(url));
+					request.setAllowedNetworkTypes(
+							DownloadManager.Request.NETWORK_WIFI
+									| DownloadManager.Request.NETWORK_MOBILE)
+							.setAllowedOverRoaming(false)
+							.setTitle(item.getTitle())
+							.setDescription(item.getTitle())
+							.setDestinationInExternalPublicDir(
+									Environment.DIRECTORY_DOWNLOADS,
+									url.replaceAll("/", ""));
+					mgr.enqueue(request);
 				}
 			});
-			download.setVisibility(ImageButton.INVISIBLE); // TODO remove after
-															// download OK
 		}
 
 		title.setText(item.getTitle());
