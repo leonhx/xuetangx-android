@@ -161,7 +161,7 @@ public class CourseListFragment extends ListFragment {
 			ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
 
 			if (!new NetworkConnectivityManager(mActivity)
-					.isConnectingToInternet(false)) {
+					.isConnectingToInternet(true)) {
 				courses = loadCourses(courseStatus);
 				return courses;
 			}

@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
@@ -36,6 +39,9 @@ public class SearchFragment extends ListFragment {
 	private Activity mActivity;
 	private EditText searchField;
 	private boolean searchable;
+
+	private int nextOffset = 0;
+	private int LIMIT = 10;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +68,7 @@ public class SearchFragment extends ListFragment {
 							// message.
 							if (!event.isShiftPressed()) {
 								if (isPreparedForSending(actionId, event)) {
-									sendMessage();
+									sendMessage(false);
 								}
 								return true;
 							}
@@ -71,7 +77,7 @@ public class SearchFragment extends ListFragment {
 
 						if (actionId == EditorInfo.IME_ACTION_SEARCH
 								|| actionId == EditorInfo.IME_ACTION_DONE) {
-							sendMessage();
+							sendMessage(false);
 							return true;
 						}
 
@@ -98,7 +104,21 @@ public class SearchFragment extends ListFragment {
 			public void run() {
 				listView.setAdapter(adapter);
 			}
-		}, "", "", false, false).execute();
+		}, "", "", false, false, false).execute();
+
+		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				if (nextOffset < 0) {
+					Toast.makeText(mActivity, R.string.search_no_more_result,
+							Toast.LENGTH_SHORT).show();
+					mSwipeRefreshLayout.setRefreshing(false);
+				} else {
+					sendMessage(true);
+				}
+			}
+		});
 
 		return rootView;
 	}
@@ -115,9 +135,9 @@ public class SearchFragment extends ListFragment {
 		super.onListItemClick(l, v, position, id);
 	}
 
-	private void sendMessage() {
+	private void sendMessage(boolean append) {
 		final String query = searchField.getText().toString();
-		if (searchable) {
+		if (searchable && null != query) {
 			searchable = false;
 			InputMethodManager imm = (InputMethodManager) mActivity
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -128,7 +148,7 @@ public class SearchFragment extends ListFragment {
 					adapter.notifyDataSetInvalidated();
 					searchable = true;
 				}
-			}, query, "", false, false).execute();
+			}, query, "", false, false, append).execute();
 		}
 	}
 
@@ -146,14 +166,16 @@ public class SearchFragment extends ListFragment {
 		private String __cid;
 		private boolean __started;
 		private boolean __hasTA;
+		private boolean __append;
 
 		public GetSearchResultTask(Runnable runOnPostExecute, String query,
-				String cid, boolean started, boolean hasTA) {
+				String cid, boolean started, boolean hasTA, boolean append) {
 			__runOnPostExecute = runOnPostExecute;
 			__query = query;
 			__cid = cid;
 			__started = started;
 			__hasTA = hasTA;
+			__append = append;
 		}
 
 		@Override
@@ -168,8 +190,15 @@ public class SearchFragment extends ListFragment {
 			}
 
 			try {
-				courses = Courses.search(__query, __cid, __started, __hasTA);
-				new SignInStatusManager(mActivity).checkSignInStatus(courses);
+				int offset = nextOffset;
+				if (!__append) {
+					offset = 0;
+				}
+				Pair<ArrayList<CourseInfo>, Integer> pair = Courses.search(
+						__query, __cid, __started, __hasTA, offset, LIMIT);
+				new SignInStatusManager(mActivity).checkSignInStatus(pair);
+				courses = pair.first;
+				nextOffset = pair.second;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -180,9 +209,16 @@ public class SearchFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(ArrayList<CourseInfo> result) {
 
-			if (null != result && !result.isEmpty()) {
-				mCourses.clear();
-				mCourses.addAll(result);
+			if (null != result) {
+				if (!result.isEmpty()) {
+					if (!__append) {
+						mCourses.clear();
+					}
+					mCourses.addAll(0, result);
+				} else {
+					Toast.makeText(mActivity, R.string.search_no_result,
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			if (null != __runOnPostExecute) {

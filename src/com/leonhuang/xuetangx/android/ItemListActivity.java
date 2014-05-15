@@ -129,7 +129,7 @@ public class ItemListActivity extends ListActivity {
 			ArrayList<ItemInfo> items = new ArrayList<ItemInfo>();
 
 			if (!new NetworkConnectivityManager(ItemListActivity.this)
-					.isConnectingToInternet(false)) {
+					.isConnectingToInternet(true)) {
 				items = loadItems();
 				return items;
 			}

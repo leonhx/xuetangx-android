@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:inputType="text"
+        android:ems="10"
         android:hint="@string/search_hint"
         android:imeOptions="actionSearch"
-        android:ems="10" >
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>

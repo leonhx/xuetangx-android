@@ -7,6 +7,6 @@
         android:id="@+id/action_open_in_broswer"
         android:orderInCategory="100"
         android:title="@string/action_open_in_broswer"
-        app:showAsAction="never"/>
+        android:showAsAction="never"/>
 
 </menu>

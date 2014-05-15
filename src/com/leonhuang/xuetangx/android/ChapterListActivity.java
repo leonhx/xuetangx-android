@@ -267,7 +267,7 @@ public class ChapterListActivity extends ListActivity {
 			ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
 
 			if (!new NetworkConnectivityManager(ChapterListActivity.this)
-					.isConnectingToInternet(false)) {
+					.isConnectingToInternet(true)) {
 				chapters = loadChapters();
 				return chapters;
 			}

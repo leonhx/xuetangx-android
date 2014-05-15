@@ -122,15 +122,14 @@ public class IntroActivity extends Activity {
 
 							@Override
 							public void run() {
-								IntroActivity.this.showProgress(false);
 								IntroActivity.this.startMainActivity();
+								IntroActivity.this.showProgress(false);
 							}
 						}).execute();
 			} else {
 				IntroActivity.this.startLoginActivity();
+				showProgress(false);
 			}
-			
-			showProgress(false);
 		}
 
 		@Override
