@@ -28,7 +28,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 
 import com.leonhuang.xuetangx.Courses;
@@ -39,6 +40,7 @@ import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.data.SimpleChapterInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseInfo;
 import com.leonhuang.xuetangx.data.SimpleCourseStatus;
+import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennClient.LoginListener;
 import com.renn.rennsdk.RennExecutor.CallBack;
@@ -59,7 +61,7 @@ public class ChapterListActivity extends ListActivity {
 	private SimpleCourseInfo course;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
-	private ListView listView;
+	private ExpandableListView listView;
 	private ChapterAdapter adapter;
 
 	private View mUnenrollStatusView;
@@ -90,7 +92,7 @@ public class ChapterListActivity extends ListActivity {
 
 		mUnenrollStatusView = findViewById(R.id.unenroll_status);
 
-		listView = (ListView) mSwipeRefreshLayout
+		listView = (ExpandableListView) mSwipeRefreshLayout
 				.findViewById(android.R.id.list);
 		adapter = new ChapterAdapter(this, mChapters);
 
@@ -114,16 +116,31 @@ public class ChapterListActivity extends ListActivity {
 				}, false).execute();
 			}
 		});
-	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent = new Intent(this, LectureListActivity.class);
-		intent.putExtra(LectureListActivity.CHAPTER_NO, position);
-		intent.putExtra(LectureListActivity.COURSE_CACHE_PATH,
-				getStoragePath(course));
-		startActivity(intent);
-		super.onListItemClick(l, v, position, id);
+		listView.setOnChildClickListener(new OnChildClickListener() {
+
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				SimpleLectureInfo lecture = (SimpleLectureInfo) adapter
+						.getChild(groupPosition, childPosition);
+				if (!new NetworkConnectivityManager(ChapterListActivity.this)
+						.isConnectingToInternet(false)
+						&& !isItemsCached(lecture)) {
+					Toast.makeText(ChapterListActivity.this,
+							R.string.internet_not_avail_and_lecture_not_cached,
+							Toast.LENGTH_SHORT).show();
+					return true;
+				}
+
+				Intent intent = new Intent(ChapterListActivity.this,
+						ItemListActivity.class);
+				intent.putExtra(ItemListActivity.SIMPLE_LECTURE_INFO,
+						lecture.toString());
+				startActivity(intent);
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -437,6 +454,24 @@ public class ChapterListActivity extends ListActivity {
 			mUnenrollStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			listView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	private boolean isItemsCached(SimpleLectureInfo lecture) {
+		String filename = ItemListActivity.getStoragePath(lecture);
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					openFileInput(filename)));
+			while (reader.readLine() != null) {
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 }

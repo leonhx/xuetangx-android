@@ -38,7 +38,6 @@ public class IntroActivity extends Activity {
 	}
 
 	private void tryLogin(final String email, final String password) {
-		showProgress(true);
 		new UserLoginTask(email, password).execute();
 	}
 
@@ -87,6 +86,7 @@ public class IntroActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			showProgress(true);
 
 			if (!new NetworkConnectivityManager(IntroActivity.this)
 					.isConnectingToInternet(true)) {

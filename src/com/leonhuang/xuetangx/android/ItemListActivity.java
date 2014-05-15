@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -28,14 +29,11 @@ import com.leonhuang.xuetangx.android.model.UserInfo;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.data.ItemInfo;
-import com.leonhuang.xuetangx.data.SimpleChapterInfo;
 import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
 public class ItemListActivity extends ListActivity {
 
-	public static final String CHAPTER_NO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.ChapterNo";
-	public static final String LECTURE_NO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.LectureNo";
-	public static final String COURSE_CACHE_PATH = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.CourseCachePath";
+	public static final String SIMPLE_LECTURE_INFO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.SimpleLectureInfo";
 
 	private static final String CACHE_LECTURE_PATH = "com.leonhuang.xuetangx.android.ItemListActivity.Cache.Items";
 
@@ -43,7 +41,6 @@ public class ItemListActivity extends ListActivity {
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private ArrayList<ItemInfo> mItems = new ArrayList<ItemInfo>();
 	private ListView listView;
-	private String courseCachePath;
 	private ItemAdapter adapter;
 
 	@Override
@@ -53,11 +50,12 @@ public class ItemListActivity extends ListActivity {
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
-		int chap_position = extra.getInt(CHAPTER_NO);
-		int lect_position = extra.getInt(LECTURE_NO);
-		courseCachePath = extra.getString(COURSE_CACHE_PATH);
-		lecture = loadChapters().get(chap_position).getLectures()
-				.get(lect_position);
+		try {
+			lecture = SimpleLectureInfo.fromJSON(new JSONObject(extra
+					.getString(SIMPLE_LECTURE_INFO)));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
 		getActionBar().setTitle(lecture.getTitle());
 		getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -217,36 +215,6 @@ public class ItemListActivity extends ListActivity {
 		}
 
 		return items;
-	}
-
-	private ArrayList<SimpleChapterInfo> loadChapters() {
-		ArrayList<SimpleChapterInfo> chapters = new ArrayList<SimpleChapterInfo>();
-
-		String filename = courseCachePath;
-		if (null != filename) {
-			try {
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(openFileInput(filename)));
-				StringBuilder sb = new StringBuilder();
-				String line;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				JSONArray chaptersJSON = new JSONArray(sb.toString());
-				for (int i = 0; i < chaptersJSON.length(); i++) {
-					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
-							.getJSONObject(i)));
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return chapters;
 	}
 
 	public static String getStoragePath(SimpleLectureInfo lecture) {
