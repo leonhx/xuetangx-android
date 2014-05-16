@@ -1,8 +1,6 @@
 package com.leonhuang.xuetangx.android;
 
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,17 +20,15 @@ import android.widget.Toast;
 
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.model.UserInfo;
-import com.leonhuang.xuetangx.android.util.DownloadNotificationClickedReceiver;
 
 public class MainActivity extends FragmentActivity {
 
 	public static final String INITIAL_FRAGMENT_NO = "com.leonhuang.xuetangx.MainActivity.InitialFragmentNo";
 	public static final int FRAGMENT_DASHBOARD = 0;
 	public static final int FRAGMENT_SEARCH = 1;
-	public static final int FRAGMENT_DOWNLOADS = 2;
-	public static final int FRAGMENT_ACTION_FEEDBACK = 3;
-	public static final int FRAGMENT_ABOUT = 4;
-	public static final int FRAGMENT_ACTION_LOGOUT = 5;
+	public static final int FRAGMENT_ACTION_FEEDBACK = 2;
+	public static final int FRAGMENT_ABOUT = 3;
+	public static final int FRAGMENT_ACTION_LOGOUT = 4;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -174,9 +170,6 @@ public class MainActivity extends FragmentActivity {
 			break;
 		case FRAGMENT_SEARCH:
 			fragment = new SearchFragment();
-			break;
-		case FRAGMENT_DOWNLOADS:
-			fragment = new DownloadsFragment();
 			break;
 		case FRAGMENT_ACTION_FEEDBACK:
 			intent = new Intent(Intent.ACTION_SEND);
