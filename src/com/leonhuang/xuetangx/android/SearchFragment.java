@@ -186,7 +186,7 @@ public class SearchFragment extends ListFragment {
 
 			if (!new NetworkConnectivityManager(mActivity)
 					.isConnectingToInternet(true)) {
-				return courses;
+				return null;
 			}
 
 			try {
