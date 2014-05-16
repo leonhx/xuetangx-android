@@ -1,6 +1,6 @@
 package com.leonhuang.xuetangx.android.util;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -9,20 +9,27 @@ import com.leonhuang.xuetangx.android.LoginActivity;
 
 public class SignInStatusManager {
 
-	private Context __context;
+	private Activity __activity;
 
-	public SignInStatusManager(Context context) {
-		__context = context;
+	public SignInStatusManager(Activity activity) {
+		__activity = activity;
 	}
 
-	public void checkSignInStatus(Object info) {
+	public boolean checkSignInStatus(Object info) {
 		if (null == info) {
-			Toast.makeText(__context, R.string.util_relogin_plz,
-					Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(__context, LoginActivity.class);
+			__activity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(__activity, R.string.util_relogin_plz,
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+			Intent intent = new Intent(__activity, LoginActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			__context.startActivity(intent);
+			__activity.startActivity(intent);
+			return false;
 		}
+		return true;
 	}
 }

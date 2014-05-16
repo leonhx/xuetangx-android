@@ -1,6 +1,8 @@
 package com.leonhuang.xuetangx.android;
 
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +22,17 @@ import android.widget.Toast;
 
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.model.UserInfo;
+import com.leonhuang.xuetangx.android.util.DownloadNotificationClickedReceiver;
 
 public class MainActivity extends FragmentActivity {
+
+	public static final String INITIAL_FRAGMENT_NO = "com.leonhuang.xuetangx.MainActivity.InitialFragmentNo";
+	public static final int FRAGMENT_DASHBOARD = 0;
+	public static final int FRAGMENT_SEARCH = 1;
+	public static final int FRAGMENT_DOWNLOADS = 2;
+	public static final int FRAGMENT_ACTION_FEEDBACK = 3;
+	public static final int FRAGMENT_ABOUT = 4;
+	public static final int FRAGMENT_ACTION_LOGOUT = 5;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -78,8 +89,19 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			Intent intent = getIntent();
+			selectItem(intent.getIntExtra(INITIAL_FRAGMENT_NO,
+					FRAGMENT_DASHBOARD));
 		}
+
+//		registerReceiver(new DownloadNotificationClickedReceiver(),
+//				new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+	}
+
+	@Override
+	protected void onDestroy() {
+//		unregisterReceiver(new DownloadNotificationClickedReceiver());
+		super.onDestroy();
 	}
 
 	@Override
@@ -143,34 +165,33 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void selectItem(int position) {
-		// TODO
-
 		Fragment fragment = null;
 		Intent intent;
 
 		switch (position) {
-		case 0: // Dashboard
+		case FRAGMENT_DASHBOARD:
 			fragment = new DashboardFragment();
 			break;
-		case 1: // Search
+		case FRAGMENT_SEARCH:
 			fragment = new SearchFragment();
 			break;
-		case 2: // My Downloads
+		case FRAGMENT_DOWNLOADS:
 			fragment = new DownloadsFragment();
 			break;
-		case 3: // Feedback
+		case FRAGMENT_ACTION_FEEDBACK:
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"leon@njuopen.com"});
+			intent.putExtra(Intent.EXTRA_EMAIL,
+					new String[] { "leon@njuopen.com" });
 			intent.putExtra(Intent.EXTRA_SUBJECT, "[XuetangX FEEDBACK]");
 
 			startActivity(Intent.createChooser(intent,
 					getString(R.string.choose_mail_client)));
 			return;
-		case 4: // About
+		case FRAGMENT_ABOUT:
 			fragment = new AboutFragment();
 			break;
-		case 5: // Logout
+		case FRAGMENT_ACTION_LOGOUT:
 			new UserInfo("", "", "", "").save(MainActivity.this);
 			intent = new Intent(MainActivity.this, LoginActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

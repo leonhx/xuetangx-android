@@ -196,7 +196,9 @@ public class SearchFragment extends ListFragment {
 				}
 				Pair<ArrayList<CourseInfo>, Integer> pair = Courses.search(
 						__query, __cid, __started, __hasTA, offset, LIMIT);
-				new SignInStatusManager(mActivity).checkSignInStatus(pair);
+				if (!new SignInStatusManager(mActivity).checkSignInStatus(pair)) {
+					return null;
+				}
 				courses = pair.first;
 				nextOffset = pair.second;
 			} catch (IOException e) {

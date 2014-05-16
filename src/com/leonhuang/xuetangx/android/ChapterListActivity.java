@@ -284,8 +284,10 @@ public class ChapterListActivity extends ListActivity {
 				UserInfo user = UserInfo.load(ChapterListActivity.this);
 				chapters = Courses.lectures(user.getEmail(),
 						user.getPassword(), course);
-				new SignInStatusManager(ChapterListActivity.this)
-						.checkSignInStatus(chapters);
+				if (!new SignInStatusManager(ChapterListActivity.this)
+						.checkSignInStatus(chapters)) {
+					return null;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

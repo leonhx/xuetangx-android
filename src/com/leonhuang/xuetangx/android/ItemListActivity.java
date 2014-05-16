@@ -139,8 +139,10 @@ public class ItemListActivity extends ListActivity {
 				UserInfo user = UserInfo.load(ItemListActivity.this);
 				items = Courses.lecture(user.getEmail(), user.getPassword(),
 						lecture);
-				new SignInStatusManager(ItemListActivity.this)
-						.checkSignInStatus(items);
+				if (!new SignInStatusManager(ItemListActivity.this)
+						.checkSignInStatus(items)) {
+					return null;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -27,7 +27,10 @@ public class UpdateUserInfoTask extends AsyncTask<Void, Void, Void> {
 		try {
 			StudentInfo studentInfo = Student.info(user.getEmail(),
 					user.getPassword());
-			new SignInStatusManager(activity).checkSignInStatus(studentInfo);
+			if (!new SignInStatusManager(activity)
+					.checkSignInStatus(studentInfo)) {
+				return null;
+			}
 			user.update(studentInfo.getName(), studentInfo.getNickname());
 			user.save(this.activity);
 		} catch (IOException e) {

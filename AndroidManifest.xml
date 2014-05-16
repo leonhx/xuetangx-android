@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.leonhuang.xuetangx"
     android:versionCode="0"
-    android:versionName="0.0.7" >
+    android:versionName="0.0.8" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -67,17 +67,15 @@
         <activity android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
         </activity>
         <receiver
-            android:name=".DownloadNotificationClickedReceiver"
+            android:name="com.leonhuang.xuetangx.android.util.DownloadNotificationClickedReceiver"
             android:exported="true"
-            android:process=":receiver" >
+            android:process=":receiver"
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" >
                 </action>
             </intent-filter>
         </receiver>
     </application>
-
-    <use>
-    </use>
 
 </manifest>

@@ -189,7 +189,10 @@ public class CourseListFragment extends ListFragment {
 							user.getPassword());
 					break;
 				}
-				new SignInStatusManager(mActivity).checkSignInStatus(courses);
+				if (!new SignInStatusManager(mActivity)
+						.checkSignInStatus(courses)) {
+					return null;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
