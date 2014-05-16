@@ -66,6 +66,15 @@
         </activity>
         <activity android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
         </activity>
+        <receiver
+            android:name=".DownloadNotificationClickedReceiver"
+            android:exported="true"
+            android:process=":receiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" >
+                </action>
+            </intent-filter>
+        </receiver>
     </application>
 
     <use>

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.leonhuang.xuetangx.R;
 
 public class DownloadsFragment extends Fragment {
+	
+	public static final String DOWNLOAD_IDS = "com.leonhuang.xuetangx.download.IDs";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

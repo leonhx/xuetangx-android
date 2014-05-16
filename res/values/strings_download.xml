@@ -1,5 +1,7 @@
 <resources>
 
-    <string name="download_service_name">XuetangX Download</string>
+    <string name="download_title">XuetangX Download</string>
+    <string name="download_in_progress">Download in progress</string>
+    <string name="download_complete">Download complete</string>
 	
 </resources>
