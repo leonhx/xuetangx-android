@@ -32,8 +32,6 @@ import com.leonhuang.xuetangx.data.ItemType;
 
 public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
-	public static final String DOWNLOAD_IDS = "com.leonhuang.xuetangx.download.pref.IDs";
-
 	private LayoutInflater inflater;
 	private ArrayList<ItemInfo> items;
 	private Activity __activity;
@@ -217,7 +215,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	public static void saveDownloadID(Context context, String url, long id) {
 		SharedPreferences sharedPref = context.getSharedPreferences(
-				DOWNLOAD_IDS, Context.MODE_PRIVATE);
+				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
 		Editor editor = sharedPref.edit();
 		editor.putLong(url, id);
 		editor.commit();
@@ -225,7 +223,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	public static void resetDownloadID(Context context, String url) {
 		SharedPreferences sharedPref = context.getSharedPreferences(
-				DOWNLOAD_IDS, Context.MODE_PRIVATE);
+				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
 		Editor editor = sharedPref.edit();
 		editor.remove(url);
 		editor.commit();
@@ -233,7 +231,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	public static long getDownloadID(Context context, String url) {
 		SharedPreferences sharedPref = context.getSharedPreferences(
-				DOWNLOAD_IDS, Context.MODE_PRIVATE);
+				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
 		return sharedPref.getLong(url, 0);
 	}
 }
