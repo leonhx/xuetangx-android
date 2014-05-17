@@ -67,7 +67,8 @@
         <activity android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.android.util.VideoPlayerActivity" >
+            android:name="com.leonhuang.xuetangx.android.util.VideoPlayerActivity"
+            android:theme="@style/NoActionBar" >
         </activity>
     </application>
 
