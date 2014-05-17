@@ -128,6 +128,7 @@ public class LoginActivity extends Activity {
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce) {
 			super.onBackPressed();
+			android.os.Process.killProcess(android.os.Process.myPid());
 			return;
 		}
 

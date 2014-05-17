@@ -36,6 +36,11 @@ public class IntroActivity extends Activity {
 			IntroActivity.this.startLoginActivity();
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    android.os.Process.killProcess(android.os.Process.myPid());
+	}
 
 	private void tryLogin(final String email, final String password) {
 		new UserLoginTask(email, password).execute();

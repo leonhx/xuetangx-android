@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,7 +64,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					download.setEnabled(false);// TODO
+					download.setEnabled(false);
 					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
 						@Override
 						public void run(String rawUrl, String realUrl) {
@@ -104,7 +103,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 					}).execute();
 				}
 			});
-			type.setOnClickListener(new OnClickListener() {
+			OnClickListener playVideoListener = new OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					// TODO check whether download successfule before
@@ -128,7 +127,9 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 						}
 					}).execute();
 				}
-			});
+			};
+			type.setOnClickListener(playVideoListener);
+			title.setOnClickListener(playVideoListener);
 		}
 
 		title.setText(item.getTitle());
@@ -173,20 +174,16 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				return null;
 			}
 
-			String url = null;
 			try {
-				Pair<String, String> pair = Courses.videoUrl(__item);
-				if (!new SignInStatusManager(__activity)
-						.checkSignInStatus(pair)) {
-					return null;
-				}
-				__url = pair.first;
-				url = pair.second;
+				String url = Courses
+						.videoUrl(__item.getLowQualityVideoUrls()[0]);
+				new SignInStatusManager(__activity).checkSignInStatus(url);
+				return url;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			return url;
+			return null;
 		}
 
 		@Override
