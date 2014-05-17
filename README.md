@@ -11,8 +11,6 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 ### TODO
 
-+ Video Player
++ DownloadsFragment extends ListFragment
 
 + Share to: Weibo, QZone, WeChat
-
-+ DownloadsFragment extends ListFragment

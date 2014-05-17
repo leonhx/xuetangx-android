@@ -26,9 +26,10 @@ public class MainActivity extends FragmentActivity {
 	public static final String INITIAL_FRAGMENT_NO = "com.leonhuang.xuetangx.MainActivity.InitialFragmentNo";
 	public static final int FRAGMENT_DASHBOARD = 0;
 	public static final int FRAGMENT_SEARCH = 1;
-	public static final int FRAGMENT_ACTION_FEEDBACK = 2;
-	public static final int FRAGMENT_ABOUT = 3;
-	public static final int FRAGMENT_ACTION_LOGOUT = 4;
+	public static final int FRAGMENT_DOWNLOADS = 2;
+	public static final int FRAGMENT_ACTION_FEEDBACK = 3;
+	public static final int FRAGMENT_ABOUT = 4;
+	public static final int FRAGMENT_ACTION_LOGOUT = 5;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -36,7 +37,7 @@ public class MainActivity extends FragmentActivity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] mFragmentTitles;
+	private String[] mFragmentTitles = new String[6];
 
 	private boolean doubleBackToExitPressedOnce;
 
@@ -45,8 +46,14 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		mFragmentTitles[FRAGMENT_DASHBOARD] = getString(R.string.drawer_dashboard);
+		mFragmentTitles[FRAGMENT_SEARCH] = getString(R.string.drawer_search);
+		mFragmentTitles[FRAGMENT_DOWNLOADS] = getString(R.string.drawer_downloads);
+		mFragmentTitles[FRAGMENT_ACTION_FEEDBACK] = getString(R.string.drawer_feedback);
+		mFragmentTitles[FRAGMENT_ABOUT] = getString(R.string.drawer_about);
+		mFragmentTitles[FRAGMENT_ACTION_LOGOUT] = getString(R.string.drawer_logout);
+
 		mTitle = mDrawerTitle = getTitle();
-		mFragmentTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -90,13 +97,13 @@ public class MainActivity extends FragmentActivity {
 					FRAGMENT_DASHBOARD));
 		}
 
-//		registerReceiver(new DownloadNotificationClickedReceiver(),
-//				new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+		// registerReceiver(new DownloadNotificationClickedReceiver(),
+		// new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
 	}
 
 	@Override
 	protected void onDestroy() {
-//		unregisterReceiver(new DownloadNotificationClickedReceiver());
+		// unregisterReceiver(new DownloadNotificationClickedReceiver());
 		super.onDestroy();
 	}
 
@@ -171,6 +178,9 @@ public class MainActivity extends FragmentActivity {
 			break;
 		case FRAGMENT_SEARCH:
 			fragment = new SearchFragment();
+			break;
+		case FRAGMENT_DOWNLOADS:
+			fragment = new DownloadsFragment();
 			break;
 		case FRAGMENT_ACTION_FEEDBACK:
 			intent = new Intent(Intent.ACTION_SEND);

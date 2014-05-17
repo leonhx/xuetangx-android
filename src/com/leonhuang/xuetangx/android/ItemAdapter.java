@@ -106,26 +106,38 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			OnClickListener playVideoListener = new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					// TODO check whether download successfule before
-					// if so: play local file
-					// else: play online stream
-					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
-						@Override
-						public void run(String rawUrl, String realUrl) {
-							Intent intent = new Intent(__activity,
-									VideoPlayerActivity.class);
-							intent.putExtra(VideoPlayerActivity.VIDEO_URI,
-									realUrl);
-							__activity.startActivity(intent);
+					String file = null;
+					for (String url : item.getVideoUrls()) {
+						long id = getDownloadID(__activity, url);
+						DownloadManager mgr = (DownloadManager) __activity
+								.getSystemService(Context.DOWNLOAD_SERVICE);
+						Uri uri = mgr.getUriForDownloadedFile(id);
+						if (null != uri) {
+							file = uri.getPath();
+							break;
 						}
-					}, new OnPostExecuteRunnable() {
-						@Override
-						public void run(String rawUrl, String realUrl) {
-							Toast.makeText(__activity,
-									R.string.util_internet_inavail,
-									Toast.LENGTH_SHORT).show();
-						}
-					}).execute();
+					}
+
+					if (null != file) {
+						startVideoPlayer(__activity, file);
+					} else {
+						new GetDownloadUrlTask(item,
+								new OnPostExecuteRunnable() {
+									@Override
+									public void run(String rawUrl,
+											String realUrl) {
+										startVideoPlayer(__activity, realUrl);
+									}
+								}, new OnPostExecuteRunnable() {
+									@Override
+									public void run(String rawUrl,
+											String realUrl) {
+										Toast.makeText(__activity,
+												R.string.util_internet_inavail,
+												Toast.LENGTH_SHORT).show();
+									}
+								}).execute();
+					}
 				}
 			};
 			type.setOnClickListener(playVideoListener);
@@ -153,7 +165,6 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	private class GetDownloadUrlTask extends AsyncTask<Void, Void, String> {
 
-		private ItemInfo __item;
 		private String __url;
 		private OnPostExecuteRunnable __runIfNetworkFailed;
 		private OnPostExecuteRunnable __runIfSucceed;
@@ -161,7 +172,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		public GetDownloadUrlTask(ItemInfo item,
 				OnPostExecuteRunnable runIfSucceed,
 				OnPostExecuteRunnable runIfFailed) {
-			__item = item;
+			__url = item.getLowQualityVideoUrls()[0];
 			__runIfSucceed = runIfSucceed;
 			__runIfNetworkFailed = runIfFailed;
 		}
@@ -175,8 +186,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			}
 
 			try {
-				String url = Courses
-						.videoUrl(__item.getLowQualityVideoUrls()[0]);
+				String url = Courses.videoUrl(__url);
 				new SignInStatusManager(__activity).checkSignInStatus(url);
 				return url;
 			} catch (IOException e) {
@@ -199,6 +209,12 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	}
 
+	public static void startVideoPlayer(Activity activity, String uri) {
+		Intent intent = new Intent(activity, VideoPlayerActivity.class);
+		intent.putExtra(VideoPlayerActivity.VIDEO_URI, uri);
+		activity.startActivity(intent);
+	}
+
 	public static void saveDownloadID(Context context, String url, long id) {
 		SharedPreferences sharedPref = context.getSharedPreferences(
 				DOWNLOAD_IDS, Context.MODE_PRIVATE);
@@ -215,7 +231,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		editor.commit();
 	}
 
-	public static Long getDownloadID(Context context, String url) {
+	public static long getDownloadID(Context context, String url) {
 		SharedPreferences sharedPref = context.getSharedPreferences(
 				DOWNLOAD_IDS, Context.MODE_PRIVATE);
 		return sharedPref.getLong(url, 0);
