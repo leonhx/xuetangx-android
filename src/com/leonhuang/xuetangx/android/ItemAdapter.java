@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
+import com.leonhuang.xuetangx.android.util.VideoPlayerActivity;
 import com.leonhuang.xuetangx.data.ItemInfo;
 import com.leonhuang.xuetangx.data.ItemType;
 
@@ -64,9 +66,31 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				@Override
 				public void onClick(View view) {
 					download.setEnabled(false);// TODO
-					new DownloadTask(item, new Runnable() {
+					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
 						@Override
-						public void run() {
+						public void run(String rawUrl, String realUrl) {
+							DownloadManager.Request request = new DownloadManager.Request(
+									Uri.parse(realUrl));
+							DownloadManager mgr = (DownloadManager) __activity
+									.getSystemService(Context.DOWNLOAD_SERVICE);
+							request.setAllowedNetworkTypes(
+									DownloadManager.Request.NETWORK_WIFI
+											| DownloadManager.Request.NETWORK_MOBILE)
+									.setAllowedOverRoaming(false)
+									.setTitle(item.getTitle())
+									.setDescription(item.getTitle())
+									.setDestinationInExternalPublicDir(
+											Environment.DIRECTORY_MOVIES,
+											"." + item.getTitle()
+													+ rawUrl.hashCode());
+
+							Log.i("Download", realUrl);
+							long id = mgr.enqueue(request);
+							saveDownloadID(__activity, rawUrl, id);
+						}
+					}, new OnPostExecuteRunnable() {
+						@Override
+						public void run(String rawUrl, String realUrl) {
 							Toast.makeText(__activity,
 									R.string.download_network_fail,
 									Toast.LENGTH_SHORT).show();
@@ -81,13 +105,28 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				}
 			});
 			type.setOnClickListener(new OnClickListener() {
-
 				@Override
-				public void onClick(View arg0) {
+				public void onClick(View view) {
 					// TODO check whether download successfule before
 					// if so: play local file
 					// else: play online stream
-
+					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
+						@Override
+						public void run(String rawUrl, String realUrl) {
+							Intent intent = new Intent(__activity,
+									VideoPlayerActivity.class);
+							intent.putExtra(VideoPlayerActivity.VIDEO_URI,
+									realUrl);
+							__activity.startActivity(intent);
+						}
+					}, new OnPostExecuteRunnable() {
+						@Override
+						public void run(String rawUrl, String realUrl) {
+							Toast.makeText(__activity,
+									R.string.util_internet_inavail,
+									Toast.LENGTH_SHORT).show();
+						}
+					}).execute();
 				}
 			});
 		}
@@ -107,14 +146,22 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		super.notifyDataSetChanged();
 	}
 
-	private class DownloadTask extends AsyncTask<Void, Void, String> {
+	private interface OnPostExecuteRunnable {
+		public void run(String rawUrl, String realUrl);
+	}
+
+	private class GetDownloadUrlTask extends AsyncTask<Void, Void, String> {
 
 		private ItemInfo __item;
 		private String __url;
-		private Runnable __runIfNetworkFailed;
+		private OnPostExecuteRunnable __runIfNetworkFailed;
+		private OnPostExecuteRunnable __runIfSucceed;
 
-		public DownloadTask(ItemInfo item, Runnable runIfFailed) {
+		public GetDownloadUrlTask(ItemInfo item,
+				OnPostExecuteRunnable runIfSucceed,
+				OnPostExecuteRunnable runIfFailed) {
 			__item = item;
+			__runIfSucceed = runIfSucceed;
 			__runIfNetworkFailed = runIfFailed;
 		}
 
@@ -146,28 +193,11 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		protected void onPostExecute(String url) {
 			if (null == url) {
 				if (null != __runIfNetworkFailed) {
-					__runIfNetworkFailed.run();
+					__runIfNetworkFailed.run(__url, url);
 				}
-				return;
+			} else {
+				__runIfSucceed.run(__url, url);
 			}
-
-			DownloadManager.Request request = new DownloadManager.Request(
-					Uri.parse(url));
-			DownloadManager mgr = (DownloadManager) __activity
-					.getSystemService(Context.DOWNLOAD_SERVICE);
-			request.setAllowedNetworkTypes(
-					DownloadManager.Request.NETWORK_WIFI
-							| DownloadManager.Request.NETWORK_MOBILE)
-					.setAllowedOverRoaming(false)
-					.setTitle(__item.getTitle())
-					.setDescription(__item.getTitle())
-					.setDestinationInExternalPublicDir(
-							Environment.DIRECTORY_MOVIES,
-							"." + __item.getTitle() + __url.hashCode());
-
-			Log.i("Download", url);
-			long id = mgr.enqueue(request);
-			saveDownloadID(__activity, __url, id);
 		}
 
 	}

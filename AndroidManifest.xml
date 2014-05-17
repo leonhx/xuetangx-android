@@ -45,8 +45,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.leonhuang.xuetangx.android.MainActivity"
-            android:label="@string/title_activity_course_list" >
+            android:name="com.leonhuang.xuetangx.android.MainActivity" >
         </activity>
         <activity
             android:name="com.leonhuang.xuetangx.android.ChapterListActivity"
@@ -66,6 +65,9 @@
         <activity android:name="com.leonhuang.xuetangx.android.WebViewActivity" >
         </activity>
         <activity android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
+        </activity>
+        <activity
+            android:name="com.leonhuang.xuetangx.android.util.VideoPlayerActivity" >
         </activity>
     </application>
 
