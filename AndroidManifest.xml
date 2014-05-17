@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -66,16 +67,6 @@
         </activity>
         <activity android:name="com.leonhuang.xuetangx.android.CourseInfoActivity" >
         </activity>
-        <receiver
-            android:name="com.leonhuang.xuetangx.android.util.DownloadNotificationClickedReceiver"
-            android:exported="true"
-            android:process=":receiver"
-            android:enabled="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" >
-                </action>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

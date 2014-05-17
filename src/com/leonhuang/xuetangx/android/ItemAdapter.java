@@ -5,15 +5,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -22,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,17 +30,15 @@ import com.leonhuang.xuetangx.data.ItemInfo;
 import com.leonhuang.xuetangx.data.ItemType;
 
 public class ItemAdapter extends ArrayAdapter<ItemInfo> {
-	
-	public static final String DOWNLOAD_IDS = "com.leonhuang.xuetangx.download.pref.IDs";
 
-	public static int notification_id = 0;
+	public static final String DOWNLOAD_IDS = "com.leonhuang.xuetangx.download.pref.IDs";
 
 	private LayoutInflater inflater;
 	private ArrayList<ItemInfo> items;
 	private Activity __activity;
 
 	public ItemAdapter(Activity activity, ArrayList<ItemInfo> mListItems) {
-		super(activity, R.layout.row_lecture, mListItems);
+		super(activity, R.layout.row_item, mListItems);
 		inflater = activity.getWindow().getLayoutInflater();
 		this.items = mListItems;
 		this.__activity = activity;
@@ -56,7 +50,8 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		TextView title = (TextView) view.findViewById(R.id.item_title);
 		final ImageButton download = (ImageButton) view
 				.findViewById(R.id.item_download_image_button);
-		ImageView type = (ImageView) view.findViewById(R.id.item_type_image);
+		ImageButton type = (ImageButton) view
+				.findViewById(R.id.item_type_image);
 
 		final ItemInfo item = items.get(position);
 
@@ -83,6 +78,16 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 							});
 						}
 					}).execute();
+				}
+			});
+			type.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO check whether download successfule before
+					// if so: play local file
+					// else: play online stream
+
 				}
 			});
 		}
@@ -157,95 +162,14 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 					.setTitle(__item.getTitle())
 					.setDescription(__item.getTitle())
 					.setDestinationInExternalPublicDir(
-							Environment.DIRECTORY_DOWNLOADS,
-							__url.replaceAll("/", ""));
+							Environment.DIRECTORY_MOVIES,
+							"." + __item.getTitle() + __url.hashCode());
 
 			Log.i("Download", url);
 			long id = mgr.enqueue(request);
 			saveDownloadID(__activity, __url, id);
-
-			NotificationManager mNotifyManager = (NotificationManager) __activity
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-					__activity);
-			mBuilder.setContentTitle(__item.getTitle())
-					.setContentText(
-							__activity.getString(R.string.download_in_progress))
-					.setSmallIcon(R.drawable.ic_action_download);
-
-			DownloadManager.Query query = new DownloadManager.Query();
-			query.setFilterById(id);
-
-			registerDownloadProgress(mgr, query, mBuilder, mNotifyManager,
-					notification_id++);
 		}
 
-	}
-
-	private void registerDownloadProgress(final DownloadManager mgr,
-			final DownloadManager.Query query,
-			final NotificationCompat.Builder mBuilder,
-			final NotificationManager mNotifyManager, final int notify_id) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				int incr = 0;
-				while (incr <= 100) {
-					Cursor c = mgr.query(query);
-					if (null != c && c.moveToFirst()) {
-						int downloadedIndex = c
-								.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-						int totalIndex = c
-								.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-						int statusIndex = c
-								.getColumnIndex(DownloadManager.COLUMN_STATUS);
-
-						switch (c.getInt(statusIndex)) {
-						case DownloadManager.STATUS_SUCCESSFUL:
-							mBuilder.setContentText(
-									__activity
-											.getString(R.string.download_complete))
-									.setProgress(0, 0, false);
-							mNotifyManager.notify(notify_id, mBuilder.build());
-							return;
-						case DownloadManager.STATUS_FAILED:
-							mBuilder.setContentText(
-									__activity
-											.getString(R.string.download_failed))
-									.setProgress(0, 0, false);
-							mNotifyManager.notify(notify_id, mBuilder.build());
-							return;
-						case DownloadManager.STATUS_PENDING:
-							mBuilder.setContentText(__activity
-									.getString(R.string.download_pending));
-							// Fall through
-						case DownloadManager.STATUS_PAUSED:
-							mBuilder.setContentText(__activity
-									.getString(R.string.download_paused));
-							// Fall through
-						case DownloadManager.STATUS_RUNNING:
-							mBuilder.setContentText(__activity
-									.getString(R.string.download_in_progress));
-							incr = 100 * c.getInt(downloadedIndex)
-									/ c.getInt(totalIndex);
-							mBuilder.setProgress(100, incr, false);
-							mNotifyManager.notify(notify_id, mBuilder.build());
-							break;
-						}
-					}
-
-					if (null != c) {
-						c.close();
-					}
-
-					try {
-						Thread.sleep(5 * 1000);
-					} catch (InterruptedException e) {
-						Log.d("Download Progress", "sleep failure");
-					}
-				}
-			}
-		}).start();
 	}
 
 	public static void saveDownloadID(Context context, String url, long id) {

@@ -1,8 +1,5 @@
 package com.leonhuang.xuetangx.android;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,27 +7,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.leonhuang.xuetangx.R;
-import com.leonhuang.xuetangx.data.CourseInfo;
 
 public class CourseInfoActivity extends WebViewActivity {
 
 	public static final String COURSE_INFO = "com.leonhuang.xuetangx.android.CourseInfoActivity.Intent.CourseInfo";
 
-	private CourseInfo __course;
+//	private CourseInfo __course;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Intent intent = getIntent();
-		Bundle extra = intent.getExtras();
-		try {
-			__course = CourseInfo.fromJSON(new JSONObject(extra
-					.getString(COURSE_INFO)));
-		} catch (JSONException e) {
-			e.printStackTrace();
-			__course = null;
-		}
+		// Intent intent = getIntent();
+		// Bundle extra = intent.getExtras();
+		// try {
+		// __course = CourseInfo.fromJSON(new JSONObject(extra
+		// .getString(COURSE_INFO)));
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// __course = null;
+		// }
 	}
 
 	@Override
