@@ -101,6 +101,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			OnClickListener playVideoListener = new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					view.setEnabled(false);
 					String path = null;
 					String dir = getVideoStorageDir(item);
 					for (String url : item.getVideoUrls()) {
@@ -110,7 +111,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 										.getExternalStoragePublicDirectory(dir),
 								filename);
 						if (file.exists()) {
-							path = file.toString();
+							path = file.getPath();
 							break;
 						}
 					}
@@ -137,6 +138,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									}
 								}).execute();
 					}
+					view.setEnabled(true);
 				}
 			};
 			type.setOnClickListener(playVideoListener);
