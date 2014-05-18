@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.leonhuang.xuetangx"
     android:versionCode="0"
-    android:versionName="0.0.8" >
+    android:versionName="0.0.9" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -44,8 +44,7 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
-        <activity
-            android:name="com.leonhuang.xuetangx.android.MainActivity" >
+        <activity android:name="com.leonhuang.xuetangx.android.MainActivity" >
         </activity>
         <activity
             android:name="com.leonhuang.xuetangx.android.ChapterListActivity"
@@ -68,6 +67,7 @@
         </activity>
         <activity
             android:name="com.leonhuang.xuetangx.android.util.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/NoActionBar" >
         </activity>
     </application>

@@ -2,6 +2,7 @@ package com.leonhuang.xuetangx.android.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -24,6 +25,8 @@ public class VideoPlayerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video_player);
 
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
 		Intent intent = getIntent();
 		String videoUri = intent.getStringExtra(VIDEO_URI);
 		__progress = intent.getIntExtra(START_TIME, 0);
@@ -34,19 +37,22 @@ public class VideoPlayerActivity extends Activity {
 		__video.setMediaController(__controller);
 		__video.setKeepScreenOn(true);
 		__video.setVideoPath(videoUri);
+
 	}
 
 	@Override
 	protected void onResume() {
+		super.onResume();
+
 		__video.seekTo(betterProgress(__progress));
 		__video.start();
 		__video.requestFocus();
-		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+
 		if (__video.canPause()) {
 			__video.pause();
 		}
@@ -68,7 +74,7 @@ public class VideoPlayerActivity extends Activity {
 			__video.seekTo(betterProgress(__progress));
 		}
 	}
-	
+
 	private static int betterProgress(int msec) {
 		return Math.max(msec - 3000, 0);
 	}
