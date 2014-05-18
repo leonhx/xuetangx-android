@@ -289,11 +289,11 @@ public class LoginActivity extends Activity {
 					mPasswordView
 							.setError(getString(R.string.error_incorrect_password));
 					mPasswordView.requestFocus();
+					showProgress(false);
 				}
+			} else {
+				showProgress(false);
 			}
-
-			showProgress(false);
-
 		}
 
 		@Override

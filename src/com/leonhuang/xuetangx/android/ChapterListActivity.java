@@ -80,7 +80,7 @@ public class ChapterListActivity extends ListActivity {
 					new JSONObject(extra.getString(SIMPLE_COURSE_INFO)),
 					courseStatus);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.e("ChapterListActivity", "JSONException 83");
 		}
 
 		getActionBar().setTitle(course.getTitle());
@@ -216,7 +216,7 @@ public class ChapterListActivity extends ListActivity {
 				success = Courses.unenroll(user.getEmail(), user.getPassword(),
 						course);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e("ChapterListActivity", "Network access error 219");
 			}
 
 			return success;
@@ -296,7 +296,7 @@ public class ChapterListActivity extends ListActivity {
 					return null;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e("ChapterListActivity", "Network access error");
 			}
 
 			return chapters;

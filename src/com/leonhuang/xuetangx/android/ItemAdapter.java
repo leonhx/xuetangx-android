@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
-import com.leonhuang.xuetangx.android.util.SharedPref;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.android.util.VideoPlayerActivity;
 import com.leonhuang.xuetangx.data.ItemInfo;
@@ -80,12 +78,10 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									.setTitle(item.getTitle())
 									.setDescription(item.getTitle())
 									.setDestinationInExternalPublicDir(
-											getStorageDir(item),
+											getVideoStorageDir(item),
 											item.getTitle() + rawUrl.hashCode());
 
 							mgr.enqueue(request);
-							SharedPref.saveKeyValuePair(__activity, rawUrl,
-									realUrl);
 						}
 					}, new OnPostExecuteRunnable() {
 						@Override
@@ -105,35 +101,24 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			OnClickListener playVideoListener = new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					String file = null;
-					SharedPreferences sharedPref = __activity
-							.getSharedPreferences(SharedPref.DOWNLOAD_IDS,
-									Context.MODE_PRIVATE);
-					for (String key : sharedPref.getAll().keySet()) {
-						Log.i("Download Pref Key", (key));
-						Log.i("Download Pref", (String) sharedPref.getAll()
-								.get(key));
-					}
-					String rawUrl = null;
-					String realUrl = null;
+					String path = null;
+					String dir = getVideoStorageDir(item);
 					for (String url : item.getVideoUrls()) {
-						realUrl = SharedPref.getValue(__activity, url);
-						if (null != realUrl) {
-							file = SharedPref.getValue(__activity, realUrl);
-							if (null != file) {
-								rawUrl = url;
-								break;
-							}
+						String filename = item.getTitle() + url.hashCode();
+						File file = new File(
+								Environment
+										.getExternalStoragePublicDirectory(dir),
+								filename);
+						if (file.exists()) {
+							path = file.toString();
+							break;
 						}
 					}
 
-					if (null != file && new File(file).exists()) {
-						startVideoPlayer(__activity, file);
+					if (null != path) {
+						Log.i("Video Player", path);
+						startVideoPlayer(__activity, path);
 					} else {
-						if (null != file) {
-							SharedPref.removeKeyValuePair(__activity, rawUrl);
-							SharedPref.removeKeyValuePair(__activity, realUrl);
-						}
 						Log.i("Video Player", "Get From Internet");
 						new GetDownloadUrlTask(item,
 								new OnPostExecuteRunnable() {
@@ -223,7 +208,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	}
 
-	public static String getStorageDir(ItemInfo item) {
+	public static String getVideoStorageDir(ItemInfo item) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Environment.DIRECTORY_MOVIES);
 		sb.append("/../XuetangX/video/");
@@ -239,7 +224,17 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		sb.append(lecture.getUrl().hashCode());
 		sb.append("/");
 
-		return sb.toString();
+		String path = sb.toString();
+		sb.append(".nomedia");
+		File file = new File(sb.toString());
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+			}
+		}
+
+		return path;
 	}
 
 	public static void startVideoPlayer(Activity activity, String uri) {

@@ -70,14 +70,6 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/NoActionBar" >
         </activity>
-        <receiver
-            android:name="com.leonhuang.xuetangx.android.util.DownloadCompleteReceiver"
-            android:exported="true"
-            android:process=":receiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

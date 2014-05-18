@@ -11,6 +11,4 @@ Android client for XuetangX (http://www.xuetangx.com/)
 
 ### TODO
 
-+ Use SQLite to store download information
-
 + Share to: Weibo, QZone, WeChat
