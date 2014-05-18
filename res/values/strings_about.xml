@@ -4,35 +4,40 @@
     <string name="about_author">HUANG Xin</string>
     <string name="about_author_email">leon@njuopen.com</string>
     <string name="about_note">
-        The following part contains Chinese text. Without proper 
-        rendering support, you may see question marks, boxes, or 
+        The following part contains Chinese text. Without proper
+        rendering support, you may see question marks, boxes, or
         other symbols instead of Chinese characters.
     </string>
     <string name="about_copyright">
         The application (named \"XuetangX\") is the Android client
-        of a MOOC wesite named \"XuetangX\" (https://xuetangx.com/).
-        However, the application is NOT the official Android client
-        of the website.\n\n
-        
+        of a MOOC wesite named \"XuetangX\" (in Chinese, 学堂在线,
+        see https://xuetangx.com/). However, the application is
+        NOT the official Android client of the website.\n\n
+
         The application is only for non-commercial use. It can only
         be used for education. Any form of redistribution of the
-        application should obey the above two rules.\n\n
-        
+        application by anyone should NOT break the above two
+        principles.\n\n
+
         All course material is crawled by automatic crawler from
-        the website. The logo and the name of the application are 
+        the website. The logo and the name of the application are
         copied from the website. The author of the application
         has no intention to infringe the copyright. The author(s)
-        of the logo, the name, and any course material still 
-        hold(s) the copyright and can notify me to remove/replace 
-        the copyright material if he/she/they think(s) it/them 
+        of the logo, the name, and any course material still
+        hold(s) the copyright and can notify me to remove/replace
+        the copyright material if he/she/they think(s) it/them
         improper.\n\n
-        
+
         The application itself, i.e., the source code, compiled
-        binary file(s), the algorithm(s) created by the author 
-        which is/are applied in the application, and the 
+        binary file(s), the algorithm(s) created by the author
+        which is/are applied in the application, and the
         design of the application are copyright. The owner is
-        the author of the application.
-        
+        the author of the application.\n\n
+
+        Thank you for your support! If you have any suggestion,
+        please send me an email by clicking \"Feedback\" in the
+        navigation drawer.
+
 	</string>
 
 </resources>

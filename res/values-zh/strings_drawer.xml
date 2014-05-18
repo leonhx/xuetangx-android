@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="drawer_dashboard">主页</string>
+    <string name="drawer_search">搜索</string>
+    <string name="drawer_feedback">反馈</string>
+    <string name="drawer_about">关于</string>
+    <string name="drawer_logout">退出登录</string>
+    <string name="drawer_downloads">已下载</string>
+
+    <string name="drawer_open">打开导航栏</string>
+    <string name="drawer_close">关闭导航栏</string>
+    <string name="choose_mail_client">发送邮件&#8230;</string>
+    <string name="choose_file_manager">打开文件夹&#8230;</string>
+
+</resources>

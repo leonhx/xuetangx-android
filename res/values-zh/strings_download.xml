@@ -1,0 +1,15 @@
+<resources>
+
+    <string name="download_title">学堂在线下载任务</string>
+    <string name="download_in_progress">正在下载</string>
+    <string name="download_complete">下载成功</string>
+    <string name="download_failed">下载失败</string>
+    <string name="download_pending">下载推迟</string>
+    <string name="download_paused">下载暂停</string>
+    <string name="download_wrong">粗问题了，请向开发者反馈一下吧</string>
+    <string name="download_network_fail">添加下载任务失败</string>
+
+    <string name="download_cancel">取消</string>
+    <string name="download_remove">删除</string>
+
+</resources>

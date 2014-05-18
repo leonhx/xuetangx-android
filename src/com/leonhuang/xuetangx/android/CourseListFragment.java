@@ -76,7 +76,7 @@ public class CourseListFragment extends ListFragment {
 			public void run() {
 				listView.setAdapter(adapter);
 			}
-		}, true).execute();
+		}, true, false).execute();
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -88,7 +88,7 @@ public class CourseListFragment extends ListFragment {
 					public void run() {
 						adapter.notifyDataSetInvalidated();
 					}
-				}, false).execute();
+				}, false, true).execute();
 			}
 		});
 
@@ -109,7 +109,7 @@ public class CourseListFragment extends ListFragment {
 			public void run() {
 				adapter.notifyDataSetInvalidated();
 			}
-		}, true).execute();
+		}, true, false).execute();
 		super.onResume();
 	}
 
@@ -148,10 +148,12 @@ public class CourseListFragment extends ListFragment {
 
 		private Runnable runOnPostExecute;
 		private boolean __cacheFirst;
+		private boolean __toastNetworkStatus;
 
-		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst) {
+		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst, boolean toastNetworkStatus) {
 			this.runOnPostExecute = runOnPostExecute;
 			__cacheFirst = cacheFirst;
+			__toastNetworkStatus = toastNetworkStatus;
 		}
 
 		@Override
@@ -161,7 +163,7 @@ public class CourseListFragment extends ListFragment {
 			ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
 
 			if (!new NetworkConnectivityManager(mActivity)
-					.isConnectingToInternet(true)) {
+					.isConnectingToInternet(__toastNetworkStatus)) {
 				courses = loadCourses(courseStatus);
 				return courses;
 			}

@@ -1,0 +1,37 @@
+<resources>
+
+    <string name="course_upcoming">此课程尚未开始</string>
+	<string name="course_current">此课程已经开始，快来学习吧</string>
+	<string name="course_past">此课程已结束</string>
+	<string name="course_start_date_format">开课时间：yyyy年MM月dd日</string>
+
+	<string name="course_image_plh">图片</string>
+
+	<string name="share_to_renren">分享到人人</string>
+	<string name="share_failed">分享失败</string>
+	<string name="share_succeed">分享成功</string>
+
+	<string name="course_tab_upcoming">即将开课</string>
+	<string name="course_tab_current">当前课程</string>
+	<string name="course_tab_past">已经结束</string>
+
+	<string name="internet_not_avail_and_course_not_cached">网络不可连接，并且此课程之前没有缓存</string>
+	<string name="internet_not_avail_and_lecture_not_cached">网络不可连接，并且该小节之前没有缓存</string>
+
+	<string name="enroll">加入课程</string>
+	<string name="unenroll">退选课程</string>
+	<string name="enroll_succeed">加入成功</string>
+	<string name="enroll_failed">加入失败</string>
+	<string name="unenroll_succeed">退选成功</string>
+	<string name="unenroll_failed">退选失败</string>
+
+	<string name="course_has_ta">助教在线</string>
+	<string name="course_has_no_ta">助教离线</string>
+	<string name="course_status">更新到第 %1$d 节</string>
+
+	<string name="search_hint">搜索课程</string>
+	<string name="search_no_result">没有匹配的结果</string>
+	<string name="search_no_more_result">没有更多的结果了</string>
+
+	<string name="action_open_in_broswer">在浏览器中打开</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="about_author">黄欣</string>
+    <string name="about_author_email">leon@njuopen.com</string>
+    <string name="about_note">
+        The following part contains Chinese text. Without proper
+        rendering support, you may see question marks, boxes, or
+        other symbols instead of Chinese characters.
+    </string>
+    <string name="about_copyright">
+        此应用 (即 \"学堂在线\") 是一个名为\"学堂在线\"(见
+        https://xuetangx.com/)的MOOC网站的Android客户端。
+        但是此应用并非网站的官方的Android客户端。\n\n
+
+        此应用仅供非商业使用，并且只能用于教育用途。
+        任何人对此应用以任何形式再次分发都不能违背上述两项原则。
+        \n\n
+
+        所有的课程资料都是使用自动爬虫从网站上自动爬取的。
+        应用图标和应用名称直接使用网站的图标和名称。
+        此应用的作者无意侵犯其版权。
+        图标、名称以及所有课程资料的作者依然持有其作品的版权，
+        如果认为此应用不应使用这些材料，
+        请及时通知我移除或者替换。
+
+        此应用本身，即其源代码、编译后的二进制文件、
+        应用作者在此应用中使用的算法、以及此应用的设计，
+        的版权归此应用作者所有。
+
+        谢谢您的支持！如果您对此应用有任何意见或者建议，
+        请点击导航栏中的\"反馈\"给我发送邮件。
+
+	</string>
+
+</resources>

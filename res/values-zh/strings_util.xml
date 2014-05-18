@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="util_internet_inavail">网络好像粗问题了</string>
+    <string name="util_relogin_plz">粗问题了，重新登录吧</string>
+
+</resources>
