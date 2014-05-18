@@ -73,7 +73,7 @@ public class ChapterListActivity extends ListActivity {
 
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
-		SimpleCourseStatus courseStatus = (SimpleCourseStatus) extra
+		final SimpleCourseStatus courseStatus = (SimpleCourseStatus) extra
 				.getSerializable(COURSE_STATUS);
 		try {
 			course = SimpleCourseInfo.fromJSON(
@@ -124,6 +124,8 @@ public class ChapterListActivity extends ListActivity {
 					int groupPosition, int childPosition, long id) {
 				SimpleLectureInfo lecture = (SimpleLectureInfo) adapter
 						.getChild(groupPosition, childPosition);
+				SimpleChapterInfo chapter = (SimpleChapterInfo) adapter
+						.getGroup(groupPosition);
 				if (!new NetworkConnectivityManager(ChapterListActivity.this)
 						.isConnectingToInternet(false)
 						&& !isItemsCached(lecture)) {
@@ -135,6 +137,11 @@ public class ChapterListActivity extends ListActivity {
 
 				Intent intent = new Intent(ChapterListActivity.this,
 						ItemListActivity.class);
+				intent.putExtra(ItemListActivity.SIMPLE_COURSE_INFO,
+						course.toString());
+				intent.putExtra(ItemListActivity.COURSE_STATUS, courseStatus);
+				intent.putExtra(ItemListActivity.SIMPLE_CHAPTER_INFO,
+						chapter.toString());
 				intent.putExtra(ItemListActivity.SIMPLE_LECTURE_INFO,
 						lecture.toString());
 				startActivity(intent);
@@ -350,8 +357,8 @@ public class ChapterListActivity extends ListActivity {
 				}
 				JSONArray chaptersJSON = new JSONArray(sb.toString());
 				for (int i = 0; i < chaptersJSON.length(); i++) {
-					chapters.add(SimpleChapterInfo.fromJSON(chaptersJSON
-							.getJSONObject(i)));
+					chapters.add(SimpleChapterInfo.fromJSON(
+							chaptersJSON.getJSONObject(i), course));
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

@@ -48,14 +48,14 @@ public class DownloadAdapter extends ArrayAdapter<DownloadInfo> {
 			@Override
 			public void onClick(View view) {
 				mgr.remove(download.getId());
-				ItemAdapter.resetDownloadID(__activity, download.getUrl());
+				// ItemAdapter.resetDownloadID(__activity, download.getUrl());
 			}
 		};
 		OnClickListener removeListener = new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				mgr.remove(download.getId());
-				ItemAdapter.resetDownloadID(__activity, download.getUrl());
+				// ItemAdapter.resetDownloadID(__activity, download.getUrl());
 				File file = new File(download.getPath().getPath());
 				file.delete();
 			}

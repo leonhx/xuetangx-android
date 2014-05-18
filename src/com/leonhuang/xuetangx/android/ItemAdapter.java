@@ -1,5 +1,6 @@
 package com.leonhuang.xuetangx.android;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -8,7 +9,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -25,10 +25,14 @@ import android.widget.Toast;
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
+import com.leonhuang.xuetangx.android.util.SharedPref;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.android.util.VideoPlayerActivity;
 import com.leonhuang.xuetangx.data.ItemInfo;
 import com.leonhuang.xuetangx.data.ItemType;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleCourseInfo;
+import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
 public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
@@ -62,7 +66,6 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					download.setEnabled(false);
 					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
 						@Override
 						public void run(String rawUrl, String realUrl) {
@@ -77,13 +80,12 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									.setTitle(item.getTitle())
 									.setDescription(item.getTitle())
 									.setDestinationInExternalPublicDir(
-											Environment.DIRECTORY_MOVIES,
-											"." + item.getTitle()
-													+ rawUrl.hashCode());
+											getStorageDir(item),
+											item.getTitle() + rawUrl.hashCode());
 
-							Log.i("Download", realUrl);
-							long id = mgr.enqueue(request);
-							saveDownloadID(__activity, rawUrl, id);
+							mgr.enqueue(request);
+							SharedPref.saveKeyValuePair(__activity, rawUrl,
+									realUrl);
 						}
 					}, new OnPostExecuteRunnable() {
 						@Override
@@ -94,7 +96,6 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 							__activity.runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									download.setEnabled(true);
 								}
 							});
 						}
@@ -105,20 +106,35 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 				@Override
 				public void onClick(View view) {
 					String file = null;
+					SharedPreferences sharedPref = __activity
+							.getSharedPreferences(SharedPref.DOWNLOAD_IDS,
+									Context.MODE_PRIVATE);
+					for (String key : sharedPref.getAll().keySet()) {
+						Log.i("Download Pref Key", (key));
+						Log.i("Download Pref", (String) sharedPref.getAll()
+								.get(key));
+					}
+					String rawUrl = null;
+					String realUrl = null;
 					for (String url : item.getVideoUrls()) {
-						long id = getDownloadID(__activity, url);
-						DownloadManager mgr = (DownloadManager) __activity
-								.getSystemService(Context.DOWNLOAD_SERVICE);
-						Uri uri = mgr.getUriForDownloadedFile(id);
-						if (null != uri) {
-							file = uri.getPath();
-							break;
+						realUrl = SharedPref.getValue(__activity, url);
+						if (null != realUrl) {
+							file = SharedPref.getValue(__activity, realUrl);
+							if (null != file) {
+								rawUrl = url;
+								break;
+							}
 						}
 					}
 
-					if (null != file) {
+					if (null != file && new File(file).exists()) {
 						startVideoPlayer(__activity, file);
 					} else {
+						if (null != file) {
+							SharedPref.removeKeyValuePair(__activity, rawUrl);
+							SharedPref.removeKeyValuePair(__activity, realUrl);
+						}
+						Log.i("Video Player", "Get From Internet");
 						new GetDownloadUrlTask(item,
 								new OnPostExecuteRunnable() {
 									@Override
@@ -207,31 +223,29 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 
 	}
 
+	public static String getStorageDir(ItemInfo item) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Environment.DIRECTORY_MOVIES);
+		sb.append("/../XuetangX/video/");
+
+		SimpleLectureInfo lecture = item.getSimpleLecture();
+		SimpleChapterInfo chapter = lecture.getChapter();
+		SimpleCourseInfo course = chapter.getCourse();
+
+		sb.append(course.getTitle());
+		sb.append(course.getCourseInfoUrl().hashCode());
+		sb.append("/");
+		sb.append(lecture.getTitle());
+		sb.append(lecture.getUrl().hashCode());
+		sb.append("/");
+
+		return sb.toString();
+	}
+
 	public static void startVideoPlayer(Activity activity, String uri) {
 		Intent intent = new Intent(activity, VideoPlayerActivity.class);
 		intent.putExtra(VideoPlayerActivity.VIDEO_URI, uri);
 		activity.startActivity(intent);
 	}
 
-	public static void saveDownloadID(Context context, String url, long id) {
-		SharedPreferences sharedPref = context.getSharedPreferences(
-				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
-		Editor editor = sharedPref.edit();
-		editor.putLong(url, id);
-		editor.commit();
-	}
-
-	public static void resetDownloadID(Context context, String url) {
-		SharedPreferences sharedPref = context.getSharedPreferences(
-				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
-		Editor editor = sharedPref.edit();
-		editor.remove(url);
-		editor.commit();
-	}
-
-	public static long getDownloadID(Context context, String url) {
-		SharedPreferences sharedPref = context.getSharedPreferences(
-				DownloadsFragment.DOWNLOAD_IDS, Context.MODE_PRIVATE);
-		return sharedPref.getLong(url, 0);
-	}
 }

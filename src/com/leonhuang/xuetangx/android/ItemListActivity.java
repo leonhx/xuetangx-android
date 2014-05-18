@@ -29,10 +29,16 @@ import com.leonhuang.xuetangx.android.model.UserInfo;
 import com.leonhuang.xuetangx.android.util.NetworkConnectivityManager;
 import com.leonhuang.xuetangx.android.util.SignInStatusManager;
 import com.leonhuang.xuetangx.data.ItemInfo;
+import com.leonhuang.xuetangx.data.SimpleChapterInfo;
+import com.leonhuang.xuetangx.data.SimpleCourseInfo;
+import com.leonhuang.xuetangx.data.SimpleCourseStatus;
 import com.leonhuang.xuetangx.data.SimpleLectureInfo;
 
 public class ItemListActivity extends ListActivity {
 
+	public static final String SIMPLE_COURSE_INFO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.SimpleCourseInfo";
+	public static final String COURSE_STATUS = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.CourseStatus";
+	public static final String SIMPLE_CHAPTER_INFO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.SimpleChapterInfo";
 	public static final String SIMPLE_LECTURE_INFO = "com.leonhuang.xuetangx.android.ItemListActivity.Intent.SimpleLectureInfo";
 
 	private static final String CACHE_LECTURE_PATH = "com.leonhuang.xuetangx.android.ItemListActivity.Cache.Items";
@@ -51,8 +57,15 @@ public class ItemListActivity extends ListActivity {
 		Intent intent = getIntent();
 		Bundle extra = intent.getExtras();
 		try {
-			lecture = SimpleLectureInfo.fromJSON(new JSONObject(extra
-					.getString(SIMPLE_LECTURE_INFO)));
+			SimpleCourseInfo course = SimpleCourseInfo.fromJSON(new JSONObject(
+					extra.getString(SIMPLE_COURSE_INFO)),
+					(SimpleCourseStatus) extra.getSerializable(COURSE_STATUS));
+			SimpleChapterInfo chapter = SimpleChapterInfo.fromJSON(
+					new JSONObject(extra.getString(SIMPLE_CHAPTER_INFO)),
+					course);
+			lecture = SimpleLectureInfo.fromJSON(
+					new JSONObject(extra.getString(SIMPLE_LECTURE_INFO)),
+					chapter);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -205,7 +218,8 @@ public class ItemListActivity extends ListActivity {
 				}
 				JSONArray chaptersJSON = new JSONArray(sb.toString());
 				for (int i = 0; i < chaptersJSON.length(); i++) {
-					items.add(ItemInfo.fromJSON(chaptersJSON.getJSONObject(i)));
+					items.add(ItemInfo.fromJSON(chaptersJSON.getJSONObject(i),
+							lecture));
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
