@@ -26,10 +26,11 @@ public class MainActivity extends FragmentActivity {
 	public static final String INITIAL_FRAGMENT_NO = "com.leonhuang.xuetangx.MainActivity.InitialFragmentNo";
 	public static final int FRAGMENT_DASHBOARD = 0;
 	public static final int FRAGMENT_SEARCH = 1;
-	// public static final int FRAGMENT_DOWNLOADS = 2;
+	// public static final int FRAGMENT_ACTION_VIEW_DOWNLOADS = 2;
 	public static final int FRAGMENT_ACTION_FEEDBACK = 2;
 	public static final int FRAGMENT_ABOUT = 3;
 	public static final int FRAGMENT_ACTION_LOGOUT = 4;
+	public static final int FRAGMENT_NUMBER = 5;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -37,7 +38,7 @@ public class MainActivity extends FragmentActivity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] mFragmentTitles = new String[5];
+	private String[] mFragmentTitles = new String[FRAGMENT_NUMBER];
 
 	private boolean doubleBackToExitPressedOnce;
 
@@ -48,7 +49,7 @@ public class MainActivity extends FragmentActivity {
 
 		mFragmentTitles[FRAGMENT_DASHBOARD] = getString(R.string.drawer_dashboard);
 		mFragmentTitles[FRAGMENT_SEARCH] = getString(R.string.drawer_search);
-		// mFragmentTitles[FRAGMENT_DOWNLOADS] =
+		// mFragmentTitles[FRAGMENT_ACTION_VIEW_DOWNLOADS] =
 		// getString(R.string.drawer_downloads);
 		mFragmentTitles[FRAGMENT_ACTION_FEEDBACK] = getString(R.string.drawer_feedback);
 		mFragmentTitles[FRAGMENT_ABOUT] = getString(R.string.drawer_about);
@@ -180,9 +181,18 @@ public class MainActivity extends FragmentActivity {
 		case FRAGMENT_SEARCH:
 			fragment = new SearchFragment();
 			break;
-		// case FRAGMENT_DOWNLOADS:
-		// fragment = new DownloadsFragment();
-		// break;
+		// case FRAGMENT_ACTION_VIEW_DOWNLOADS: // TODO
+		// Uri startDir = Uri.fromFile(new File(Environment
+		// .getExternalStorageDirectory().getAbsolutePath()
+		// + "/../XuetangX/"));
+		// intent = new Intent();
+		// intent.setData(startDir);
+		// intent.setType("*/*");
+		// intent.setAction(Intent.ACTION_GET_CONTENT);
+		// startActivity(intent);
+		// startActivity(Intent.createChooser(intent,
+		// getString(R.string.choose_file_manager)));
+		// return;
 		case FRAGMENT_ACTION_FEEDBACK:
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
