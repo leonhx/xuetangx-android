@@ -64,6 +64,7 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					download.setEnabled(false);
 					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
 						@Override
 						public void run(String rawUrl, String realUrl) {
@@ -78,10 +79,11 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									.setTitle(item.getTitle())
 									.setDescription(item.getTitle())
 									.setDestinationInExternalPublicDir(
-											getVideoStorageDir(item),
-											item.getTitle() + rawUrl.hashCode());
+											Environment.DIRECTORY_MOVIES,
+											getVideoStorageDir(item, rawUrl));
 
 							mgr.enqueue(request);
+							download.setEnabled(true);
 						}
 					}, new OnPostExecuteRunnable() {
 						@Override
@@ -89,27 +91,20 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 							Toast.makeText(__activity,
 									R.string.download_network_fail,
 									Toast.LENGTH_SHORT).show();
-							__activity.runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-								}
-							});
+							download.setEnabled(true);
 						}
 					}).execute();
 				}
 			});
 			OnClickListener playVideoListener = new OnClickListener() {
 				@Override
-				public void onClick(View view) {
-					view.setEnabled(false);
+				public void onClick(final View view) {
 					String path = null;
-					String dir = getVideoStorageDir(item);
 					for (String url : item.getVideoUrls()) {
-						String filename = item.getTitle() + url.hashCode();
 						File file = new File(
 								Environment
-										.getExternalStoragePublicDirectory(dir),
-								filename);
+										.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+								getVideoStorageDir(item, url));
 						if (file.exists()) {
 							path = file.getPath();
 							break;
@@ -138,7 +133,6 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									}
 								}).execute();
 					}
-					view.setEnabled(true);
 				}
 			};
 			type.setOnClickListener(playVideoListener);
@@ -204,16 +198,16 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 					__runIfNetworkFailed.run(__url, url);
 				}
 			} else {
-				__runIfSucceed.run(__url, url);
+				if (null != __runIfSucceed) {
+					__runIfSucceed.run(__url, url);
+				}
 			}
 		}
 
 	}
 
-	public static String getVideoStorageDir(ItemInfo item) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Environment.DIRECTORY_MOVIES);
-		sb.append("/../XuetangX/video/");
+	public static String getVideoStorageDir(ItemInfo item, String rawUrl) {
+		StringBuilder sb = new StringBuilder("../XuetangX/video/");
 
 		SimpleLectureInfo lecture = item.getSimpleLecture();
 		SimpleChapterInfo chapter = lecture.getChapter();
@@ -226,17 +220,30 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		sb.append(lecture.getUrl().hashCode());
 		sb.append("/");
 
-		String path = sb.toString();
-		sb.append(".nomedia");
-		File file = new File(sb.toString());
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
+		String dir = sb.toString();
+		File file = new File(
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+				dir);
+		if (!file.exists() && !file.mkdirs()) {
+			Log.e("Create File", "Create folders failed");
+		} else {
+			file = new File(
+					Environment
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+					dir + ".nomedia");
+			if (!file.exists()) {
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					Log.e("Create File", "Create .nomedia failed");
+				}
 			}
 		}
 
-		return path;
+		sb.append(item.getTitle());
+		sb.append(rawUrl.hashCode());
+		return sb.toString();
 	}
 
 	public static void startVideoPlayer(Activity activity, String uri) {
