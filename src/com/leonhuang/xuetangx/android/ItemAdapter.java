@@ -60,6 +60,16 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			type.setImageDrawable(view.getResources().getDrawable(
 					R.drawable.ic_action_edit));
 			download.setVisibility(ImageButton.INVISIBLE);
+			OnClickListener showProblemListener = new OnClickListener() {
+				@Override
+				public void onClick(final View view) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
+							.getProblemPageUrl()));
+					__activity.startActivity(intent);
+				}
+			};
+			type.setOnClickListener(showProblemListener);
+			title.setOnClickListener(showProblemListener);
 		} else {
 			download.setOnClickListener(new OnClickListener() {
 				@Override

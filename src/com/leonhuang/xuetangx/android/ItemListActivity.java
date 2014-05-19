@@ -14,13 +14,11 @@ import org.json.JSONObject;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 
 import com.leonhuang.xuetangx.Courses;
@@ -102,28 +100,6 @@ public class ItemListActivity extends ListActivity {
 				}).execute();
 			}
 		});
-	}
-
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		ItemInfo item = mItems.get(position);
-		Intent intent;
-		switch (item.getType()) {
-		case PROBLEM:
-			intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-					.getProblemPageUrl()));
-			startActivity(intent);
-			break;
-		case VIDEO:
-			intent = new Intent(ItemListActivity.this, WebViewActivity.class);
-			Log.i("Video URL", item.getLowQualityVideoUrls()[0]);
-			intent.putExtra(WebViewActivity.WEB_VIEW_URL,
-					item.getLowQualityVideoUrls()[0]);
-			startActivity(intent);
-			break;
-		}
-
-		super.onListItemClick(l, v, position, id);
 	}
 
 	private class GetItemsTask extends
