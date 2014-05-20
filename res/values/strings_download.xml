@@ -1,6 +1,7 @@
 <resources>
 
     <string name="download_title">XuetangX Download</string>
+    <string name="download_enqueue_succeed">Downloading&#8230;</string>
     <string name="download_in_progress">Download in progress</string>
     <string name="download_complete">Download complete</string>
     <string name="download_failed">Download failed</string>

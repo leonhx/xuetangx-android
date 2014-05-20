@@ -1,6 +1,7 @@
 <resources>
 
     <string name="download_title">学堂在线下载任务</string>
+    <string name="download_enqueue_succeed">正在下载&#8230;</string>
     <string name="download_in_progress">正在下载</string>
     <string name="download_complete">下载成功</string>
     <string name="download_failed">下载失败</string>

@@ -63,8 +63,8 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 			OnClickListener showProblemListener = new OnClickListener() {
 				@Override
 				public void onClick(final View view) {
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item
-							.getProblemPageUrl()));
+					Intent intent = new Intent(Intent.ACTION_VIEW,
+							Uri.parse(item.getProblemPageUrl()));
 					__activity.startActivity(intent);
 				}
 			};
@@ -93,6 +93,9 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 											getVideoStorageDir(item, rawUrl));
 
 							mgr.enqueue(request);
+							Toast.makeText(__activity,
+									R.string.download_enqueue_succeed,
+									Toast.LENGTH_SHORT).show();
 							download.setEnabled(true);
 						}
 					}, new OnPostExecuteRunnable() {
