@@ -33,7 +33,7 @@ public class CourseInfoActivity extends WebViewActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.course_info, menu);
 		
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override

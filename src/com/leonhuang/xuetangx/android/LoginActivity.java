@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -97,9 +98,9 @@ public class LoginActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.login, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
