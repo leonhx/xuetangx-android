@@ -16,3 +16,4 @@ Android client for XuetangX (http://www.xuetangx.com/)
 + Implement the activity to do homework
 + Implement CourseInfoActivity and allow enroll course
 + Allow users to edit the string of `Share to` and more: Weibo, QZone, WeChat
++ Build a personal website and a page about the product
