@@ -5,9 +5,11 @@
 
     <item
         android:id="@+id/action_share_renren"
+        android:showAsAction="never"
         android:title="@string/share_to_renren"/>
     <item
         android:id="@+id/action_unenroll"
+        android:showAsAction="never"
         android:title="@string/unenroll"/>
 
 </menu>
