@@ -10,13 +10,11 @@
 
     <style name="MyTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_nav_up</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
     </style>
     
     <style name="MyHasTitleTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyHasTitleActionBarStyle</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_nav_up</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
     </style>
 
