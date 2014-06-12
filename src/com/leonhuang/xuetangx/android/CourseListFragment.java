@@ -150,7 +150,8 @@ public class CourseListFragment extends ListFragment {
 		private boolean __cacheFirst;
 		private boolean __toastNetworkStatus;
 
-		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst, boolean toastNetworkStatus) {
+		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst,
+				boolean toastNetworkStatus) {
 			this.runOnPostExecute = runOnPostExecute;
 			__cacheFirst = cacheFirst;
 			__toastNetworkStatus = toastNetworkStatus;
@@ -168,7 +169,9 @@ public class CourseListFragment extends ListFragment {
 				return courses;
 			}
 
-			if (__cacheFirst) {
+			if (__cacheFirst
+					&& !new NetworkConnectivityManager(mActivity)
+							.isConnectingViaWifiOrWiMAX()) {
 				courses = loadCourses(courseStatus);
 				if (!courses.isEmpty()) {
 					return courses;

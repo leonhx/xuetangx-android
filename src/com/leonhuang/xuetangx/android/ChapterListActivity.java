@@ -279,7 +279,9 @@ public class ChapterListActivity extends ListActivity {
 				return chapters;
 			}
 
-			if (__cacheFirst) {
+			if (__cacheFirst
+					&& !new NetworkConnectivityManager(ChapterListActivity.this)
+							.isConnectingViaWifiOrWiMAX()) {
 				chapters = loadChapters();
 				if (!chapters.isEmpty()) {
 					return chapters;
