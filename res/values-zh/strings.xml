@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">学堂在线</string>
+    <string name="app_name">studX</string>
     <string name="action_refresh">刷新</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="click_twice_to_quit">双击返回键退出应用</string>
+    <string name="action_more">更多</string>
 
 </resources>

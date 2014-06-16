@@ -4,8 +4,15 @@
     tools:context="com.leonhuang.xuetangx.CourseInfoActivity" >
 
     <item
-        android:id="@+id/action_open_in_broswer"
-        android:showAsAction="never"
-        android:title="@string/action_open_in_broswer"/>
+        android:icon="@drawable/ic_action_overflow"
+        android:showAsAction="always"
+        android:title="@string/action_more">
+        <menu>
+            <item
+                android:id="@+id/action_open_in_broswer"
+                android:showAsAction="never"
+                android:title="@string/action_open_in_broswer"/>
+        </menu>
+    </item>
 
 </menu>

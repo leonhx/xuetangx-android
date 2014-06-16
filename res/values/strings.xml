@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">XuetangX</string>
+    <string name="app_name">studX</string>
     <string name="action_refresh">Refresh</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="click_twice_to_quit">Click twice to quit</string>
+    <string name="action_more">More</string>
 
 </resources>

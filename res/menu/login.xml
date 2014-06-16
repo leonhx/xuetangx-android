@@ -3,12 +3,19 @@
     tools:context="${packageName}.${activityClass}" >
 
     <item
-        android:id="@+id/action_forgot_password"
-        android:showAsAction="never"
-        android:title="@string/action_forgot_password"/>
-    <item
-        android:id="@+id/action_register"
-        android:showAsAction="never"
-        android:title="@string/action_register"/>
+        android:icon="@drawable/ic_action_overflow"
+        android:showAsAction="always"
+        android:title="@string/action_more">
+        <menu>
+            <item
+                android:id="@+id/action_forgot_password"
+                android:showAsAction="never"
+                android:title="@string/action_forgot_password"/>
+            <item
+                android:id="@+id/action_register"
+                android:showAsAction="never"
+                android:title="@string/action_register"/>
+        </menu>
+    </item>
 
 </menu>
