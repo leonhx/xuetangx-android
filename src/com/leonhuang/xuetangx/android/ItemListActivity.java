@@ -134,9 +134,16 @@ public class ItemListActivity extends ListActivity {
 					return null;
 				}
 			} catch (IOException e) {
-				Toast.makeText(ItemListActivity.this,
-						ItemListActivity.this.getString(R.string.err_server),
-						Toast.LENGTH_SHORT).show();
+				ItemListActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								ItemListActivity.this,
+								ItemListActivity.this
+										.getString(R.string.err_server),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 				e.printStackTrace();
 			}
 
@@ -148,11 +155,16 @@ public class ItemListActivity extends ListActivity {
 
 			if (null != result) {
 				if (result.isEmpty()) {
-					Toast.makeText(
-							ItemListActivity.this,
-							ItemListActivity.this
-									.getString(R.string.empty_item_list),
-							Toast.LENGTH_SHORT).show();
+					ItemListActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(
+									ItemListActivity.this,
+									ItemListActivity.this
+											.getString(R.string.empty_item_list),
+									Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
 				mItems.clear();
 				mItems.addAll(result);

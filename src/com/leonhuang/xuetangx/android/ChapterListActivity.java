@@ -292,10 +292,16 @@ public class ChapterListActivity extends ListActivity {
 					return null;
 				}
 			} catch (IOException e) {
-				Toast.makeText(
-						ChapterListActivity.this,
-						ChapterListActivity.this.getString(R.string.err_server),
-						Toast.LENGTH_SHORT).show();
+				ChapterListActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								ChapterListActivity.this,
+								ChapterListActivity.this
+										.getString(R.string.err_server),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 				Log.e("ChapterListActivity", "Network access error");
 			}
 
@@ -307,11 +313,16 @@ public class ChapterListActivity extends ListActivity {
 
 			if (null != result) {
 				if (result.isEmpty()) {
-					Toast.makeText(
-							ChapterListActivity.this,
-							ChapterListActivity.this
-									.getString(R.string.empty_chapter_list),
-							Toast.LENGTH_SHORT).show();
+					ChapterListActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(
+									ChapterListActivity.this,
+									ChapterListActivity.this
+											.getString(R.string.empty_chapter_list),
+									Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
 				mChapters.clear();
 				mChapters.addAll(result);
@@ -401,32 +412,59 @@ public class ChapterListActivity extends ListActivity {
 							new CallBack() {
 								@Override
 								public void onSuccess(RennResponse response) {
-									Toast.makeText(ChapterListActivity.this,
-											R.string.share_succeed,
-											Toast.LENGTH_SHORT).show();
+									ChapterListActivity.this
+											.runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													Toast.makeText(
+															ChapterListActivity.this,
+															R.string.share_succeed,
+															Toast.LENGTH_SHORT)
+															.show();
+												}
+											});
 								}
 
 								@Override
 								public void onFailed(String errorCode,
 										String errorMessage) {
-									Toast.makeText(ChapterListActivity.this,
-											R.string.share_failed,
-											Toast.LENGTH_SHORT).show();
+									ChapterListActivity.this
+											.runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													Toast.makeText(
+															ChapterListActivity.this,
+															R.string.share_failed,
+															Toast.LENGTH_SHORT)
+															.show();
+												}
+											});
 								}
 
 							});
 				} catch (RennException e) {
-					Toast.makeText(ChapterListActivity.this,
-							R.string.share_failed, Toast.LENGTH_SHORT).show();
+					ChapterListActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(ChapterListActivity.this,
+									R.string.share_failed, Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
 					e.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onLoginCanceled() {
-				Toast.makeText(ChapterListActivity.this,
-						getString(R.string.login_failed), Toast.LENGTH_SHORT)
-						.show();
+				ChapterListActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(ChapterListActivity.this,
+								getString(R.string.login_failed),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 
 		});

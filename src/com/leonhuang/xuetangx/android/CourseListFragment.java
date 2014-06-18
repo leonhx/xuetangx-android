@@ -153,6 +153,7 @@ public class CourseListFragment extends ListFragment {
 
 		@Override
 		protected ArrayList<SimpleCourseInfo> doInBackground(Void... params) {
+
 			mSwipeRefreshLayout.setRefreshing(true);
 
 			ArrayList<SimpleCourseInfo> courses = new ArrayList<SimpleCourseInfo>();
@@ -185,9 +186,14 @@ public class CourseListFragment extends ListFragment {
 				}
 			} catch (IOException e) {
 				if (__toastNetworkStatus) {
-					Toast.makeText(mActivity,
-							mActivity.getString(R.string.err_server),
-							Toast.LENGTH_SHORT).show();
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(mActivity,
+									mActivity.getString(R.string.err_server),
+									Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
 				e.printStackTrace();
 			}
@@ -201,10 +207,16 @@ public class CourseListFragment extends ListFragment {
 			if (null != result) {
 				if (result.isEmpty()) {
 					if (__toastNetworkStatus) {
-						Toast.makeText(
-								mActivity,
-								mActivity.getString(R.string.empty_course_list),
-								Toast.LENGTH_SHORT).show();
+						mActivity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(
+										mActivity,
+										mActivity
+												.getString(R.string.empty_course_list),
+										Toast.LENGTH_SHORT).show();
+							}
+						});
 					}
 				} else {
 					Collections.sort(result,

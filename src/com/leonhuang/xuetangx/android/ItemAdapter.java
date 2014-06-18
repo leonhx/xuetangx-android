@@ -99,12 +99,13 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 											getVideoStorageDir(item, rawUrl));
 
 									mgr.enqueue(request);
-									Toast.makeText(__activity,
-											R.string.download_enqueue_succeed,
-											Toast.LENGTH_SHORT).show();
 									__activity.runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
+											Toast.makeText(
+													__activity,
+													R.string.download_enqueue_succeed,
+													Toast.LENGTH_SHORT).show();
 											download.setEnabled(true);
 										}
 									});
@@ -126,10 +127,15 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 					}, new OnPostExecuteRunnable() {
 						@Override
 						public void run(String rawUrl, String realUrl) {
-							Toast.makeText(__activity,
-									R.string.download_network_fail,
-									Toast.LENGTH_SHORT).show();
-							download.setEnabled(true);
+							__activity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(__activity,
+											R.string.download_network_fail,
+											Toast.LENGTH_SHORT).show();
+									download.setEnabled(true);
+								}
+							});
 						}
 					}).execute();
 				}
@@ -165,9 +171,14 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 									@Override
 									public void run(String rawUrl,
 											String realUrl) {
-										Toast.makeText(__activity,
-												R.string.util_internet_inavail,
-												Toast.LENGTH_SHORT).show();
+										__activity.runOnUiThread(new Runnable() {
+											@Override
+											public void run() {
+												Toast.makeText(__activity,
+														R.string.util_internet_inavail,
+														Toast.LENGTH_SHORT).show();
+											}
+										});
 									}
 								}).execute();
 					}
