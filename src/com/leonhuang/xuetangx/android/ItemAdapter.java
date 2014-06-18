@@ -251,9 +251,11 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		SimpleChapterInfo chapter = lecture.getChapter();
 		SimpleCourseInfo course = chapter.getCourse();
 
-		sb.append(course.getTitle() + course.getId());
+		sb.append(course.getTitle());
+		sb.append(course.getCourseInfoUrl().hashCode());
 		sb.append("/");
 		sb.append(lecture.getTitle());
+		sb.append(lecture.getUrl().hashCode());
 		sb.append("/");
 
 		String dir = sb.toString();
