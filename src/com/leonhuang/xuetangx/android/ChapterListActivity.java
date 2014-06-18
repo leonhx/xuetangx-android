@@ -96,6 +96,7 @@ public class ChapterListActivity extends ListActivity {
 				.findViewById(android.R.id.list);
 		adapter = new ChapterAdapter(this, mChapters);
 
+		mChapters.clear();
 		mChapters.addAll(loadChapters());
 		listView.setAdapter(adapter);
 

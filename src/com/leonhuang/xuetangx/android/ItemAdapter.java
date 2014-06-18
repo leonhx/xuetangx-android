@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -77,26 +80,48 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 					download.setEnabled(false);
 					new GetDownloadUrlTask(item, new OnPostExecuteRunnable() {
 						@Override
-						public void run(String rawUrl, String realUrl) {
-							DownloadManager.Request request = new DownloadManager.Request(
-									Uri.parse(realUrl));
-							DownloadManager mgr = (DownloadManager) __activity
-									.getSystemService(Context.DOWNLOAD_SERVICE);
-							request.setAllowedNetworkTypes(
-									DownloadManager.Request.NETWORK_WIFI
-											| DownloadManager.Request.NETWORK_MOBILE)
-									.setAllowedOverRoaming(false)
-									.setTitle(item.getTitle())
-									.setDescription(item.getTitle())
-									.setDestinationInExternalPublicDir(
+						public void run(final String rawUrl,
+								final String realUrl) {
+							Runnable toDownload = new Runnable() {
+								@Override
+								public void run() {
+									DownloadManager.Request request = new DownloadManager.Request(
+											Uri.parse(realUrl));
+									DownloadManager mgr = (DownloadManager) __activity
+											.getSystemService(Context.DOWNLOAD_SERVICE);
+									request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI
+											| DownloadManager.Request.NETWORK_MOBILE);
+									request.setAllowedOverRoaming(false);
+									request.setTitle(item.getTitle());
+									request.setDescription(item.getTitle());
+									request.setDestinationInExternalPublicDir(
 											Environment.DIRECTORY_MOVIES,
 											getVideoStorageDir(item, rawUrl));
 
-							mgr.enqueue(request);
-							Toast.makeText(__activity,
-									R.string.download_enqueue_succeed,
-									Toast.LENGTH_SHORT).show();
-							download.setEnabled(true);
+									mgr.enqueue(request);
+									Toast.makeText(__activity,
+											R.string.download_enqueue_succeed,
+											Toast.LENGTH_SHORT).show();
+									__activity.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											download.setEnabled(true);
+										}
+									});
+								}
+							};
+
+							File file = new File(
+									Environment
+											.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
+									getVideoStorageDir(item, rawUrl));
+							if (file.exists()) {
+								Log.i("Download", "exist");
+								alert(toDownload);
+							} else {
+								toDownload.run();
+							}
+
 						}
 					}, new OnPostExecuteRunnable() {
 						@Override
@@ -226,11 +251,9 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		SimpleChapterInfo chapter = lecture.getChapter();
 		SimpleCourseInfo course = chapter.getCourse();
 
-		sb.append(course.getTitle());
-		sb.append(course.getCourseInfoUrl().hashCode());
+		sb.append(course.getTitle() + course.getId());
 		sb.append("/");
 		sb.append(lecture.getTitle());
-		sb.append(lecture.getUrl().hashCode());
 		sb.append("/");
 
 		String dir = sb.toString();
@@ -255,7 +278,6 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		}
 
 		sb.append(item.getTitle());
-		sb.append(rawUrl.hashCode());
 		return sb.toString();
 	}
 
@@ -265,4 +287,25 @@ public class ItemAdapter extends ArrayAdapter<ItemInfo> {
 		activity.startActivity(intent);
 	}
 
+	private void alert(final Runnable runIfYes) {
+		__activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Builder builder = new AlertDialog.Builder(__activity);
+				builder.setIcon(android.R.drawable.ic_dialog_alert);
+				builder.setTitle(R.string.download_confirm);
+				builder.setMessage(R.string.download_confirm_info);
+				builder.setPositiveButton(R.string.download_yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								runIfYes.run();
+							}
+						});
+				builder.setNegativeButton(R.string.download_no, null);
+				builder.show();
+			}
+		});
+	}
 }

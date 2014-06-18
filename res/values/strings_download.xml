@@ -12,5 +12,10 @@
     
     <string name="download_cancel">Cancel</string>
     <string name="download_remove">Remove</string>
+    
+    <string name="download_confirm">Confirm Download</string>
+    <string name="download_confirm_info">The video exists and can be played if you click the item. Do you really want to download it again?</string>
+    <string name="download_yes">Yes</string>
+    <string name="download_no">No</string>
 	
 </resources>

@@ -97,6 +97,7 @@ public class CourseListFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		mCourses.clear();
 		mCourses.addAll(loadCourses(courseStatus));
 		if (new NetworkConnectivityManager(mActivity)
 				.isConnectingViaWifiOrWiMAX()) {

@@ -12,5 +12,10 @@
 
     <string name="download_cancel">取消</string>
     <string name="download_remove">删除</string>
+    
+    <string name="download_confirm">确认下载</string>
+    <string name="download_confirm_info">这个视频已经下载成功，可以在点击后直接播放。请问你真的希望重新下载吗？</string>
+    <string name="download_yes">是</string>
+    <string name="download_no">否</string>
 
 </resources>
