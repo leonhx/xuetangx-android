@@ -221,7 +221,17 @@ public class ChapterListActivity extends ListActivity {
 				success = Courses.unenroll(user.getEmail(), user.getPassword(),
 						course);
 			} catch (IOException e) {
-				Log.e("ChapterListActivity", "Network access error 219");
+				ChapterListActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								ChapterListActivity.this,
+								ChapterListActivity.this
+										.getString(R.string.err_server),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+				return null;
 			}
 
 			return success;
@@ -302,7 +312,7 @@ public class ChapterListActivity extends ListActivity {
 								Toast.LENGTH_SHORT).show();
 					}
 				});
-				Log.e("ChapterListActivity", "Network access error");
+				return null;
 			}
 
 			return chapters;

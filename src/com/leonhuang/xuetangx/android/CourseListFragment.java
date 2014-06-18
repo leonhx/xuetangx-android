@@ -195,7 +195,7 @@ public class CourseListFragment extends ListFragment {
 						}
 					});
 				}
-				e.printStackTrace();
+				return null;
 			}
 
 			return courses;

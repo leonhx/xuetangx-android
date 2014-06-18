@@ -144,7 +144,7 @@ public class ItemListActivity extends ListActivity {
 								Toast.LENGTH_SHORT).show();
 					}
 				});
-				e.printStackTrace();
+				return null;
 			}
 
 			return items;

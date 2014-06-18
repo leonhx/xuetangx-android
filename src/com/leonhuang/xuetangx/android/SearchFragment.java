@@ -202,7 +202,15 @@ public class SearchFragment extends ListFragment {
 				courses = pair.first;
 				nextOffset = pair.second;
 			} catch (IOException e) {
-				e.printStackTrace();
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(mActivity,
+								mActivity.getString(R.string.err_server),
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+				return null;
 			}
 
 			return courses;
@@ -218,8 +226,14 @@ public class SearchFragment extends ListFragment {
 					}
 					mCourses.addAll(0, result);
 				} else {
-					Toast.makeText(mActivity, R.string.search_no_result,
-							Toast.LENGTH_SHORT).show();
+					mActivity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(mActivity,
+									R.string.search_no_result,
+									Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
 			}
 
@@ -230,7 +244,5 @@ public class SearchFragment extends ListFragment {
 			super.onPostExecute(result);
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
-
 	}
-
 }
