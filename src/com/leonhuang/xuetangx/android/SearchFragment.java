@@ -41,7 +41,7 @@ public class SearchFragment extends ListFragment {
 	private boolean searchable;
 
 	private int nextOffset = 0;
-	private int LIMIT = 10;
+	private final int LIMIT = 10;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
