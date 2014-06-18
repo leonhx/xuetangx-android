@@ -70,25 +70,18 @@ public class CourseListFragment extends ListFragment {
 				.findViewById(android.R.id.list);
 		adapter = new CourseAdapter(getActivity(), mCourses);
 
-		new GetDataTask(new Runnable() {
-
-			@Override
-			public void run() {
-				listView.setAdapter(adapter);
-			}
-		}, true, false).execute();
+		listView.setAdapter(adapter);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				Log.i("Refresh", String.valueOf(courseStatus));
 				new GetDataTask(new Runnable() {
-
 					@Override
 					public void run() {
 						adapter.notifyDataSetInvalidated();
 					}
-				}, false, true).execute();
+				}, true).execute();
 			}
 		});
 
@@ -103,14 +96,17 @@ public class CourseListFragment extends ListFragment {
 
 	@Override
 	public void onResume() {
-		new GetDataTask(new Runnable() {
-
-			@Override
-			public void run() {
-				adapter.notifyDataSetInvalidated();
-			}
-		}, true, false).execute();
 		super.onResume();
+		mCourses.addAll(loadCourses(courseStatus));
+		if (new NetworkConnectivityManager(mActivity)
+				.isConnectingViaWifiOrWiMAX()) {
+			new GetDataTask(new Runnable() {
+				@Override
+				public void run() {
+					adapter.notifyDataSetInvalidated();
+				}
+			}, false).execute();
+		}
 	}
 
 	@Override
@@ -147,13 +143,10 @@ public class CourseListFragment extends ListFragment {
 			AsyncTask<Void, Void, ArrayList<SimpleCourseInfo>> {
 
 		private Runnable runOnPostExecute;
-		private boolean __cacheFirst;
 		private boolean __toastNetworkStatus;
 
-		public GetDataTask(Runnable runOnPostExecute, boolean cacheFirst,
-				boolean toastNetworkStatus) {
+		public GetDataTask(Runnable runOnPostExecute, boolean toastNetworkStatus) {
 			this.runOnPostExecute = runOnPostExecute;
-			__cacheFirst = cacheFirst;
 			__toastNetworkStatus = toastNetworkStatus;
 		}
 
@@ -167,15 +160,6 @@ public class CourseListFragment extends ListFragment {
 					.isConnectingToInternet(__toastNetworkStatus)) {
 				courses = loadCourses(courseStatus);
 				return courses;
-			}
-
-			if (__cacheFirst
-					&& !new NetworkConnectivityManager(mActivity)
-							.isConnectingViaWifiOrWiMAX()) {
-				courses = loadCourses(courseStatus);
-				if (!courses.isEmpty()) {
-					return courses;
-				}
 			}
 
 			try {
@@ -199,6 +183,11 @@ public class CourseListFragment extends ListFragment {
 					return null;
 				}
 			} catch (IOException e) {
+				if (__toastNetworkStatus) {
+					Toast.makeText(mActivity,
+							mActivity.getString(R.string.err_server),
+							Toast.LENGTH_SHORT).show();
+				}
 				e.printStackTrace();
 			}
 
@@ -208,15 +197,25 @@ public class CourseListFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleCourseInfo> result) {
 
-			if (null != result && !result.isEmpty()) {
-				Collections.sort(result, new Comparator<SimpleCourseInfo>() {
-					@Override
-					public int compare(SimpleCourseInfo arg0,
-							SimpleCourseInfo arg1) {
-						return arg0.getStartDate().compareTo(
-								arg1.getStartDate());
+			if (null != result) {
+				if (result.isEmpty()) {
+					if (__toastNetworkStatus) {
+						Toast.makeText(
+								mActivity,
+								mActivity.getString(R.string.empty_course_list),
+								Toast.LENGTH_SHORT).show();
 					}
-				});
+				} else {
+					Collections.sort(result,
+							new Comparator<SimpleCourseInfo>() {
+								@Override
+								public int compare(SimpleCourseInfo arg0,
+										SimpleCourseInfo arg1) {
+									return arg0.getStartDate().compareTo(
+											arg1.getStartDate());
+								}
+							});
+				}
 
 				mCourses.clear();
 				mCourses.addAll(result);
@@ -230,7 +229,6 @@ public class CourseListFragment extends ListFragment {
 			super.onPostExecute(result);
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
-
 	}
 
 	private void saveCourses(ArrayList<SimpleCourseInfo> courses,

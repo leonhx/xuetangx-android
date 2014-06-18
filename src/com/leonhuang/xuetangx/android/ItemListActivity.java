@@ -20,6 +20,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.leonhuang.xuetangx.Courses;
 import com.leonhuang.xuetangx.R;
@@ -124,7 +125,7 @@ public class ItemListActivity extends ListActivity {
 			}
 
 			try {
-				Log.i("ChapterListTask", "Get From Internet");
+				Log.i("ItemListTask", "Get From Internet");
 				UserInfo user = UserInfo.load(ItemListActivity.this);
 				items = Courses.lecture(user.getEmail(), user.getPassword(),
 						lecture);
@@ -133,6 +134,9 @@ public class ItemListActivity extends ListActivity {
 					return null;
 				}
 			} catch (IOException e) {
+				Toast.makeText(ItemListActivity.this,
+						ItemListActivity.this.getString(R.string.err_server),
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 
@@ -142,7 +146,14 @@ public class ItemListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(ArrayList<ItemInfo> result) {
 
-			if (null != result && !result.isEmpty()) {
+			if (null != result) {
+				if (result.isEmpty()) {
+					Toast.makeText(
+							ItemListActivity.this,
+							ItemListActivity.this
+									.getString(R.string.empty_item_list),
+							Toast.LENGTH_SHORT).show();
+				}
 				mItems.clear();
 				mItems.addAll(result);
 				saveItems(result);

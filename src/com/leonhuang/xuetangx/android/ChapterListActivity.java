@@ -60,7 +60,7 @@ public class ChapterListActivity extends ListActivity {
 
 	private SimpleCourseInfo course;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
+	private final ArrayList<SimpleChapterInfo> mChapters = new ArrayList<SimpleChapterInfo>();
 	private ExpandableListView listView;
 	private ChapterAdapter adapter;
 
@@ -96,24 +96,28 @@ public class ChapterListActivity extends ListActivity {
 				.findViewById(android.R.id.list);
 		adapter = new ChapterAdapter(this, mChapters);
 
-		new GetContentTask(new Runnable() {
+		mChapters.addAll(loadChapters());
+		listView.setAdapter(adapter);
 
-			@Override
-			public void run() {
-				listView.setAdapter(adapter);
-			}
-		}, true).execute();
+		if (new NetworkConnectivityManager(ChapterListActivity.this)
+				.isConnectingViaWifiOrWiMAX()) {
+			new GetContentTask(new Runnable() {
+				@Override
+				public void run() {
+					adapter.notifyDataSetInvalidated();
+				}
+			}).execute();
+		}
 
 		mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				new GetContentTask(new Runnable() {
-
 					@Override
 					public void run() {
 						adapter.notifyDataSetInvalidated();
 					}
-				}, false).execute();
+				}).execute();
 			}
 		});
 
@@ -260,11 +264,9 @@ public class ChapterListActivity extends ListActivity {
 			AsyncTask<Void, Void, ArrayList<SimpleChapterInfo>> {
 
 		private Runnable runOnPostExecute;
-		private boolean __cacheFirst;
 
-		public GetContentTask(Runnable runOnPostExecute, boolean cacheFirst) {
+		public GetContentTask(Runnable runOnPostExecute) {
 			this.runOnPostExecute = runOnPostExecute;
-			__cacheFirst = cacheFirst;
 		}
 
 		@Override
@@ -279,15 +281,6 @@ public class ChapterListActivity extends ListActivity {
 				return chapters;
 			}
 
-			if (__cacheFirst
-					&& !new NetworkConnectivityManager(ChapterListActivity.this)
-							.isConnectingViaWifiOrWiMAX()) {
-				chapters = loadChapters();
-				if (!chapters.isEmpty()) {
-					return chapters;
-				}
-			}
-
 			try {
 				Log.i("ChapterListTask", "Get From Internet");
 				UserInfo user = UserInfo.load(ChapterListActivity.this);
@@ -298,6 +291,10 @@ public class ChapterListActivity extends ListActivity {
 					return null;
 				}
 			} catch (IOException e) {
+				Toast.makeText(
+						ChapterListActivity.this,
+						ChapterListActivity.this.getString(R.string.err_server),
+						Toast.LENGTH_SHORT).show();
 				Log.e("ChapterListActivity", "Network access error");
 			}
 
@@ -307,7 +304,14 @@ public class ChapterListActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(ArrayList<SimpleChapterInfo> result) {
 
-			if (null != result && !result.isEmpty()) {
+			if (null != result) {
+				if (result.isEmpty()) {
+					Toast.makeText(
+							ChapterListActivity.this,
+							ChapterListActivity.this
+									.getString(R.string.empty_chapter_list),
+							Toast.LENGTH_SHORT).show();
+				}
 				mChapters.clear();
 				mChapters.addAll(result);
 				saveChapters(result);

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.leonhuang.xuetangx.R;
@@ -52,8 +53,32 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 				activity.getString(R.string.course_start_date_format),
 				Locale.CHINA);
 		date.setText(df.format(course.getStartDate().getTime()));
-		new DownloadImageTask((ImageView) view.findViewById(R.id.tweetAvatar))
-				.execute(course.getImgUrl());
+		final ProgressBar progressBar = (ProgressBar) view
+				.findViewById(R.id.image_progress);
+		final ImageView image = (ImageView) view.findViewById(R.id.tweetAvatar);
+		new DownloadImageTask(image, new Runnable() {
+			@Override
+			public void run() {
+				activity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						progressBar.setVisibility(View.VISIBLE);
+						image.setVisibility(View.INVISIBLE);
+					}
+				});
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				activity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						progressBar.setVisibility(View.INVISIBLE);
+						image.setVisibility(View.VISIBLE);
+					}
+				});
+			}
+		}).execute(course.getImgUrl());
 
 		platform.setText(course.getUniversity());
 		return view;
@@ -71,12 +96,18 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 		ImageView bmImage;
+		private Runnable __runBefore;
+		private Runnable __runAfter;
 
-		public DownloadImageTask(ImageView bmImage) {
+		public DownloadImageTask(ImageView bmImage, Runnable runBefore,
+				Runnable runAfter) {
 			this.bmImage = bmImage;
+			this.__runBefore = runBefore;
+			this.__runAfter = runAfter;
 		}
 
 		protected Bitmap doInBackground(String... urls) {
+			__runBefore.run();
 			String urldisplay = urls[0];
 			try {
 				return BitmapFactory.decodeStream(activity
@@ -109,6 +140,7 @@ public class CourseAdapter extends ArrayAdapter<SimpleCourseInfo> {
 				bmImage.setImageDrawable(activity.getResources().getDrawable(
 						R.drawable.placeholder));
 			}
+			__runAfter.run();
 		}
 	}
 
